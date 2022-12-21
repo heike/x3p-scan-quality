@@ -1,6 +1,6 @@
 ---
 title: "Comparitive Analysis"
-author: "Craig Orman"
+author: "Craig Orman, Naga Vempati, Dr. Heike Hofmann"
 date: "2022-12-09"
 output: html_document
 ---
@@ -16,9 +16,7 @@ library(ggplot2)
 
 Staging
 ```{r}
-setwd("C:/Users/black/Desktop/Craig")
-full_data = read.csv("std_and_cropped_data_12_20_2022.csv", header = TRUE)
-
+full_data = read.csv(file = "data/std_and_cropped_data_12_20_2022.csv", header = TRUE)
 ```
 
 ```{r}
@@ -30,30 +28,10 @@ full_data = full_data %>% mutate(
 
 ```
 
-$$
-\alpha = 0.05 \\
-H_0: \sigma^2_S = \sigma^2_C \\
-H_a: \sigma^2_S \neq \sigma^2_C \\
-ts = \frac{S^2_C}{S^2_C} \\
-Null = F_{1849,1849} \\
-RR =\{|ts| \geq qF_{1849,1849}(0.975)\}
-$$
 
 ## Functions
 ```{r}
 comparison <- function(standard, cropped, feature) {
-
-scatTitle = paste(feature)
-# mean difference test
-SS = var(standard)
-RR = qf(0.975, 1849, 1849)
-SC = var(cropped)
-ts = SS/SC
-if (abs(ts) >= RR) {
-  scatTitle = paste(scatTitle, "where we reject the null with 95% confidence")
-} else {
-  scatTitle = paste(scatTitle, "where we do NOT reject the null with 95% confidence")
-}
 
 upper = max(max(standard), max(cropped))
 upper = upper * 1.1
@@ -61,7 +39,7 @@ scatty = full_data %>% ggplot(aes(x=standard, y=cropped, col=Quality)) +
   geom_point() +
   xlim(0,upper) +
   ylim(0,upper) +
-  ggtitle(scatTitle)
+  ggtitle(feature)
 
 boxy = boxplot(standard, cropped,
         horizontal = TRUE,
