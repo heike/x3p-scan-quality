@@ -1,0 +1,1851 @@
+"FAU","Bullet","Land","Quality","Problem","duplicate"
+3,"A",6,"Bad","Damage",FALSE
+4,"B",4,"Bad","Damage",FALSE
+5,"B",5,"Bad","Damage",FALSE
+5,"B",6,"Bad","Damage",FALSE
+16,"B",5,"Bad","Damage",FALSE
+22,"B",5,"Bad","Damage",FALSE
+51,"D",6,"Bad","Damage",FALSE
+58,"B",1,"Bad","Damage",FALSE
+58,"D",2,"Bad","Damage",FALSE
+65,"A",5,"Bad","Damage",FALSE
+71,"A",1,"Bad","Damage",FALSE
+71,"B",3,"Bad","Damage",FALSE
+73,"B",4,"Bad","Damage",FALSE
+75,"D",5,"Bad","Damage",FALSE
+77,"B",6,"Bad","Damage",FALSE
+85,"C",2,"Bad","Damage",FALSE
+86,"D",4,"Bad","Damage",FALSE
+102,"B",2,"Bad","Damage",FALSE
+102,"B",3,"Bad","Damage",FALSE
+102,"B",4,"Bad","Damage",FALSE
+102,"B",5,"Bad","Damage",FALSE
+104,"B",5,"Bad","Damage",FALSE
+104,"C",1,"Bad","Damage",FALSE
+108,"B",5,"Bad","Damage",FALSE
+109,"D",1,"Bad","Damage",FALSE
+135,"D",5,"Bad","Damage",FALSE
+145,"D",2,"Bad","Damage",FALSE
+153,"B",6,"Bad","Damage",FALSE
+154,"A",6,"Bad","Damage",FALSE
+156,"C",4,"Bad","Damage",FALSE
+157,"C",2,"Bad","Damage",FALSE
+165,"C",2,"Bad","Damage",FALSE
+166,"B",4,"Bad","Damage",FALSE
+166,"D",6,"Bad","Damage",FALSE
+195,"B",1,"Bad","Damage",FALSE
+198,"C",1,"Bad","Damage",FALSE
+201,"D",6,"Bad","Damage",FALSE
+203,"B",2,"Bad","Damage",FALSE
+203,"C",2,"Bad","Damage",FALSE
+203,"C",3,"Bad","Damage",FALSE
+204,"A",1,"Bad","Damage",FALSE
+204,"B",3,"Bad","Damage",FALSE
+204,"C",3,"Bad","Damage",FALSE
+205,"A",3,"Bad","Damage",FALSE
+208,"B",1,"Bad","Damage",FALSE
+211,"A",2,"Bad","Damage",FALSE
+211,"A",4,"Bad","Damage",FALSE
+211,"B",3,"Bad","Damage",FALSE
+211,"C",5,"Bad","Damage",FALSE
+215,"B",5,"Bad","Damage",FALSE
+215,"D",1,"Bad","Damage",FALSE
+227,"C",6,"Bad","Damage",FALSE
+227,"D",2,"Bad","Damage",FALSE
+227,"D",3,"Bad","Damage",FALSE
+228,"D",4,"Bad","Damage",FALSE
+236,"C",3,"Bad","Damage",FALSE
+252,"D",6,"Bad","Damage",FALSE
+254,"D",1,"Bad","Damage",FALSE
+258,"C",6,"Bad","Damage",FALSE
+269,"B",5,"Bad","Damage",FALSE
+269,"C",4,"Bad","Damage",FALSE
+272,"B",2,"Bad","Damage",FALSE
+273,"A",2,"Bad","Damage",FALSE
+273,"B",5,"Bad","Damage",FALSE
+136,"C",4,"Problematic","Damage",FALSE
+186,"B",3,"Problematic","Damage",FALSE
+216,"C",4,"Problematic","Damage",FALSE
+35,"D",5,"Tiny Problems","Damage",FALSE
+199,"D",4,"Yikes","Damage",FALSE
+17,"A",5,"Bad","Feathering",FALSE
+17,"A",6,"Bad","Feathering",FALSE
+17,"B",2,"Bad","Feathering",FALSE
+17,"B",3,"Bad","Feathering",FALSE
+17,"C",1,"Bad","Feathering",FALSE
+17,"C",6,"Bad","Feathering",FALSE
+40,"C",3,"Bad","Feathering",FALSE
+40,"C",4,"Bad","Feathering",FALSE
+93,"C",4,"Bad","Feathering",FALSE
+113,"D",6,"Bad","Feathering",FALSE
+140,"B",3,"Bad","Feathering",FALSE
+154,"A",1,"Bad","Feathering",FALSE
+154,"B",1,"Bad","Feathering",FALSE
+158,"C",5,"Bad","Feathering",FALSE
+160,"D",6,"Bad","Feathering",FALSE
+164,"B",5,"Bad","Feathering",FALSE
+169,"A",6,"Bad","Feathering",FALSE
+180,"D",6,"Bad","Feathering",FALSE
+192,"A",5,"Bad","Feathering",FALSE
+192,"A",6,"Bad","Feathering",FALSE
+195,"D",1,"Bad","Feathering",FALSE
+197,"C",2,"Bad","Feathering",FALSE
+197,"D",3,"Bad","Feathering",FALSE
+198,"D",1,"Bad","Feathering",FALSE
+203,"A",3,"Bad","Feathering",FALSE
+203,"C",6,"Bad","Feathering",FALSE
+205,"C",6,"Bad","Feathering",FALSE
+207,"B",1,"Bad","Feathering",FALSE
+207,"B",2,"Bad","Feathering",FALSE
+207,"B",5,"Bad","Feathering",FALSE
+207,"B",6,"Bad","Feathering",FALSE
+207,"C",1,"Bad","Feathering",FALSE
+207,"C",2,"Bad","Feathering",FALSE
+207,"C",3,"Bad","Feathering",FALSE
+207,"C",5,"Bad","Feathering",FALSE
+207,"C",6,"Bad","Feathering",FALSE
+207,"D",4,"Bad","Feathering",FALSE
+209,"B",4,"Bad","Feathering",FALSE
+209,"C",3,"Bad","Feathering",FALSE
+210,"A",6,"Bad","Feathering",FALSE
+210,"B",2,"Bad","Feathering",FALSE
+210,"D",2,"Bad","Feathering",FALSE
+210,"D",5,"Bad","Feathering",FALSE
+212,"A",5,"Bad","Feathering",FALSE
+212,"C",6,"Bad","Feathering",FALSE
+212,"D",2,"Bad","Feathering",FALSE
+213,"A",1,"Bad","Feathering",FALSE
+213,"A",6,"Bad","Feathering",FALSE
+213,"D",3,"Bad","Feathering",FALSE
+214,"A",1,"Bad","Feathering",FALSE
+216,"C",6,"Bad","Feathering",FALSE
+216,"D",1,"Bad","Feathering",FALSE
+217,"A",2,"Bad","Feathering",FALSE
+217,"A",3,"Bad","Feathering",FALSE
+217,"B",2,"Bad","Feathering",FALSE
+217,"B",3,"Bad","Feathering",FALSE
+217,"B",4,"Bad","Feathering",FALSE
+217,"C",2,"Bad","Feathering",FALSE
+217,"C",6,"Bad","Feathering",FALSE
+219,"A",2,"Bad","Feathering",FALSE
+219,"A",3,"Bad","Feathering",FALSE
+219,"A",4,"Bad","Feathering",FALSE
+219,"A",5,"Bad","Feathering",FALSE
+219,"A",6,"Bad","Feathering",FALSE
+219,"B",1,"Bad","Feathering",FALSE
+219,"B",3,"Bad","Feathering",FALSE
+219,"C",1,"Bad","Feathering",FALSE
+219,"C",6,"Bad","Feathering",FALSE
+219,"D",1,"Bad","Feathering",FALSE
+219,"D",3,"Bad","Feathering",FALSE
+219,"D",6,"Bad","Feathering",FALSE
+220,"A",4,"Bad","Feathering",FALSE
+224,"A",2,"Bad","Feathering",FALSE
+224,"B",1,"Bad","Feathering",FALSE
+224,"B",4,"Bad","Feathering",FALSE
+224,"C",2,"Bad","Feathering",FALSE
+224,"C",6,"Bad","Feathering",FALSE
+230,"A",4,"Bad","Feathering",FALSE
+230,"C",3,"Bad","Feathering",FALSE
+230,"C",4,"Bad","Feathering",FALSE
+230,"D",2,"Bad","Feathering",FALSE
+230,"D",4,"Bad","Feathering",FALSE
+230,"D",5,"Bad","Feathering",FALSE
+232,"B",1,"Bad","Feathering",FALSE
+232,"B",2,"Bad","Feathering",FALSE
+233,"B",1,"Bad","Feathering",FALSE
+233,"B",2,"Bad","Feathering",FALSE
+233,"B",3,"Bad","Feathering",FALSE
+233,"B",4,"Bad","Feathering",FALSE
+233,"C",5,"Bad","Feathering",FALSE
+233,"C",6,"Bad","Feathering",FALSE
+236,"C",1,"Bad","Feathering",FALSE
+236,"C",6,"Bad","Feathering",FALSE
+236,"D",1,"Bad","Feathering",FALSE
+236,"D",3,"Bad","Feathering",FALSE
+236,"D",4,"Bad","Feathering",FALSE
+236,"D",5,"Bad","Feathering",FALSE
+237,"B",5,"Bad","Feathering",FALSE
+237,"C",4,"Bad","Feathering",FALSE
+237,"C",5,"Bad","Feathering",FALSE
+237,"C",6,"Bad","Feathering",FALSE
+238,"A",1,"Bad","Feathering",FALSE
+238,"A",4,"Bad","Feathering",FALSE
+238,"B",4,"Bad","Feathering",FALSE
+238,"B",5,"Bad","Feathering",FALSE
+238,"C",5,"Bad","Feathering",FALSE
+238,"D",2,"Bad","Feathering",FALSE
+239,"A",1,"Bad","Feathering",FALSE
+239,"C",6,"Bad","Feathering",FALSE
+239,"D",1,"Bad","Feathering",FALSE
+240,"A",2,"Bad","Feathering",FALSE
+241,"A",1,"Bad","Feathering",FALSE
+241,"A",6,"Bad","Feathering",FALSE
+242,"A",5,"Bad","Feathering",FALSE
+242,"A",6,"Bad","Feathering",FALSE
+256,"A",1,"Bad","Feathering",FALSE
+256,"A",3,"Bad","Feathering",FALSE
+256,"A",4,"Bad","Feathering",FALSE
+256,"A",5,"Bad","Feathering",FALSE
+256,"B",5,"Bad","Feathering",FALSE
+256,"C",1,"Bad","Feathering",FALSE
+256,"C",2,"Bad","Feathering",FALSE
+256,"C",3,"Bad","Feathering",FALSE
+256,"C",5,"Bad","Feathering",FALSE
+256,"D",1,"Bad","Feathering",FALSE
+256,"D",3,"Bad","Feathering",FALSE
+257,"A",4,"Bad","Feathering",FALSE
+257,"D",2,"Bad","Feathering",FALSE
+257,"D",3,"Bad","Feathering",FALSE
+257,"D",5,"Bad","Feathering",FALSE
+257,"D",6,"Bad","Feathering",FALSE
+270,"C",1,"Bad","Feathering",FALSE
+271,"D",4,"Bad","Feathering",FALSE
+272,"C",1,"Bad","Feathering",FALSE
+273,"A",3,"Bad","Feathering",FALSE
+274,"A",6,"Bad","Feathering",FALSE
+274,"B",1,"Bad","Feathering",FALSE
+274,"B",2,"Bad","Feathering",FALSE
+274,"C",4,"Bad","Feathering",FALSE
+274,"D",1,"Bad","Feathering",FALSE
+275,"B",3,"Bad","Feathering",FALSE
+275,"B",5,"Bad","Feathering",FALSE
+275,"C",1,"Bad","Feathering",FALSE
+275,"C",2,"Bad","Feathering",FALSE
+278,"B",1,"Bad","Feathering",FALSE
+278,"B",2,"Bad","Feathering",FALSE
+278,"B",3,"Bad","Feathering",FALSE
+278,"B",4,"Bad","Feathering",FALSE
+278,"C",5,"Bad","Feathering",FALSE
+279,"B",1,"Bad","Feathering",FALSE
+279,"C",1,"Bad","Feathering",FALSE
+279,"C",2,"Bad","Feathering",FALSE
+279,"C",3,"Bad","Feathering",FALSE
+279,"D",1,"Bad","Feathering",FALSE
+279,"D",4,"Bad","Feathering",FALSE
+280,"A",2,"Bad","Feathering",FALSE
+280,"A",3,"Bad","Feathering",FALSE
+280,"B",3,"Bad","Feathering",FALSE
+280,"B",6,"Bad","Feathering",FALSE
+281,"B",5,"Bad","Feathering",FALSE
+281,"C",3,"Bad","Feathering",FALSE
+282,"D",1,"Bad","Feathering",FALSE
+283,"A",6,"Bad","Feathering",FALSE
+283,"B",1,"Bad","Feathering",FALSE
+283,"B",2,"Bad","Feathering",FALSE
+283,"B",5,"Bad","Feathering",FALSE
+283,"B",6,"Bad","Feathering",FALSE
+283,"C",6,"Bad","Feathering",FALSE
+283,"D",3,"Bad","Feathering",FALSE
+283,"D",4,"Bad","Feathering",FALSE
+284,"A",2,"Bad","Feathering",FALSE
+284,"A",3,"Bad","Feathering",FALSE
+285,"D",1,"Bad","Feathering",FALSE
+286,"B",1,"Bad","Feathering",FALSE
+286,"B",6,"Bad","Feathering",FALSE
+286,"C",1,"Bad","Feathering",FALSE
+294,"D",6,"Bad","Feathering",FALSE
+295,"D",2,"Bad","Feathering",FALSE
+300,"C",4,"Bad","Feathering",FALSE
+2,"D",3,"Problematic","Feathering",FALSE
+2,"D",5,"Problematic","Feathering",FALSE
+10,"A",5,"Problematic","Feathering",FALSE
+17,"B",4,"Problematic","Feathering",FALSE
+38,"D",2,"Problematic","Feathering",FALSE
+40,"C",1,"Problematic","Feathering",FALSE
+40,"C",2,"Problematic","Feathering",FALSE
+40,"C",6,"Problematic","Feathering",FALSE
+70,"D",4,"Problematic","Feathering",FALSE
+93,"B",1,"Problematic","Feathering",FALSE
+114,"B",1,"Problematic","Feathering",FALSE
+115,"C",3,"Problematic","Feathering",FALSE
+122,"D",3,"Problematic","Feathering",FALSE
+124,"A",5,"Problematic","Feathering",FALSE
+130,"B",2,"Problematic","Feathering",FALSE
+137,"D",6,"Problematic","Feathering",FALSE
+140,"D",3,"Problematic","Feathering",FALSE
+149,"A",1,"Problematic","Feathering",FALSE
+152,"B",3,"Problematic","Feathering",FALSE
+152,"B",4,"Problematic","Feathering",FALSE
+154,"A",2,"Problematic","Feathering",FALSE
+154,"A",3,"Problematic","Feathering",FALSE
+164,"A",1,"Problematic","Feathering",FALSE
+164,"A",5,"Problematic","Feathering",FALSE
+164,"B",2,"Problematic","Feathering",FALSE
+164,"B",4,"Problematic","Feathering",FALSE
+164,"B",6,"Problematic","Feathering",FALSE
+164,"C",1,"Problematic","Feathering",FALSE
+164,"D",2,"Problematic","Feathering",FALSE
+168,"B",3,"Problematic","Feathering",FALSE
+168,"B",6,"Problematic","Feathering",FALSE
+175,"B",1,"Problematic","Feathering",FALSE
+175,"B",6,"Problematic","Feathering",FALSE
+175,"D",2,"Problematic","Feathering",FALSE
+179,"B",1,"Problematic","Feathering",FALSE
+179,"B",2,"Problematic","Feathering",FALSE
+183,"C",2,"Problematic","Feathering",FALSE
+183,"C",3,"Problematic","Feathering",FALSE
+183,"C",5,"Problematic","Feathering",FALSE
+183,"C",6,"Problematic","Feathering",FALSE
+187,"A",5,"Problematic","Feathering",FALSE
+188,"D",2,"Problematic","Feathering",FALSE
+188,"D",3,"Problematic","Feathering",FALSE
+189,"A",4,"Problematic","Feathering",FALSE
+192,"A",1,"Problematic","Feathering",FALSE
+192,"A",2,"Problematic","Feathering",FALSE
+192,"A",3,"Problematic","Feathering",FALSE
+192,"A",4,"Problematic","Feathering",FALSE
+207,"B",4,"Problematic","Feathering",FALSE
+209,"B",1,"Problematic","Feathering",FALSE
+209,"B",3,"Problematic","Feathering",FALSE
+209,"B",6,"Problematic","Feathering",FALSE
+210,"B",1,"Problematic","Feathering",FALSE
+210,"B",3,"Problematic","Feathering",FALSE
+210,"C",1,"Problematic","Feathering",FALSE
+211,"B",2,"Problematic","Feathering",FALSE
+211,"B",4,"Problematic","Feathering",FALSE
+211,"B",5,"Problematic","Feathering",FALSE
+211,"D",2,"Problematic","Feathering",FALSE
+211,"D",4,"Problematic","Feathering",FALSE
+211,"D",6,"Problematic","Feathering",FALSE
+212,"A",2,"Problematic","Feathering",FALSE
+212,"B",1,"Problematic","Feathering",FALSE
+212,"B",3,"Problematic","Feathering",FALSE
+212,"B",4,"Problematic","Feathering",FALSE
+212,"B",6,"Problematic","Feathering",FALSE
+212,"C",4,"Problematic","Feathering",FALSE
+213,"B",4,"Problematic","Feathering",FALSE
+213,"B",5,"Problematic","Feathering",FALSE
+213,"C",1,"Problematic","Feathering",FALSE
+213,"C",4,"Problematic","Feathering",FALSE
+219,"D",5,"Problematic","Feathering",FALSE
+220,"B",4,"Problematic","Feathering",FALSE
+220,"B",5,"Problematic","Feathering",FALSE
+224,"A",4,"Problematic","Feathering",FALSE
+224,"B",2,"Problematic","Feathering",FALSE
+224,"B",6,"Problematic","Feathering",FALSE
+229,"C",6,"Problematic","Feathering",FALSE
+230,"B",1,"Problematic","Feathering",FALSE
+231,"D",5,"Problematic","Feathering",FALSE
+232,"A",2,"Problematic","Feathering",FALSE
+233,"A",1,"Problematic","Feathering",FALSE
+233,"A",2,"Problematic","Feathering",FALSE
+233,"A",4,"Problematic","Feathering",FALSE
+233,"A",5,"Problematic","Feathering",FALSE
+237,"B",6,"Problematic","Feathering",FALSE
+237,"D",2,"Problematic","Feathering",FALSE
+238,"C",6,"Problematic","Feathering",FALSE
+238,"D",4,"Problematic","Feathering",FALSE
+238,"D",6,"Problematic","Feathering",FALSE
+242,"A",3,"Problematic","Feathering",FALSE
+246,"B",5,"Problematic","Feathering",FALSE
+246,"B",6,"Problematic","Feathering",FALSE
+247,"B",5,"Problematic","Feathering",FALSE
+247,"B",6,"Problematic","Feathering",FALSE
+247,"D",1,"Problematic","Feathering",FALSE
+248,"C",1,"Problematic","Feathering",FALSE
+249,"D",1,"Problematic","Feathering",FALSE
+254,"A",4,"Problematic","Feathering",FALSE
+254,"B",4,"Problematic","Feathering",FALSE
+254,"C",3,"Problematic","Feathering",FALSE
+255,"A",4,"Problematic","Feathering",FALSE
+256,"A",6,"Problematic","Feathering",FALSE
+256,"B",1,"Problematic","Feathering",FALSE
+257,"D",1,"Problematic","Feathering",FALSE
+258,"A",2,"Problematic","Feathering",FALSE
+258,"A",6,"Problematic","Feathering",FALSE
+258,"B",3,"Problematic","Feathering",FALSE
+258,"B",4,"Problematic","Feathering",FALSE
+259,"A",6,"Problematic","Feathering",FALSE
+259,"B",1,"Problematic","Feathering",FALSE
+259,"B",3,"Problematic","Feathering",FALSE
+259,"D",1,"Problematic","Feathering",FALSE
+259,"D",6,"Problematic","Feathering",FALSE
+263,"A",2,"Problematic","Feathering",FALSE
+263,"A",3,"Problematic","Feathering",FALSE
+263,"C",4,"Problematic","Feathering",FALSE
+264,"C",6,"Problematic","Feathering",FALSE
+264,"D",2,"Problematic","Feathering",FALSE
+264,"D",6,"Problematic","Feathering",FALSE
+265,"A",3,"Problematic","Feathering",FALSE
+265,"A",4,"Problematic","Feathering",FALSE
+265,"B",4,"Problematic","Feathering",FALSE
+267,"B",3,"Problematic","Feathering",FALSE
+267,"C",4,"Problematic","Feathering",FALSE
+268,"C",5,"Problematic","Feathering",FALSE
+270,"B",4,"Problematic","Feathering",FALSE
+270,"C",4,"Problematic","Feathering",FALSE
+270,"C",5,"Problematic","Feathering",FALSE
+271,"C",5,"Problematic","Feathering",FALSE
+271,"C",6,"Problematic","Feathering",FALSE
+271,"D",5,"Problematic","Feathering",FALSE
+273,"B",3,"Problematic","Feathering",FALSE
+273,"C",5,"Problematic","Feathering",FALSE
+275,"C",3,"Problematic","Feathering",FALSE
+275,"C",4,"Problematic","Feathering",FALSE
+275,"D",4,"Problematic","Feathering",FALSE
+275,"D",5,"Problematic","Feathering",FALSE
+276,"A",5,"Problematic","Feathering",FALSE
+276,"A",6,"Problematic","Feathering",FALSE
+276,"B",1,"Problematic","Feathering",FALSE
+276,"B",2,"Problematic","Feathering",FALSE
+276,"B",3,"Problematic","Feathering",FALSE
+276,"B",4,"Problematic","Feathering",FALSE
+276,"C",5,"Problematic","Feathering",FALSE
+276,"D",3,"Problematic","Feathering",FALSE
+276,"D",5,"Problematic","Feathering",FALSE
+277,"A",2,"Problematic","Feathering",FALSE
+277,"D",3,"Problematic","Feathering",FALSE
+278,"A",2,"Problematic","Feathering",FALSE
+278,"D",3,"Problematic","Feathering",FALSE
+279,"A",1,"Problematic","Feathering",FALSE
+279,"A",5,"Problematic","Feathering",FALSE
+279,"A",6,"Problematic","Feathering",FALSE
+279,"B",2,"Problematic","Feathering",FALSE
+279,"B",6,"Problematic","Feathering",FALSE
+279,"C",6,"Problematic","Feathering",FALSE
+279,"D",2,"Problematic","Feathering",FALSE
+280,"A",1,"Problematic","Feathering",FALSE
+280,"A",4,"Problematic","Feathering",FALSE
+280,"B",2,"Problematic","Feathering",FALSE
+280,"D",1,"Problematic","Feathering",FALSE
+280,"D",5,"Problematic","Feathering",FALSE
+280,"D",6,"Problematic","Feathering",FALSE
+281,"A",6,"Problematic","Feathering",FALSE
+281,"C",5,"Problematic","Feathering",FALSE
+281,"D",1,"Problematic","Feathering",FALSE
+281,"D",3,"Problematic","Feathering",FALSE
+281,"D",4,"Problematic","Feathering",FALSE
+281,"D",5,"Problematic","Feathering",FALSE
+282,"B",1,"Problematic","Feathering",FALSE
+282,"B",2,"Problematic","Feathering",FALSE
+282,"B",3,"Problematic","Feathering",FALSE
+282,"C",2,"Problematic","Feathering",FALSE
+282,"C",3,"Problematic","Feathering",FALSE
+282,"C",5,"Problematic","Feathering",FALSE
+282,"D",2,"Problematic","Feathering",FALSE
+282,"D",3,"Problematic","Feathering",FALSE
+282,"D",4,"Problematic","Feathering",FALSE
+283,"A",1,"Problematic","Feathering",FALSE
+283,"A",2,"Problematic","Feathering",FALSE
+284,"C",2,"Problematic","Feathering",FALSE
+284,"C",4,"Problematic","Feathering",FALSE
+284,"C",6,"Problematic","Feathering",FALSE
+285,"C",4,"Problematic","Feathering",FALSE
+286,"C",2,"Problematic","Feathering",FALSE
+286,"C",4,"Problematic","Feathering",FALSE
+286,"D",1,"Problematic","Feathering",FALSE
+286,"D",3,"Problematic","Feathering",FALSE
+286,"D",4,"Problematic","Feathering",FALSE
+286,"D",5,"Problematic","Feathering",FALSE
+286,"D",6,"Problematic","Feathering",FALSE
+287,"C",3,"Problematic","Feathering",FALSE
+287,"C",6,"Problematic","Feathering",FALSE
+287,"D",3,"Problematic","Feathering",FALSE
+289,"A",3,"Problematic","Feathering",FALSE
+289,"A",4,"Problematic","Feathering",FALSE
+289,"B",6,"Problematic","Feathering",FALSE
+290,"A",1,"Problematic","Feathering",FALSE
+290,"A",2,"Problematic","Feathering",FALSE
+290,"A",4,"Problematic","Feathering",FALSE
+290,"A",5,"Problematic","Feathering",FALSE
+290,"A",6,"Problematic","Feathering",FALSE
+290,"B",1,"Problematic","Feathering",FALSE
+290,"B",4,"Problematic","Feathering",FALSE
+290,"C",1,"Problematic","Feathering",FALSE
+290,"C",2,"Problematic","Feathering",FALSE
+290,"C",4,"Problematic","Feathering",FALSE
+290,"D",2,"Problematic","Feathering",FALSE
+290,"D",3,"Problematic","Feathering",FALSE
+292,"C",2,"Problematic","Feathering",FALSE
+292,"C",3,"Problematic","Feathering",FALSE
+293,"A",1,"Problematic","Feathering",FALSE
+293,"A",2,"Problematic","Feathering",FALSE
+293,"A",3,"Problematic","Feathering",FALSE
+293,"A",4,"Problematic","Feathering",FALSE
+293,"A",5,"Problematic","Feathering",FALSE
+293,"A",6,"Problematic","Feathering",FALSE
+293,"C",5,"Problematic","Feathering",FALSE
+293,"C",6,"Problematic","Feathering",FALSE
+293,"D",3,"Problematic","Feathering",FALSE
+293,"D",4,"Problematic","Feathering",FALSE
+294,"A",2,"Problematic","Feathering",FALSE
+294,"A",4,"Problematic","Feathering",FALSE
+295,"A",4,"Problematic","Feathering",FALSE
+295,"C",5,"Problematic","Feathering",FALSE
+299,"D",3,"Problematic","Feathering",FALSE
+300,"A",2,"Problematic","Feathering",FALSE
+300,"A",3,"Problematic","Feathering",FALSE
+300,"A",4,"Problematic","Feathering",FALSE
+300,"A",5,"Problematic","Feathering",FALSE
+300,"B",4,"Problematic","Feathering",FALSE
+300,"B",5,"Problematic","Feathering",FALSE
+300,"C",2,"Problematic","Feathering",FALSE
+300,"C",3,"Problematic","Feathering",FALSE
+2,"B",5,"Tiny Problems","Feathering",FALSE
+2,"B",6,"Tiny Problems","Feathering",FALSE
+6,"A",4,"Tiny Problems","Feathering",FALSE
+7,"C",1,"Tiny Problems","Feathering",FALSE
+7,"D",2,"Tiny Problems","Feathering",FALSE
+10,"D",1,"Tiny Problems","Feathering",FALSE
+11,"D",4,"Tiny Problems","Feathering",FALSE
+13,"A",2,"Tiny Problems","Feathering",FALSE
+13,"A",3,"Tiny Problems","Feathering",FALSE
+14,"C",4,"Tiny Problems","Feathering",FALSE
+14,"C",5,"Tiny Problems","Feathering",FALSE
+16,"C",1,"Tiny Problems","Feathering",FALSE
+19,"A",6,"Tiny Problems","Feathering",FALSE
+19,"B",1,"Tiny Problems","Feathering",FALSE
+33,"D",4,"Tiny Problems","Feathering",FALSE
+36,"C",5,"Tiny Problems","Feathering",FALSE
+36,"C",6,"Tiny Problems","Feathering",FALSE
+70,"A",2,"Tiny Problems","Feathering",FALSE
+70,"C",4,"Tiny Problems","Feathering",FALSE
+114,"A",3,"Tiny Problems","Feathering",FALSE
+115,"C",2,"Tiny Problems","Feathering",FALSE
+115,"C",4,"Tiny Problems","Feathering",FALSE
+136,"C",1,"Tiny Problems","Feathering",FALSE
+137,"D",3,"Tiny Problems","Feathering",FALSE
+138,"A",1,"Tiny Problems","Feathering",FALSE
+138,"B",4,"Tiny Problems","Feathering",FALSE
+138,"B",5,"Tiny Problems","Feathering",FALSE
+147,"C",3,"Tiny Problems","Feathering",FALSE
+150,"B",1,"Tiny Problems","Feathering",FALSE
+152,"C",3,"Tiny Problems","Feathering",FALSE
+154,"B",4,"Tiny Problems","Feathering",FALSE
+154,"C",1,"Tiny Problems","Feathering",FALSE
+157,"B",3,"Tiny Problems","Feathering",FALSE
+157,"B",4,"Tiny Problems","Feathering",FALSE
+160,"A",6,"Tiny Problems","Feathering",FALSE
+164,"B",3,"Tiny Problems","Feathering",FALSE
+164,"C",2,"Tiny Problems","Feathering",FALSE
+164,"C",6,"Tiny Problems","Feathering",FALSE
+164,"D",1,"Tiny Problems","Feathering",FALSE
+166,"A",3,"Tiny Problems","Feathering",FALSE
+177,"D",5,"Tiny Problems","Feathering",FALSE
+209,"B",5,"Tiny Problems","Feathering",FALSE
+212,"A",6,"Tiny Problems","Feathering",FALSE
+212,"C",3,"Tiny Problems","Feathering",FALSE
+246,"D",6,"Tiny Problems","Feathering",FALSE
+247,"D",6,"Tiny Problems","Feathering",FALSE
+260,"B",6,"Tiny Problems","Feathering",FALSE
+260,"C",1,"Tiny Problems","Feathering",FALSE
+260,"C",5,"Tiny Problems","Feathering",FALSE
+260,"C",6,"Tiny Problems","Feathering",FALSE
+260,"D",2,"Tiny Problems","Feathering",FALSE
+262,"B",6,"Tiny Problems","Feathering",FALSE
+262,"C",1,"Tiny Problems","Feathering",FALSE
+263,"A",4,"Tiny Problems","Feathering",FALSE
+263,"B",3,"Tiny Problems","Feathering",FALSE
+263,"C",1,"Tiny Problems","Feathering",FALSE
+263,"C",3,"Tiny Problems","Feathering",FALSE
+273,"A",6,"Tiny Problems","Feathering",FALSE
+283,"D",1,"Tiny Problems","Feathering",FALSE
+283,"D",2,"Tiny Problems","Feathering",FALSE
+287,"C",5,"Tiny Problems","Feathering",FALSE
+164,"A",6,"Yikes","Feathering",FALSE
+164,"B",1,"Yikes","Feathering",FALSE
+219,"D",2,"Yikes","Feathering",FALSE
+237,"D",3,"Yikes","Feathering",FALSE
+238,"A",2,"Yikes","Feathering",FALSE
+238,"A",3,"Yikes","Feathering",FALSE
+242,"C",2,"Yikes","Feathering",FALSE
+242,"C",4,"Yikes","Feathering",FALSE
+242,"D",1,"Yikes","Feathering",FALSE
+244,"A",5,"Yikes","Feathering",FALSE
+244,"C",3,"Yikes","Feathering",FALSE
+244,"C",5,"Yikes","Feathering",FALSE
+244,"D",5,"Yikes","Feathering",FALSE
+273,"C",6,"Yikes","Feathering",FALSE
+273,"D",6,"Yikes","Feathering",FALSE
+274,"A",1,"Yikes","Feathering",FALSE
+278,"A",3,"Yikes","Feathering",FALSE
+282,"B",4,"Yikes","Feathering",FALSE
+1,"A",1,"Good","Good",FALSE
+1,"A",2,"Good","Good",FALSE
+1,"A",3,"Good","Good",FALSE
+1,"A",4,"Good","Good",FALSE
+1,"A",5,"Good","Good",FALSE
+1,"A",6,"Good","Good",FALSE
+1,"B",1,"Good","Good",FALSE
+1,"B",2,"Good","Good",FALSE
+1,"B",3,"Good","Good",FALSE
+1,"B",4,"Good","Good",FALSE
+1,"B",5,"Good","Good",FALSE
+1,"B",6,"Good","Good",FALSE
+1,"C",1,"Good","Good",FALSE
+1,"C",2,"Good","Good",FALSE
+1,"C",3,"Good","Good",FALSE
+1,"C",4,"Good","Good",FALSE
+1,"D",1,"Good","Good",FALSE
+1,"D",2,"Good","Good",FALSE
+1,"D",3,"Good","Good",FALSE
+1,"D",4,"Good","Good",FALSE
+1,"D",5,"Good","Good",FALSE
+1,"D",6,"Good","Good",FALSE
+2,"A",1,"Good","Good",FALSE
+2,"A",2,"Good","Good",FALSE
+2,"A",3,"Good","Good",FALSE
+2,"A",5,"Good","Good",FALSE
+2,"A",6,"Good","Good",FALSE
+2,"B",1,"Good","Good",FALSE
+2,"B",2,"Good","Good",FALSE
+2,"B",3,"Good","Good",FALSE
+2,"C",1,"Good","Good",FALSE
+2,"C",2,"Good","Good",FALSE
+2,"C",4,"Good","Good",FALSE
+2,"C",5,"Good","Good",FALSE
+2,"C",6,"Good","Good",FALSE
+2,"D",1,"Good","Good",FALSE
+2,"D",2,"Good","Good",FALSE
+2,"D",4,"Good","Good",FALSE
+2,"D",6,"Good","Good",FALSE
+3,"A",1,"Good","Good",FALSE
+3,"A",2,"Good","Good",FALSE
+3,"A",3,"Good","Good",FALSE
+3,"A",5,"Good","Good",FALSE
+3,"B",2,"Good","Good",FALSE
+3,"B",3,"Good","Good",FALSE
+3,"B",4,"Good","Good",FALSE
+3,"B",5,"Good","Good",FALSE
+3,"B",6,"Good","Good",FALSE
+3,"C",2,"Good","Good",FALSE
+3,"C",3,"Good","Good",FALSE
+3,"C",4,"Good","Good",FALSE
+3,"C",5,"Good","Good",FALSE
+3,"C",6,"Good","Good",FALSE
+3,"D",3,"Good","Good",FALSE
+3,"D",4,"Good","Good",FALSE
+3,"D",5,"Good","Good",FALSE
+4,"A",1,"Good","Good",FALSE
+4,"A",2,"Good","Good",FALSE
+4,"A",4,"Good","Good",FALSE
+4,"A",5,"Good","Good",FALSE
+4,"A",6,"Good","Good",FALSE
+4,"B",2,"Good","Good",FALSE
+4,"B",3,"Good","Good",FALSE
+4,"C",2,"Good","Good",FALSE
+4,"C",5,"Good","Good",FALSE
+4,"D",1,"Good","Good",FALSE
+4,"D",2,"Good","Good",FALSE
+4,"D",3,"Good","Good",FALSE
+4,"D",4,"Good","Good",FALSE
+4,"D",5,"Good","Good",FALSE
+4,"D",6,"Good","Good",FALSE
+5,"A",1,"Good","Good",FALSE
+5,"A",2,"Good","Good",FALSE
+5,"A",3,"Good","Good",FALSE
+5,"A",4,"Good","Good",FALSE
+5,"A",5,"Good","Good",FALSE
+5,"B",1,"Good","Good",FALSE
+5,"B",2,"Good","Good",FALSE
+5,"D",1,"Good","Good",FALSE
+5,"D",2,"Good","Good",FALSE
+5,"D",3,"Good","Good",FALSE
+6,"A",6,"Good","Good",FALSE
+6,"B",2,"Good","Good",FALSE
+6,"B",5,"Good","Good",FALSE
+6,"B",6,"Good","Good",FALSE
+6,"D",1,"Good","Good",FALSE
+6,"D",2,"Good","Good",FALSE
+6,"D",3,"Good","Good",FALSE
+6,"D",4,"Good","Good",FALSE
+6,"D",5,"Good","Good",FALSE
+6,"D",6,"Good","Good",FALSE
+7,"A",1,"Good","Good",FALSE
+7,"A",5,"Good","Good",FALSE
+7,"A",6,"Good","Good",FALSE
+7,"B",4,"Good","Good",FALSE
+7,"B",6,"Good","Good",FALSE
+7,"C",2,"Good","Good",FALSE
+7,"C",3,"Good","Good",FALSE
+7,"C",4,"Good","Good",FALSE
+7,"C",5,"Good","Good",FALSE
+7,"C",6,"Good","Good",FALSE
+7,"D",3,"Good","Good",FALSE
+7,"D",4,"Good","Good",FALSE
+7,"D",5,"Good","Good",FALSE
+7,"D",6,"Good","Good",FALSE
+8,"A",2,"Good","Good",FALSE
+8,"A",6,"Good","Good",FALSE
+8,"B",1,"Good","Good",FALSE
+8,"B",5,"Good","Good",FALSE
+8,"B",6,"Good","Good",FALSE
+8,"C",4,"Good","Good",FALSE
+8,"D",1,"Good","Good",FALSE
+8,"D",2,"Good","Good",FALSE
+8,"D",3,"Good","Good",FALSE
+8,"D",4,"Good","Good",FALSE
+8,"D",5,"Good","Good",FALSE
+8,"D",6,"Good","Good",FALSE
+9,"B",2,"Good","Good",FALSE
+9,"C",1,"Good","Good",FALSE
+9,"C",5,"Good","Good",FALSE
+9,"D",4,"Good","Good",FALSE
+10,"A",2,"Good","Good",FALSE
+10,"C",3,"Good","Good",FALSE
+10,"D",5,"Good","Good",FALSE
+10,"D",6,"Good","Good",FALSE
+11,"A",1,"Good","Good",FALSE
+11,"A",4,"Good","Good",FALSE
+11,"C",1,"Good","Good",FALSE
+11,"C",2,"Good","Good",FALSE
+11,"C",3,"Good","Good",FALSE
+11,"C",4,"Good","Good",FALSE
+11,"C",5,"Good","Good",FALSE
+11,"C",6,"Good","Good",FALSE
+11,"D",5,"Good","Good",FALSE
+12,"A",3,"Good","Good",FALSE
+12,"A",4,"Good","Good",FALSE
+12,"C",5,"Good","Good",FALSE
+12,"C",6,"Good","Good",FALSE
+12,"D",5,"Good","Good",FALSE
+13,"B",2,"Good","Good",FALSE
+13,"D",6,"Good","Good",FALSE
+14,"A",1,"Good","Good",FALSE
+14,"A",2,"Good","Good",FALSE
+14,"A",3,"Good","Good",FALSE
+14,"A",5,"Good","Good",FALSE
+14,"A",6,"Good","Good",FALSE
+14,"B",2,"Good","Good",FALSE
+14,"B",4,"Good","Good",FALSE
+14,"B",6,"Good","Good",FALSE
+14,"C",1,"Good","Good",FALSE
+14,"C",2,"Good","Good",FALSE
+15,"A",5,"Good","Good",FALSE
+16,"A",1,"Good","Good",FALSE
+16,"A",5,"Good","Good",FALSE
+16,"B",1,"Good","Good",FALSE
+16,"B",2,"Good","Good",FALSE
+16,"B",3,"Good","Good",FALSE
+16,"B",6,"Good","Good",FALSE
+16,"C",2,"Good","Good",FALSE
+16,"C",5,"Good","Good",FALSE
+16,"C",6,"Good","Good",FALSE
+16,"D",1,"Good","Good",FALSE
+16,"D",2,"Good","Good",FALSE
+16,"D",3,"Good","Good",FALSE
+16,"D",4,"Good","Good",FALSE
+17,"A",4,"Good","Good",FALSE
+17,"B",1,"Good","Good",FALSE
+17,"D",3,"Good","Good",FALSE
+17,"D",4,"Good","Good",FALSE
+17,"D",5,"Good","Good",FALSE
+18,"A",1,"Good","Good",FALSE
+18,"A",2,"Good","Good",FALSE
+18,"A",3,"Good","Good",FALSE
+18,"A",4,"Good","Good",FALSE
+18,"A",5,"Good","Good",FALSE
+18,"A",6,"Good","Good",FALSE
+18,"B",1,"Good","Good",FALSE
+18,"B",2,"Good","Good",FALSE
+18,"B",3,"Good","Good",FALSE
+18,"B",4,"Good","Good",FALSE
+18,"B",5,"Good","Good",FALSE
+18,"B",6,"Good","Good",FALSE
+18,"C",1,"Good","Good",FALSE
+18,"C",2,"Good","Good",FALSE
+18,"C",3,"Good","Good",FALSE
+18,"C",4,"Good","Good",FALSE
+18,"C",5,"Good","Good",FALSE
+18,"C",6,"Good","Good",FALSE
+18,"D",1,"Good","Good",FALSE
+18,"D",2,"Good","Good",FALSE
+18,"D",3,"Good","Good",FALSE
+18,"D",4,"Good","Good",FALSE
+18,"D",5,"Good","Good",FALSE
+20,"A",2,"Good","Good",FALSE
+20,"B",3,"Good","Good",FALSE
+23,"C",2,"Good","Good",FALSE
+23,"C",3,"Good","Good",FALSE
+24,"B",6,"Good","Good",FALSE
+24,"C",3,"Good","Good",FALSE
+25,"A",3,"Good","Good",FALSE
+25,"A",5,"Good","Good",FALSE
+25,"B",4,"Good","Good",FALSE
+25,"D",4,"Good","Good",FALSE
+30,"A",2,"Good","Good",FALSE
+30,"B",2,"Good","Good",FALSE
+30,"C",6,"Good","Good",FALSE
+33,"D",5,"Good","Good",FALSE
+36,"B",2,"Good","Good",FALSE
+36,"B",5,"Good","Good",FALSE
+36,"C",1,"Good","Good",FALSE
+38,"B",3,"Good","Good",FALSE
+38,"B",6,"Good","Good",FALSE
+41,"B",2,"Good","Good",FALSE
+41,"C",2,"Good","Good",FALSE
+41,"D",2,"Good","Good",FALSE
+41,"D",5,"Good","Good",FALSE
+42,"A",3,"Good","Good",FALSE
+42,"B",3,"Good","Good",FALSE
+48,"A",6,"Good","Good",FALSE
+53,"D",6,"Good","Good",FALSE
+54,"A",6,"Good","Good",FALSE
+54,"B",1,"Good","Good",FALSE
+54,"B",3,"Good","Good",FALSE
+54,"B",5,"Good","Good",FALSE
+55,"D",6,"Good","Good",FALSE
+56,"A",3,"Good","Good",FALSE
+56,"A",5,"Good","Good",FALSE
+56,"A",6,"Good","Good",FALSE
+56,"D",3,"Good","Good",FALSE
+57,"B",2,"Good","Good",FALSE
+57,"B",6,"Good","Good",FALSE
+57,"D",4,"Good","Good",FALSE
+61,"A",3,"Good","Good",FALSE
+61,"C",6,"Good","Good",FALSE
+67,"B",3,"Good","Good",FALSE
+80,"C",1,"Good","Good",FALSE
+103,"A",5,"Good","Good",FALSE
+118,"D",4,"Good","Good",FALSE
+122,"B",5,"Good","Good",FALSE
+124,"B",6,"Good","Good",FALSE
+133,"C",3,"Good","Good",FALSE
+134,"A",5,"Good","Good",FALSE
+134,"C",1,"Good","Good",FALSE
+136,"A",2,"Good","Good",FALSE
+136,"A",4,"Good","Good",FALSE
+184,"B",2,"Good","Good",FALSE
+200,"D",3,"Good","Good",FALSE
+207,"A",6,"Good","Good",FALSE
+218,"B",6,"Good","Good",FALSE
+257,"C",2,"Good","Good",FALSE
+259,"A",1,"Good","Good",FALSE
+284,"B",2,"Good","Good",FALSE
+300,"D",1,"Good","Good",FALSE
+6,"B",4,"Problematic","Holes",FALSE
+12,"B",3,"Problematic","Holes",FALSE
+12,"B",4,"Problematic","Holes",FALSE
+12,"C",1,"Problematic","Holes",FALSE
+15,"C",4,"Problematic","Holes",FALSE
+241,"D",4,"Problematic","Holes",FALSE
+274,"C",1,"Problematic","Holes",FALSE
+285,"A",3,"Problematic","Holes",FALSE
+297,"A",5,"Problematic","Holes",FALSE
+297,"D",3,"Problematic","Holes",FALSE
+1,"C",5,"Tiny Problems","Holes",FALSE
+1,"C",6,"Tiny Problems","Holes",FALSE
+2,"B",4,"Tiny Problems","Holes",FALSE
+4,"A",3,"Tiny Problems","Holes",FALSE
+4,"C",4,"Tiny Problems","Holes",FALSE
+5,"B",3,"Tiny Problems","Holes",FALSE
+5,"B",4,"Tiny Problems","Holes",FALSE
+5,"C",1,"Tiny Problems","Holes",FALSE
+5,"C",2,"Tiny Problems","Holes",FALSE
+5,"C",6,"Tiny Problems","Holes",FALSE
+5,"D",4,"Tiny Problems","Holes",FALSE
+6,"A",1,"Tiny Problems","Holes",FALSE
+6,"A",2,"Tiny Problems","Holes",FALSE
+6,"A",3,"Tiny Problems","Holes",FALSE
+6,"A",5,"Tiny Problems","Holes",FALSE
+6,"B",3,"Tiny Problems","Holes",FALSE
+6,"C",1,"Tiny Problems","Holes",FALSE
+6,"C",2,"Tiny Problems","Holes",FALSE
+6,"C",3,"Tiny Problems","Holes",FALSE
+6,"C",4,"Tiny Problems","Holes",FALSE
+6,"C",5,"Tiny Problems","Holes",FALSE
+6,"C",6,"Tiny Problems","Holes",FALSE
+7,"A",2,"Tiny Problems","Holes",FALSE
+7,"A",3,"Tiny Problems","Holes",FALSE
+7,"B",2,"Tiny Problems","Holes",FALSE
+8,"A",1,"Tiny Problems","Holes",FALSE
+8,"A",5,"Tiny Problems","Holes",FALSE
+8,"B",3,"Tiny Problems","Holes",FALSE
+8,"B",4,"Tiny Problems","Holes",FALSE
+8,"C",2,"Tiny Problems","Holes",FALSE
+8,"C",3,"Tiny Problems","Holes",FALSE
+8,"C",6,"Tiny Problems","Holes",FALSE
+9,"A",6,"Tiny Problems","Holes",FALSE
+9,"B",3,"Tiny Problems","Holes",FALSE
+9,"C",4,"Tiny Problems","Holes",FALSE
+10,"A",3,"Tiny Problems","Holes",FALSE
+10,"A",4,"Tiny Problems","Holes",FALSE
+10,"A",6,"Tiny Problems","Holes",FALSE
+10,"B",1,"Tiny Problems","Holes",FALSE
+10,"B",2,"Tiny Problems","Holes",FALSE
+10,"B",3,"Tiny Problems","Holes",FALSE
+10,"B",6,"Tiny Problems","Holes",FALSE
+10,"C",1,"Tiny Problems","Holes",FALSE
+10,"C",2,"Tiny Problems","Holes",FALSE
+10,"C",4,"Tiny Problems","Holes",FALSE
+10,"C",5,"Tiny Problems","Holes",FALSE
+10,"C",6,"Tiny Problems","Holes",FALSE
+10,"D",4,"Tiny Problems","Holes",FALSE
+11,"A",2,"Tiny Problems","Holes",FALSE
+11,"A",3,"Tiny Problems","Holes",FALSE
+11,"A",5,"Tiny Problems","Holes",FALSE
+11,"A",6,"Tiny Problems","Holes",FALSE
+11,"B",1,"Tiny Problems","Holes",FALSE
+11,"B",2,"Tiny Problems","Holes",FALSE
+11,"B",3,"Tiny Problems","Holes",FALSE
+11,"B",5,"Tiny Problems","Holes",FALSE
+11,"B",6,"Tiny Problems","Holes",FALSE
+11,"D",1,"Tiny Problems","Holes",FALSE
+11,"D",2,"Tiny Problems","Holes",FALSE
+11,"D",3,"Tiny Problems","Holes",FALSE
+11,"D",6,"Tiny Problems","Holes",FALSE
+12,"A",2,"Tiny Problems","Holes",FALSE
+12,"B",1,"Tiny Problems","Holes",FALSE
+12,"B",2,"Tiny Problems","Holes",FALSE
+12,"B",5,"Tiny Problems","Holes",FALSE
+12,"B",6,"Tiny Problems","Holes",FALSE
+12,"C",2,"Tiny Problems","Holes",FALSE
+12,"C",3,"Tiny Problems","Holes",FALSE
+12,"C",4,"Tiny Problems","Holes",FALSE
+12,"D",1,"Tiny Problems","Holes",FALSE
+12,"D",2,"Tiny Problems","Holes",FALSE
+12,"D",4,"Tiny Problems","Holes",FALSE
+12,"D",6,"Tiny Problems","Holes",FALSE
+13,"A",1,"Tiny Problems","Holes",FALSE
+13,"A",4,"Tiny Problems","Holes",FALSE
+13,"A",5,"Tiny Problems","Holes",FALSE
+13,"A",6,"Tiny Problems","Holes",FALSE
+13,"B",1,"Tiny Problems","Holes",FALSE
+13,"B",3,"Tiny Problems","Holes",FALSE
+13,"B",4,"Tiny Problems","Holes",FALSE
+13,"B",5,"Tiny Problems","Holes",FALSE
+13,"C",1,"Tiny Problems","Holes",FALSE
+13,"C",4,"Tiny Problems","Holes",FALSE
+13,"C",5,"Tiny Problems","Holes",FALSE
+13,"C",6,"Tiny Problems","Holes",FALSE
+13,"D",1,"Tiny Problems","Holes",FALSE
+13,"D",2,"Tiny Problems","Holes",FALSE
+13,"D",3,"Tiny Problems","Holes",FALSE
+13,"D",4,"Tiny Problems","Holes",FALSE
+13,"D",5,"Tiny Problems","Holes",FALSE
+14,"A",4,"Tiny Problems","Holes",FALSE
+14,"B",1,"Tiny Problems","Holes",FALSE
+14,"B",3,"Tiny Problems","Holes",FALSE
+14,"B",5,"Tiny Problems","Holes",FALSE
+14,"D",2,"Tiny Problems","Holes",FALSE
+14,"D",3,"Tiny Problems","Holes",FALSE
+14,"D",6,"Tiny Problems","Holes",FALSE
+15,"A",3,"Tiny Problems","Holes",FALSE
+15,"B",1,"Tiny Problems","Holes",FALSE
+15,"B",2,"Tiny Problems","Holes",FALSE
+15,"B",3,"Tiny Problems","Holes",FALSE
+15,"B",4,"Tiny Problems","Holes",FALSE
+15,"B",5,"Tiny Problems","Holes",FALSE
+15,"B",6,"Tiny Problems","Holes",FALSE
+15,"C",3,"Tiny Problems","Holes",FALSE
+15,"D",6,"Tiny Problems","Holes",FALSE
+16,"A",4,"Tiny Problems","Holes",FALSE
+16,"A",6,"Tiny Problems","Holes",FALSE
+16,"B",4,"Tiny Problems","Holes",FALSE
+16,"C",4,"Tiny Problems","Holes",FALSE
+16,"D",5,"Tiny Problems","Holes",FALSE
+16,"D",6,"Tiny Problems","Holes",FALSE
+17,"A",2,"Tiny Problems","Holes",FALSE
+17,"A",3,"Tiny Problems","Holes",FALSE
+17,"B",5,"Tiny Problems","Holes",FALSE
+17,"B",6,"Tiny Problems","Holes",FALSE
+17,"C",2,"Tiny Problems","Holes",FALSE
+17,"C",3,"Tiny Problems","Holes",FALSE
+17,"C",4,"Tiny Problems","Holes",FALSE
+17,"C",5,"Tiny Problems","Holes",FALSE
+17,"D",1,"Tiny Problems","Holes",FALSE
+17,"D",2,"Tiny Problems","Holes",FALSE
+19,"A",4,"Tiny Problems","Holes",FALSE
+20,"C",3,"Tiny Problems","Holes",FALSE
+21,"A",2,"Tiny Problems","Holes",FALSE
+21,"A",4,"Tiny Problems","Holes",FALSE
+21,"C",5,"Tiny Problems","Holes",FALSE
+21,"D",2,"Tiny Problems","Holes",FALSE
+22,"C",3,"Tiny Problems","Holes",FALSE
+22,"C",4,"Tiny Problems","Holes",FALSE
+22,"D",1,"Tiny Problems","Holes",FALSE
+22,"D",2,"Tiny Problems","Holes",FALSE
+22,"D",5,"Tiny Problems","Holes",FALSE
+22,"D",6,"Tiny Problems","Holes",FALSE
+23,"A",5,"Tiny Problems","Holes",FALSE
+23,"B",2,"Tiny Problems","Holes",FALSE
+23,"B",4,"Tiny Problems","Holes",FALSE
+24,"D",1,"Tiny Problems","Holes",FALSE
+26,"D",1,"Tiny Problems","Holes",FALSE
+26,"D",2,"Tiny Problems","Holes",FALSE
+26,"D",3,"Tiny Problems","Holes",FALSE
+27,"A",6,"Tiny Problems","Holes",FALSE
+27,"B",3,"Tiny Problems","Holes",FALSE
+27,"D",3,"Tiny Problems","Holes",FALSE
+28,"D",1,"Tiny Problems","Holes",FALSE
+28,"D",4,"Tiny Problems","Holes",FALSE
+29,"B",5,"Tiny Problems","Holes",FALSE
+29,"D",1,"Tiny Problems","Holes",FALSE
+29,"D",3,"Tiny Problems","Holes",FALSE
+30,"D",5,"Tiny Problems","Holes",FALSE
+32,"A",4,"Tiny Problems","Holes",FALSE
+32,"B",3,"Tiny Problems","Holes",FALSE
+32,"B",6,"Tiny Problems","Holes",FALSE
+32,"C",2,"Tiny Problems","Holes",FALSE
+33,"A",3,"Tiny Problems","Holes",FALSE
+33,"B",2,"Tiny Problems","Holes",FALSE
+34,"B",5,"Tiny Problems","Holes",FALSE
+35,"B",2,"Tiny Problems","Holes",FALSE
+35,"B",4,"Tiny Problems","Holes",FALSE
+35,"C",4,"Tiny Problems","Holes",FALSE
+37,"B",6,"Tiny Problems","Holes",FALSE
+37,"D",3,"Tiny Problems","Holes",FALSE
+39,"D",5,"Tiny Problems","Holes",FALSE
+40,"A",4,"Tiny Problems","Holes",FALSE
+40,"A",6,"Tiny Problems","Holes",FALSE
+40,"B",1,"Tiny Problems","Holes",FALSE
+40,"B",6,"Tiny Problems","Holes",FALSE
+41,"C",4,"Tiny Problems","Holes",FALSE
+42,"A",4,"Tiny Problems","Holes",FALSE
+43,"B",4,"Tiny Problems","Holes",FALSE
+43,"C",2,"Tiny Problems","Holes",FALSE
+45,"C",1,"Tiny Problems","Holes",FALSE
+45,"C",2,"Tiny Problems","Holes",FALSE
+45,"C",3,"Tiny Problems","Holes",FALSE
+45,"C",6,"Tiny Problems","Holes",FALSE
+45,"D",2,"Tiny Problems","Holes",FALSE
+45,"D",6,"Tiny Problems","Holes",FALSE
+46,"D",6,"Tiny Problems","Holes",FALSE
+47,"C",4,"Tiny Problems","Holes",FALSE
+47,"C",6,"Tiny Problems","Holes",FALSE
+50,"C",2,"Tiny Problems","Holes",FALSE
+51,"C",6,"Tiny Problems","Holes",FALSE
+51,"D",3,"Tiny Problems","Holes",FALSE
+51,"D",5,"Tiny Problems","Holes",FALSE
+54,"A",3,"Tiny Problems","Holes",FALSE
+55,"C",5,"Tiny Problems","Holes",FALSE
+56,"B",2,"Tiny Problems","Holes",FALSE
+56,"C",5,"Tiny Problems","Holes",FALSE
+58,"B",6,"Tiny Problems","Holes",FALSE
+58,"C",3,"Tiny Problems","Holes",FALSE
+58,"C",6,"Tiny Problems","Holes",FALSE
+58,"D",5,"Tiny Problems","Holes",FALSE
+59,"A",6,"Tiny Problems","Holes",FALSE
+59,"D",3,"Tiny Problems","Holes",FALSE
+59,"D",4,"Tiny Problems","Holes",FALSE
+60,"A",1,"Tiny Problems","Holes",FALSE
+60,"A",2,"Tiny Problems","Holes",FALSE
+60,"B",6,"Tiny Problems","Holes",FALSE
+61,"B",4,"Tiny Problems","Holes",FALSE
+62,"A",4,"Tiny Problems","Holes",FALSE
+63,"C",3,"Tiny Problems","Holes",FALSE
+63,"D",4,"Tiny Problems","Holes",FALSE
+64,"A",6,"Tiny Problems","Holes",FALSE
+67,"A",2,"Tiny Problems","Holes",FALSE
+67,"B",6,"Tiny Problems","Holes",FALSE
+71,"A",4,"Tiny Problems","Holes",FALSE
+71,"D",5,"Tiny Problems","Holes",FALSE
+73,"A",3,"Tiny Problems","Holes",FALSE
+73,"B",3,"Tiny Problems","Holes",FALSE
+73,"D",3,"Tiny Problems","Holes",FALSE
+74,"A",6,"Tiny Problems","Holes",FALSE
+74,"B",1,"Tiny Problems","Holes",FALSE
+74,"B",3,"Tiny Problems","Holes",FALSE
+74,"D",3,"Tiny Problems","Holes",FALSE
+75,"B",6,"Tiny Problems","Holes",FALSE
+75,"C",1,"Tiny Problems","Holes",FALSE
+75,"C",2,"Tiny Problems","Holes",FALSE
+75,"C",6,"Tiny Problems","Holes",FALSE
+75,"D",4,"Tiny Problems","Holes",FALSE
+75,"D",6,"Tiny Problems","Holes",FALSE
+76,"A",6,"Tiny Problems","Holes",FALSE
+76,"B",1,"Tiny Problems","Holes",FALSE
+76,"C",4,"Tiny Problems","Holes",FALSE
+76,"C",6,"Tiny Problems","Holes",FALSE
+76,"D",1,"Tiny Problems","Holes",FALSE
+77,"B",2,"Tiny Problems","Holes",FALSE
+78,"A",1,"Tiny Problems","Holes",FALSE
+78,"A",4,"Tiny Problems","Holes",FALSE
+78,"B",1,"Tiny Problems","Holes",FALSE
+78,"B",2,"Tiny Problems","Holes",FALSE
+78,"B",3,"Tiny Problems","Holes",FALSE
+78,"B",4,"Tiny Problems","Holes",FALSE
+78,"B",5,"Tiny Problems","Holes",FALSE
+78,"C",1,"Tiny Problems","Holes",FALSE
+78,"C",3,"Tiny Problems","Holes",FALSE
+78,"D",3,"Tiny Problems","Holes",FALSE
+78,"D",4,"Tiny Problems","Holes",FALSE
+80,"A",3,"Tiny Problems","Holes",FALSE
+80,"A",4,"Tiny Problems","Holes",FALSE
+80,"A",6,"Tiny Problems","Holes",FALSE
+80,"B",6,"Tiny Problems","Holes",FALSE
+80,"C",6,"Tiny Problems","Holes",FALSE
+81,"C",5,"Tiny Problems","Holes",FALSE
+81,"C",6,"Tiny Problems","Holes",FALSE
+82,"B",3,"Tiny Problems","Holes",FALSE
+83,"A",6,"Tiny Problems","Holes",FALSE
+83,"B",1,"Tiny Problems","Holes",FALSE
+83,"B",2,"Tiny Problems","Holes",FALSE
+83,"B",3,"Tiny Problems","Holes",FALSE
+83,"B",5,"Tiny Problems","Holes",FALSE
+83,"D",2,"Tiny Problems","Holes",FALSE
+83,"D",6,"Tiny Problems","Holes",FALSE
+84,"A",5,"Tiny Problems","Holes",FALSE
+84,"A",6,"Tiny Problems","Holes",FALSE
+84,"B",1,"Tiny Problems","Holes",FALSE
+84,"C",4,"Tiny Problems","Holes",FALSE
+84,"D",4,"Tiny Problems","Holes",FALSE
+84,"D",6,"Tiny Problems","Holes",FALSE
+85,"A",1,"Tiny Problems","Holes",FALSE
+85,"A",5,"Tiny Problems","Holes",FALSE
+85,"A",6,"Tiny Problems","Holes",FALSE
+87,"B",5,"Tiny Problems","Holes",FALSE
+87,"C",3,"Tiny Problems","Holes",FALSE
+88,"B",6,"Tiny Problems","Holes",FALSE
+88,"C",3,"Tiny Problems","Holes",FALSE
+88,"D",5,"Tiny Problems","Holes",FALSE
+88,"D",6,"Tiny Problems","Holes",FALSE
+90,"B",4,"Tiny Problems","Holes",FALSE
+91,"C",1,"Tiny Problems","Holes",FALSE
+91,"C",6,"Tiny Problems","Holes",FALSE
+91,"D",3,"Tiny Problems","Holes",FALSE
+92,"A",5,"Tiny Problems","Holes",FALSE
+92,"B",5,"Tiny Problems","Holes",FALSE
+92,"C",1,"Tiny Problems","Holes",FALSE
+92,"C",6,"Tiny Problems","Holes",FALSE
+93,"B",5,"Tiny Problems","Holes",FALSE
+93,"B",6,"Tiny Problems","Holes",FALSE
+93,"C",5,"Tiny Problems","Holes",FALSE
+93,"D",2,"Tiny Problems","Holes",FALSE
+93,"D",3,"Tiny Problems","Holes",FALSE
+94,"A",6,"Tiny Problems","Holes",FALSE
+94,"B",4,"Tiny Problems","Holes",FALSE
+94,"C",1,"Tiny Problems","Holes",FALSE
+94,"C",3,"Tiny Problems","Holes",FALSE
+94,"D",2,"Tiny Problems","Holes",FALSE
+95,"D",3,"Tiny Problems","Holes",FALSE
+95,"D",6,"Tiny Problems","Holes",FALSE
+96,"C",1,"Tiny Problems","Holes",FALSE
+96,"C",6,"Tiny Problems","Holes",FALSE
+96,"D",1,"Tiny Problems","Holes",FALSE
+96,"D",5,"Tiny Problems","Holes",FALSE
+96,"D",6,"Tiny Problems","Holes",FALSE
+98,"B",5,"Tiny Problems","Holes",FALSE
+99,"A",3,"Tiny Problems","Holes",FALSE
+99,"A",5,"Tiny Problems","Holes",FALSE
+101,"A",1,"Tiny Problems","Holes",FALSE
+101,"C",3,"Tiny Problems","Holes",FALSE
+101,"D",1,"Tiny Problems","Holes",FALSE
+101,"D",6,"Tiny Problems","Holes",FALSE
+102,"A",3,"Tiny Problems","Holes",FALSE
+102,"C",1,"Tiny Problems","Holes",FALSE
+102,"C",2,"Tiny Problems","Holes",FALSE
+102,"C",3,"Tiny Problems","Holes",FALSE
+102,"C",5,"Tiny Problems","Holes",FALSE
+102,"D",5,"Tiny Problems","Holes",FALSE
+103,"C",2,"Tiny Problems","Holes",FALSE
+103,"C",5,"Tiny Problems","Holes",FALSE
+104,"A",5,"Tiny Problems","Holes",FALSE
+104,"B",1,"Tiny Problems","Holes",FALSE
+104,"B",2,"Tiny Problems","Holes",FALSE
+104,"C",3,"Tiny Problems","Holes",FALSE
+104,"C",4,"Tiny Problems","Holes",FALSE
+104,"C",5,"Tiny Problems","Holes",FALSE
+104,"C",6,"Tiny Problems","Holes",FALSE
+104,"D",1,"Tiny Problems","Holes",FALSE
+104,"D",2,"Tiny Problems","Holes",FALSE
+104,"D",3,"Tiny Problems","Holes",FALSE
+104,"D",4,"Tiny Problems","Holes",FALSE
+104,"D",5,"Tiny Problems","Holes",FALSE
+104,"D",6,"Tiny Problems","Holes",FALSE
+106,"D",1,"Tiny Problems","Holes",FALSE
+106,"D",3,"Tiny Problems","Holes",FALSE
+106,"D",5,"Tiny Problems","Holes",FALSE
+107,"B",1,"Tiny Problems","Holes",FALSE
+107,"B",2,"Tiny Problems","Holes",FALSE
+107,"D",5,"Tiny Problems","Holes",FALSE
+108,"B",1,"Tiny Problems","Holes",FALSE
+108,"B",6,"Tiny Problems","Holes",FALSE
+108,"C",2,"Tiny Problems","Holes",FALSE
+109,"A",5,"Tiny Problems","Holes",FALSE
+110,"B",1,"Tiny Problems","Holes",FALSE
+110,"B",3,"Tiny Problems","Holes",FALSE
+110,"B",5,"Tiny Problems","Holes",FALSE
+110,"B",6,"Tiny Problems","Holes",FALSE
+110,"C",2,"Tiny Problems","Holes",FALSE
+110,"C",6,"Tiny Problems","Holes",FALSE
+110,"D",2,"Tiny Problems","Holes",FALSE
+110,"D",3,"Tiny Problems","Holes",FALSE
+110,"D",4,"Tiny Problems","Holes",FALSE
+110,"D",6,"Tiny Problems","Holes",FALSE
+111,"C",6,"Tiny Problems","Holes",FALSE
+111,"D",4,"Tiny Problems","Holes",FALSE
+112,"A",2,"Tiny Problems","Holes",FALSE
+112,"A",5,"Tiny Problems","Holes",FALSE
+112,"A",6,"Tiny Problems","Holes",FALSE
+112,"B",1,"Tiny Problems","Holes",FALSE
+112,"D",1,"Tiny Problems","Holes",FALSE
+113,"A",2,"Tiny Problems","Holes",FALSE
+113,"A",3,"Tiny Problems","Holes",FALSE
+113,"A",4,"Tiny Problems","Holes",FALSE
+113,"B",3,"Tiny Problems","Holes",FALSE
+113,"C",2,"Tiny Problems","Holes",FALSE
+113,"C",4,"Tiny Problems","Holes",FALSE
+113,"C",5,"Tiny Problems","Holes",FALSE
+113,"C",6,"Tiny Problems","Holes",FALSE
+113,"D",1,"Tiny Problems","Holes",FALSE
+113,"D",2,"Tiny Problems","Holes",FALSE
+114,"A",5,"Tiny Problems","Holes",FALSE
+114,"A",6,"Tiny Problems","Holes",FALSE
+114,"B",4,"Tiny Problems","Holes",FALSE
+114,"B",5,"Tiny Problems","Holes",FALSE
+114,"B",6,"Tiny Problems","Holes",FALSE
+115,"D",3,"Tiny Problems","Holes",FALSE
+115,"D",6,"Tiny Problems","Holes",FALSE
+116,"B",4,"Tiny Problems","Holes",FALSE
+117,"A",1,"Tiny Problems","Holes",FALSE
+117,"B",1,"Tiny Problems","Holes",FALSE
+117,"C",1,"Tiny Problems","Holes",FALSE
+117,"D",4,"Tiny Problems","Holes",FALSE
+117,"D",5,"Tiny Problems","Holes",FALSE
+117,"D",6,"Tiny Problems","Holes",FALSE
+118,"B",3,"Tiny Problems","Holes",FALSE
+118,"B",4,"Tiny Problems","Holes",FALSE
+118,"B",5,"Tiny Problems","Holes",FALSE
+119,"A",3,"Tiny Problems","Holes",FALSE
+119,"A",4,"Tiny Problems","Holes",FALSE
+119,"B",1,"Tiny Problems","Holes",FALSE
+119,"B",3,"Tiny Problems","Holes",FALSE
+120,"A",1,"Tiny Problems","Holes",FALSE
+120,"A",5,"Tiny Problems","Holes",FALSE
+120,"B",2,"Tiny Problems","Holes",FALSE
+120,"B",4,"Tiny Problems","Holes",FALSE
+120,"C",5,"Tiny Problems","Holes",FALSE
+120,"D",2,"Tiny Problems","Holes",FALSE
+120,"D",3,"Tiny Problems","Holes",FALSE
+120,"D",6,"Tiny Problems","Holes",FALSE
+121,"C",6,"Tiny Problems","Holes",FALSE
+122,"A",2,"Tiny Problems","Holes",FALSE
+122,"C",4,"Tiny Problems","Holes",FALSE
+123,"B",3,"Tiny Problems","Holes",FALSE
+123,"C",3,"Tiny Problems","Holes",FALSE
+123,"C",5,"Tiny Problems","Holes",FALSE
+123,"D",3,"Tiny Problems","Holes",FALSE
+123,"D",5,"Tiny Problems","Holes",FALSE
+124,"A",4,"Tiny Problems","Holes",FALSE
+124,"B",3,"Tiny Problems","Holes",FALSE
+125,"A",2,"Tiny Problems","Holes",FALSE
+125,"A",3,"Tiny Problems","Holes",FALSE
+126,"A",3,"Tiny Problems","Holes",FALSE
+126,"B",1,"Tiny Problems","Holes",FALSE
+127,"A",4,"Tiny Problems","Holes",FALSE
+127,"B",4,"Tiny Problems","Holes",FALSE
+127,"B",6,"Tiny Problems","Holes",FALSE
+127,"C",1,"Tiny Problems","Holes",FALSE
+127,"C",4,"Tiny Problems","Holes",FALSE
+127,"C",6,"Tiny Problems","Holes",FALSE
+128,"A",4,"Tiny Problems","Holes",FALSE
+128,"A",6,"Tiny Problems","Holes",FALSE
+128,"B",1,"Tiny Problems","Holes",FALSE
+128,"B",2,"Tiny Problems","Holes",FALSE
+128,"C",2,"Tiny Problems","Holes",FALSE
+128,"C",3,"Tiny Problems","Holes",FALSE
+128,"D",1,"Tiny Problems","Holes",FALSE
+128,"D",3,"Tiny Problems","Holes",FALSE
+129,"B",4,"Tiny Problems","Holes",FALSE
+130,"A",2,"Tiny Problems","Holes",FALSE
+130,"A",3,"Tiny Problems","Holes",FALSE
+130,"A",4,"Tiny Problems","Holes",FALSE
+130,"A",5,"Tiny Problems","Holes",FALSE
+130,"B",1,"Tiny Problems","Holes",FALSE
+130,"C",2,"Tiny Problems","Holes",FALSE
+131,"A",1,"Tiny Problems","Holes",FALSE
+131,"A",2,"Tiny Problems","Holes",FALSE
+131,"A",3,"Tiny Problems","Holes",FALSE
+131,"C",2,"Tiny Problems","Holes",FALSE
+131,"C",3,"Tiny Problems","Holes",FALSE
+131,"D",5,"Tiny Problems","Holes",FALSE
+131,"D",6,"Tiny Problems","Holes",FALSE
+132,"A",2,"Tiny Problems","Holes",FALSE
+132,"B",6,"Tiny Problems","Holes",FALSE
+132,"C",2,"Tiny Problems","Holes",FALSE
+132,"C",5,"Tiny Problems","Holes",FALSE
+132,"D",2,"Tiny Problems","Holes",FALSE
+132,"D",3,"Tiny Problems","Holes",FALSE
+133,"A",3,"Tiny Problems","Holes",FALSE
+133,"A",4,"Tiny Problems","Holes",FALSE
+133,"B",1,"Tiny Problems","Holes",FALSE
+133,"B",4,"Tiny Problems","Holes",FALSE
+134,"A",6,"Tiny Problems","Holes",FALSE
+134,"B",6,"Tiny Problems","Holes",FALSE
+134,"C",2,"Tiny Problems","Holes",FALSE
+134,"C",3,"Tiny Problems","Holes",FALSE
+135,"A",1,"Tiny Problems","Holes",FALSE
+135,"A",2,"Tiny Problems","Holes",FALSE
+135,"B",2,"Tiny Problems","Holes",FALSE
+135,"C",6,"Tiny Problems","Holes",FALSE
+135,"D",2,"Tiny Problems","Holes",FALSE
+135,"D",6,"Tiny Problems","Holes",FALSE
+136,"C",5,"Tiny Problems","Holes",FALSE
+137,"A",2,"Tiny Problems","Holes",FALSE
+137,"A",3,"Tiny Problems","Holes",FALSE
+137,"A",4,"Tiny Problems","Holes",FALSE
+137,"A",5,"Tiny Problems","Holes",FALSE
+137,"B",2,"Tiny Problems","Holes",FALSE
+137,"C",6,"Tiny Problems","Holes",FALSE
+137,"D",1,"Tiny Problems","Holes",FALSE
+137,"D",5,"Tiny Problems","Holes",FALSE
+138,"B",1,"Tiny Problems","Holes",FALSE
+139,"D",4,"Tiny Problems","Holes",FALSE
+139,"D",5,"Tiny Problems","Holes",FALSE
+140,"A",2,"Tiny Problems","Holes",FALSE
+140,"A",4,"Tiny Problems","Holes",FALSE
+140,"A",5,"Tiny Problems","Holes",FALSE
+140,"B",2,"Tiny Problems","Holes",FALSE
+140,"B",4,"Tiny Problems","Holes",FALSE
+140,"C",1,"Tiny Problems","Holes",FALSE
+140,"C",2,"Tiny Problems","Holes",FALSE
+140,"C",4,"Tiny Problems","Holes",FALSE
+141,"A",1,"Tiny Problems","Holes",FALSE
+141,"A",2,"Tiny Problems","Holes",FALSE
+141,"A",4,"Tiny Problems","Holes",FALSE
+141,"A",5,"Tiny Problems","Holes",FALSE
+141,"A",6,"Tiny Problems","Holes",FALSE
+141,"B",2,"Tiny Problems","Holes",FALSE
+141,"C",2,"Tiny Problems","Holes",FALSE
+141,"C",5,"Tiny Problems","Holes",FALSE
+141,"C",6,"Tiny Problems","Holes",FALSE
+142,"B",1,"Tiny Problems","Holes",FALSE
+142,"B",4,"Tiny Problems","Holes",FALSE
+142,"C",5,"Tiny Problems","Holes",FALSE
+142,"D",1,"Tiny Problems","Holes",FALSE
+143,"B",2,"Tiny Problems","Holes",FALSE
+143,"C",5,"Tiny Problems","Holes",FALSE
+143,"C",6,"Tiny Problems","Holes",FALSE
+143,"D",1,"Tiny Problems","Holes",FALSE
+143,"D",2,"Tiny Problems","Holes",FALSE
+143,"D",6,"Tiny Problems","Holes",FALSE
+144,"A",1,"Tiny Problems","Holes",FALSE
+144,"A",2,"Tiny Problems","Holes",FALSE
+144,"A",3,"Tiny Problems","Holes",FALSE
+144,"A",4,"Tiny Problems","Holes",FALSE
+144,"A",6,"Tiny Problems","Holes",FALSE
+144,"B",3,"Tiny Problems","Holes",FALSE
+144,"B",4,"Tiny Problems","Holes",FALSE
+144,"B",5,"Tiny Problems","Holes",FALSE
+144,"B",6,"Tiny Problems","Holes",FALSE
+144,"C",1,"Tiny Problems","Holes",FALSE
+144,"C",2,"Tiny Problems","Holes",FALSE
+144,"C",5,"Tiny Problems","Holes",FALSE
+144,"D",2,"Tiny Problems","Holes",FALSE
+145,"B",3,"Tiny Problems","Holes",FALSE
+145,"B",4,"Tiny Problems","Holes",FALSE
+145,"C",2,"Tiny Problems","Holes",FALSE
+145,"C",3,"Tiny Problems","Holes",FALSE
+147,"B",6,"Tiny Problems","Holes",FALSE
+147,"D",4,"Tiny Problems","Holes",FALSE
+147,"D",5,"Tiny Problems","Holes",FALSE
+148,"A",2,"Tiny Problems","Holes",FALSE
+148,"C",1,"Tiny Problems","Holes",FALSE
+149,"A",2,"Tiny Problems","Holes",FALSE
+149,"A",5,"Tiny Problems","Holes",FALSE
+149,"B",1,"Tiny Problems","Holes",FALSE
+149,"B",2,"Tiny Problems","Holes",FALSE
+149,"B",3,"Tiny Problems","Holes",FALSE
+149,"B",4,"Tiny Problems","Holes",FALSE
+149,"B",5,"Tiny Problems","Holes",FALSE
+149,"D",1,"Tiny Problems","Holes",FALSE
+149,"D",2,"Tiny Problems","Holes",FALSE
+149,"D",3,"Tiny Problems","Holes",FALSE
+149,"D",6,"Tiny Problems","Holes",FALSE
+150,"A",1,"Tiny Problems","Holes",FALSE
+151,"A",4,"Tiny Problems","Holes",FALSE
+151,"B",1,"Tiny Problems","Holes",FALSE
+151,"B",3,"Tiny Problems","Holes",FALSE
+151,"D",3,"Tiny Problems","Holes",FALSE
+151,"D",5,"Tiny Problems","Holes",FALSE
+152,"A",1,"Tiny Problems","Holes",FALSE
+152,"A",4,"Tiny Problems","Holes",FALSE
+152,"B",2,"Tiny Problems","Holes",FALSE
+152,"D",6,"Tiny Problems","Holes",FALSE
+153,"A",2,"Tiny Problems","Holes",FALSE
+153,"A",3,"Tiny Problems","Holes",FALSE
+153,"B",1,"Tiny Problems","Holes",FALSE
+153,"B",2,"Tiny Problems","Holes",FALSE
+153,"B",4,"Tiny Problems","Holes",FALSE
+154,"C",4,"Tiny Problems","Holes",FALSE
+154,"C",6,"Tiny Problems","Holes",FALSE
+154,"D",2,"Tiny Problems","Holes",FALSE
+154,"D",5,"Tiny Problems","Holes",FALSE
+155,"A",1,"Tiny Problems","Holes",FALSE
+156,"A",4,"Tiny Problems","Holes",FALSE
+157,"B",6,"Tiny Problems","Holes",FALSE
+157,"D",3,"Tiny Problems","Holes",FALSE
+158,"A",2,"Tiny Problems","Holes",FALSE
+158,"A",4,"Tiny Problems","Holes",FALSE
+158,"C",1,"Tiny Problems","Holes",FALSE
+158,"C",4,"Tiny Problems","Holes",FALSE
+158,"D",1,"Tiny Problems","Holes",FALSE
+158,"D",4,"Tiny Problems","Holes",FALSE
+159,"B",5,"Tiny Problems","Holes",FALSE
+159,"B",6,"Tiny Problems","Holes",FALSE
+159,"C",1,"Tiny Problems","Holes",FALSE
+159,"C",6,"Tiny Problems","Holes",FALSE
+160,"B",6,"Tiny Problems","Holes",FALSE
+160,"C",1,"Tiny Problems","Holes",FALSE
+160,"C",6,"Tiny Problems","Holes",FALSE
+160,"D",1,"Tiny Problems","Holes",FALSE
+160,"D",2,"Tiny Problems","Holes",FALSE
+160,"D",3,"Tiny Problems","Holes",FALSE
+160,"D",4,"Tiny Problems","Holes",FALSE
+160,"D",5,"Tiny Problems","Holes",FALSE
+161,"D",2,"Tiny Problems","Holes",FALSE
+161,"D",6,"Tiny Problems","Holes",FALSE
+162,"A",3,"Tiny Problems","Holes",FALSE
+162,"B",4,"Tiny Problems","Holes",FALSE
+162,"C",6,"Tiny Problems","Holes",FALSE
+163,"B",3,"Tiny Problems","Holes",FALSE
+163,"D",1,"Tiny Problems","Holes",FALSE
+164,"D",4,"Tiny Problems","Holes",FALSE
+164,"D",5,"Tiny Problems","Holes",FALSE
+165,"A",1,"Tiny Problems","Holes",FALSE
+165,"A",4,"Tiny Problems","Holes",FALSE
+165,"A",5,"Tiny Problems","Holes",FALSE
+165,"A",6,"Tiny Problems","Holes",FALSE
+165,"B",1,"Tiny Problems","Holes",FALSE
+165,"C",1,"Tiny Problems","Holes",FALSE
+165,"C",3,"Tiny Problems","Holes",FALSE
+165,"C",6,"Tiny Problems","Holes",FALSE
+165,"D",3,"Tiny Problems","Holes",FALSE
+165,"D",4,"Tiny Problems","Holes",FALSE
+166,"B",3,"Tiny Problems","Holes",FALSE
+166,"B",6,"Tiny Problems","Holes",FALSE
+166,"C",1,"Tiny Problems","Holes",FALSE
+166,"C",2,"Tiny Problems","Holes",FALSE
+167,"C",5,"Tiny Problems","Holes",FALSE
+167,"C",6,"Tiny Problems","Holes",FALSE
+169,"B",5,"Tiny Problems","Holes",FALSE
+169,"B",6,"Tiny Problems","Holes",FALSE
+169,"D",1,"Tiny Problems","Holes",FALSE
+169,"D",2,"Tiny Problems","Holes",FALSE
+169,"D",5,"Tiny Problems","Holes",FALSE
+170,"B",1,"Tiny Problems","Holes",FALSE
+170,"B",2,"Tiny Problems","Holes",FALSE
+170,"B",6,"Tiny Problems","Holes",FALSE
+170,"D",4,"Tiny Problems","Holes",FALSE
+171,"A",2,"Tiny Problems","Holes",FALSE
+171,"B",1,"Tiny Problems","Holes",FALSE
+171,"C",4,"Tiny Problems","Holes",FALSE
+171,"D",3,"Tiny Problems","Holes",FALSE
+173,"C",2,"Tiny Problems","Holes",FALSE
+173,"C",3,"Tiny Problems","Holes",FALSE
+174,"A",6,"Tiny Problems","Holes",FALSE
+175,"A",5,"Tiny Problems","Holes",FALSE
+175,"B",5,"Tiny Problems","Holes",FALSE
+177,"B",4,"Tiny Problems","Holes",FALSE
+177,"D",6,"Tiny Problems","Holes",FALSE
+178,"A",3,"Tiny Problems","Holes",FALSE
+178,"B",1,"Tiny Problems","Holes",FALSE
+178,"B",4,"Tiny Problems","Holes",FALSE
+179,"B",4,"Tiny Problems","Holes",FALSE
+179,"C",4,"Tiny Problems","Holes",FALSE
+179,"C",6,"Tiny Problems","Holes",FALSE
+179,"D",1,"Tiny Problems","Holes",FALSE
+179,"D",3,"Tiny Problems","Holes",FALSE
+179,"D",5,"Tiny Problems","Holes",FALSE
+180,"A",1,"Tiny Problems","Holes",FALSE
+180,"A",2,"Tiny Problems","Holes",FALSE
+180,"A",6,"Tiny Problems","Holes",FALSE
+181,"A",4,"Tiny Problems","Holes",FALSE
+181,"B",3,"Tiny Problems","Holes",FALSE
+181,"B",4,"Tiny Problems","Holes",FALSE
+181,"B",5,"Tiny Problems","Holes",FALSE
+182,"B",4,"Tiny Problems","Holes",FALSE
+182,"B",5,"Tiny Problems","Holes",FALSE
+182,"C",2,"Tiny Problems","Holes",FALSE
+182,"C",6,"Tiny Problems","Holes",FALSE
+182,"D",4,"Tiny Problems","Holes",FALSE
+182,"D",6,"Tiny Problems","Holes",FALSE
+183,"A",1,"Tiny Problems","Holes",FALSE
+183,"A",5,"Tiny Problems","Holes",FALSE
+183,"B",1,"Tiny Problems","Holes",FALSE
+183,"B",2,"Tiny Problems","Holes",FALSE
+183,"B",3,"Tiny Problems","Holes",FALSE
+183,"B",4,"Tiny Problems","Holes",FALSE
+183,"B",5,"Tiny Problems","Holes",FALSE
+183,"B",6,"Tiny Problems","Holes",FALSE
+184,"D",1,"Tiny Problems","Holes",FALSE
+184,"D",2,"Tiny Problems","Holes",FALSE
+184,"D",3,"Tiny Problems","Holes",FALSE
+184,"D",4,"Tiny Problems","Holes",FALSE
+185,"A",1,"Tiny Problems","Holes",FALSE
+186,"A",2,"Tiny Problems","Holes",FALSE
+186,"C",1,"Tiny Problems","Holes",FALSE
+187,"A",2,"Tiny Problems","Holes",FALSE
+187,"D",1,"Tiny Problems","Holes",FALSE
+187,"D",5,"Tiny Problems","Holes",FALSE
+188,"A",1,"Tiny Problems","Holes",FALSE
+188,"A",2,"Tiny Problems","Holes",FALSE
+188,"A",3,"Tiny Problems","Holes",FALSE
+188,"A",6,"Tiny Problems","Holes",FALSE
+188,"B",3,"Tiny Problems","Holes",FALSE
+188,"B",4,"Tiny Problems","Holes",FALSE
+188,"C",3,"Tiny Problems","Holes",FALSE
+188,"C",6,"Tiny Problems","Holes",FALSE
+188,"D",6,"Tiny Problems","Holes",FALSE
+189,"A",1,"Tiny Problems","Holes",FALSE
+189,"B",5,"Tiny Problems","Holes",FALSE
+189,"B",6,"Tiny Problems","Holes",FALSE
+189,"D",5,"Tiny Problems","Holes",FALSE
+190,"A",1,"Tiny Problems","Holes",FALSE
+190,"A",2,"Tiny Problems","Holes",FALSE
+190,"C",3,"Tiny Problems","Holes",FALSE
+190,"D",2,"Tiny Problems","Holes",FALSE
+191,"B",5,"Tiny Problems","Holes",FALSE
+191,"B",6,"Tiny Problems","Holes",FALSE
+191,"C",3,"Tiny Problems","Holes",FALSE
+191,"C",4,"Tiny Problems","Holes",FALSE
+191,"C",6,"Tiny Problems","Holes",FALSE
+192,"B",2,"Tiny Problems","Holes",FALSE
+192,"C",3,"Tiny Problems","Holes",FALSE
+192,"C",4,"Tiny Problems","Holes",FALSE
+192,"D",4,"Tiny Problems","Holes",FALSE
+192,"D",5,"Tiny Problems","Holes",FALSE
+193,"A",1,"Tiny Problems","Holes",FALSE
+193,"A",2,"Tiny Problems","Holes",FALSE
+193,"A",6,"Tiny Problems","Holes",FALSE
+193,"B",1,"Tiny Problems","Holes",FALSE
+193,"B",3,"Tiny Problems","Holes",FALSE
+193,"B",5,"Tiny Problems","Holes",FALSE
+193,"B",6,"Tiny Problems","Holes",FALSE
+193,"C",5,"Tiny Problems","Holes",FALSE
+193,"C",6,"Tiny Problems","Holes",FALSE
+193,"D",2,"Tiny Problems","Holes",FALSE
+193,"D",3,"Tiny Problems","Holes",FALSE
+193,"D",4,"Tiny Problems","Holes",FALSE
+193,"D",5,"Tiny Problems","Holes",FALSE
+194,"B",3,"Tiny Problems","Holes",FALSE
+194,"C",2,"Tiny Problems","Holes",FALSE
+194,"C",4,"Tiny Problems","Holes",FALSE
+194,"C",5,"Tiny Problems","Holes",FALSE
+194,"D",1,"Tiny Problems","Holes",FALSE
+194,"D",6,"Tiny Problems","Holes",FALSE
+195,"A",6,"Tiny Problems","Holes",FALSE
+195,"B",3,"Tiny Problems","Holes",FALSE
+195,"B",4,"Tiny Problems","Holes",FALSE
+196,"A",2,"Tiny Problems","Holes",FALSE
+196,"A",3,"Tiny Problems","Holes",FALSE
+196,"A",5,"Tiny Problems","Holes",FALSE
+196,"B",2,"Tiny Problems","Holes",FALSE
+196,"B",3,"Tiny Problems","Holes",FALSE
+196,"B",6,"Tiny Problems","Holes",FALSE
+196,"C",2,"Tiny Problems","Holes",FALSE
+196,"C",3,"Tiny Problems","Holes",FALSE
+196,"C",4,"Tiny Problems","Holes",FALSE
+196,"C",5,"Tiny Problems","Holes",FALSE
+196,"D",1,"Tiny Problems","Holes",FALSE
+196,"D",2,"Tiny Problems","Holes",FALSE
+196,"D",3,"Tiny Problems","Holes",FALSE
+197,"D",4,"Tiny Problems","Holes",FALSE
+198,"B",5,"Tiny Problems","Holes",FALSE
+198,"B",6,"Tiny Problems","Holes",FALSE
+198,"C",6,"Tiny Problems","Holes",FALSE
+199,"C",5,"Tiny Problems","Holes",FALSE
+199,"D",6,"Tiny Problems","Holes",FALSE
+200,"B",4,"Tiny Problems","Holes",FALSE
+200,"C",4,"Tiny Problems","Holes",FALSE
+200,"D",6,"Tiny Problems","Holes",FALSE
+201,"A",2,"Tiny Problems","Holes",FALSE
+201,"B",2,"Tiny Problems","Holes",FALSE
+201,"B",3,"Tiny Problems","Holes",FALSE
+201,"C",3,"Tiny Problems","Holes",FALSE
+201,"C",4,"Tiny Problems","Holes",FALSE
+201,"C",5,"Tiny Problems","Holes",FALSE
+201,"C",6,"Tiny Problems","Holes",FALSE
+201,"D",2,"Tiny Problems","Holes",FALSE
+201,"D",3,"Tiny Problems","Holes",FALSE
+201,"D",5,"Tiny Problems","Holes",FALSE
+202,"C",1,"Tiny Problems","Holes",FALSE
+202,"C",3,"Tiny Problems","Holes",FALSE
+202,"C",4,"Tiny Problems","Holes",FALSE
+202,"D",1,"Tiny Problems","Holes",FALSE
+202,"D",3,"Tiny Problems","Holes",FALSE
+202,"D",4,"Tiny Problems","Holes",FALSE
+202,"D",6,"Tiny Problems","Holes",FALSE
+203,"A",1,"Tiny Problems","Holes",FALSE
+203,"A",4,"Tiny Problems","Holes",FALSE
+203,"A",6,"Tiny Problems","Holes",FALSE
+203,"B",1,"Tiny Problems","Holes",FALSE
+203,"B",5,"Tiny Problems","Holes",FALSE
+203,"B",6,"Tiny Problems","Holes",FALSE
+203,"C",4,"Tiny Problems","Holes",FALSE
+203,"D",3,"Tiny Problems","Holes",FALSE
+203,"D",6,"Tiny Problems","Holes",FALSE
+204,"B",6,"Tiny Problems","Holes",FALSE
+204,"C",1,"Tiny Problems","Holes",FALSE
+204,"C",4,"Tiny Problems","Holes",FALSE
+205,"A",5,"Tiny Problems","Holes",FALSE
+205,"C",2,"Tiny Problems","Holes",FALSE
+205,"C",3,"Tiny Problems","Holes",FALSE
+206,"A",4,"Tiny Problems","Holes",FALSE
+206,"B",4,"Tiny Problems","Holes",FALSE
+206,"C",1,"Tiny Problems","Holes",FALSE
+206,"C",2,"Tiny Problems","Holes",FALSE
+206,"C",5,"Tiny Problems","Holes",FALSE
+207,"A",3,"Tiny Problems","Holes",FALSE
+207,"A",4,"Tiny Problems","Holes",FALSE
+208,"A",5,"Tiny Problems","Holes",FALSE
+208,"D",1,"Tiny Problems","Holes",FALSE
+208,"D",2,"Tiny Problems","Holes",FALSE
+208,"D",4,"Tiny Problems","Holes",FALSE
+208,"D",5,"Tiny Problems","Holes",FALSE
+208,"D",6,"Tiny Problems","Holes",FALSE
+210,"A",1,"Tiny Problems","Holes",FALSE
+210,"A",4,"Tiny Problems","Holes",FALSE
+210,"B",4,"Tiny Problems","Holes",FALSE
+210,"B",5,"Tiny Problems","Holes",FALSE
+210,"B",6,"Tiny Problems","Holes",FALSE
+210,"C",4,"Tiny Problems","Holes",FALSE
+211,"C",4,"Tiny Problems","Holes",FALSE
+214,"C",4,"Tiny Problems","Holes",FALSE
+214,"D",3,"Tiny Problems","Holes",FALSE
+214,"D",4,"Tiny Problems","Holes",FALSE
+214,"D",5,"Tiny Problems","Holes",FALSE
+215,"C",2,"Tiny Problems","Holes",FALSE
+215,"D",4,"Tiny Problems","Holes",FALSE
+216,"A",3,"Tiny Problems","Holes",FALSE
+216,"A",5,"Tiny Problems","Holes",FALSE
+216,"C",1,"Tiny Problems","Holes",FALSE
+216,"D",5,"Tiny Problems","Holes",FALSE
+217,"B",6,"Tiny Problems","Holes",FALSE
+217,"C",1,"Tiny Problems","Holes",FALSE
+217,"C",3,"Tiny Problems","Holes",FALSE
+219,"B",2,"Tiny Problems","Holes",FALSE
+219,"B",5,"Tiny Problems","Holes",FALSE
+219,"C",3,"Tiny Problems","Holes",FALSE
+219,"C",4,"Tiny Problems","Holes",FALSE
+221,"C",5,"Tiny Problems","Holes",FALSE
+221,"C",6,"Tiny Problems","Holes",FALSE
+223,"A",1,"Tiny Problems","Holes",FALSE
+223,"D",5,"Tiny Problems","Holes",FALSE
+223,"D",6,"Tiny Problems","Holes",FALSE
+224,"A",1,"Tiny Problems","Holes",FALSE
+224,"A",6,"Tiny Problems","Holes",FALSE
+224,"B",5,"Tiny Problems","Holes",FALSE
+227,"C",5,"Tiny Problems","Holes",FALSE
+227,"D",1,"Tiny Problems","Holes",FALSE
+227,"D",4,"Tiny Problems","Holes",FALSE
+229,"A",1,"Tiny Problems","Holes",FALSE
+229,"A",2,"Tiny Problems","Holes",FALSE
+229,"A",5,"Tiny Problems","Holes",FALSE
+231,"A",3,"Tiny Problems","Holes",FALSE
+231,"A",4,"Tiny Problems","Holes",FALSE
+231,"B",3,"Tiny Problems","Holes",FALSE
+231,"B",5,"Tiny Problems","Holes",FALSE
+231,"B",6,"Tiny Problems","Holes",FALSE
+231,"C",6,"Tiny Problems","Holes",FALSE
+231,"D",1,"Tiny Problems","Holes",FALSE
+232,"C",4,"Tiny Problems","Holes",FALSE
+232,"D",1,"Tiny Problems","Holes",FALSE
+232,"D",2,"Tiny Problems","Holes",FALSE
+233,"B",5,"Tiny Problems","Holes",FALSE
+233,"C",1,"Tiny Problems","Holes",FALSE
+233,"D",6,"Tiny Problems","Holes",FALSE
+234,"A",4,"Tiny Problems","Holes",FALSE
+234,"A",5,"Tiny Problems","Holes",FALSE
+234,"A",6,"Tiny Problems","Holes",FALSE
+234,"B",1,"Tiny Problems","Holes",FALSE
+234,"B",2,"Tiny Problems","Holes",FALSE
+234,"B",4,"Tiny Problems","Holes",FALSE
+234,"C",1,"Tiny Problems","Holes",FALSE
+234,"C",3,"Tiny Problems","Holes",FALSE
+234,"C",4,"Tiny Problems","Holes",FALSE
+234,"D",1,"Tiny Problems","Holes",FALSE
+234,"D",3,"Tiny Problems","Holes",FALSE
+234,"D",4,"Tiny Problems","Holes",FALSE
+235,"A",4,"Tiny Problems","Holes",FALSE
+235,"A",6,"Tiny Problems","Holes",FALSE
+235,"C",1,"Tiny Problems","Holes",FALSE
+235,"C",2,"Tiny Problems","Holes",FALSE
+235,"C",4,"Tiny Problems","Holes",FALSE
+235,"C",6,"Tiny Problems","Holes",FALSE
+235,"D",1,"Tiny Problems","Holes",FALSE
+235,"D",3,"Tiny Problems","Holes",FALSE
+235,"D",4,"Tiny Problems","Holes",FALSE
+235,"D",6,"Tiny Problems","Holes",FALSE
+237,"C",1,"Tiny Problems","Holes",FALSE
+239,"C",2,"Tiny Problems","Holes",FALSE
+239,"C",3,"Tiny Problems","Holes",FALSE
+239,"D",3,"Tiny Problems","Holes",FALSE
+240,"B",5,"Tiny Problems","Holes",FALSE
+240,"B",6,"Tiny Problems","Holes",FALSE
+240,"C",1,"Tiny Problems","Holes",FALSE
+240,"C",2,"Tiny Problems","Holes",FALSE
+240,"C",5,"Tiny Problems","Holes",FALSE
+240,"C",6,"Tiny Problems","Holes",FALSE
+240,"D",3,"Tiny Problems","Holes",FALSE
+240,"D",4,"Tiny Problems","Holes",FALSE
+241,"A",5,"Tiny Problems","Holes",FALSE
+241,"B",3,"Tiny Problems","Holes",FALSE
+241,"D",3,"Tiny Problems","Holes",FALSE
+242,"B",4,"Tiny Problems","Holes",FALSE
+242,"B",5,"Tiny Problems","Holes",FALSE
+242,"C",3,"Tiny Problems","Holes",FALSE
+242,"C",5,"Tiny Problems","Holes",FALSE
+243,"A",2,"Tiny Problems","Holes",FALSE
+243,"A",3,"Tiny Problems","Holes",FALSE
+243,"A",4,"Tiny Problems","Holes",FALSE
+243,"B",2,"Tiny Problems","Holes",FALSE
+243,"B",3,"Tiny Problems","Holes",FALSE
+243,"B",4,"Tiny Problems","Holes",FALSE
+243,"B",5,"Tiny Problems","Holes",FALSE
+243,"B",6,"Tiny Problems","Holes",FALSE
+243,"C",5,"Tiny Problems","Holes",FALSE
+243,"D",1,"Tiny Problems","Holes",FALSE
+243,"D",3,"Tiny Problems","Holes",FALSE
+243,"D",4,"Tiny Problems","Holes",FALSE
+244,"A",6,"Tiny Problems","Holes",FALSE
+244,"B",2,"Tiny Problems","Holes",FALSE
+244,"B",3,"Tiny Problems","Holes",FALSE
+244,"B",4,"Tiny Problems","Holes",FALSE
+244,"B",5,"Tiny Problems","Holes",FALSE
+244,"B",6,"Tiny Problems","Holes",FALSE
+244,"D",6,"Tiny Problems","Holes",FALSE
+245,"A",1,"Tiny Problems","Holes",FALSE
+245,"A",3,"Tiny Problems","Holes",FALSE
+245,"A",4,"Tiny Problems","Holes",FALSE
+245,"A",5,"Tiny Problems","Holes",FALSE
+245,"A",6,"Tiny Problems","Holes",FALSE
+245,"B",1,"Tiny Problems","Holes",FALSE
+245,"C",1,"Tiny Problems","Holes",FALSE
+245,"D",5,"Tiny Problems","Holes",FALSE
+246,"A",1,"Tiny Problems","Holes",FALSE
+246,"A",4,"Tiny Problems","Holes",FALSE
+246,"A",5,"Tiny Problems","Holes",FALSE
+246,"D",5,"Tiny Problems","Holes",FALSE
+247,"A",1,"Tiny Problems","Holes",FALSE
+247,"A",3,"Tiny Problems","Holes",FALSE
+247,"A",4,"Tiny Problems","Holes",FALSE
+247,"A",5,"Tiny Problems","Holes",FALSE
+247,"D",5,"Tiny Problems","Holes",FALSE
+248,"B",1,"Tiny Problems","Holes",FALSE
+248,"B",4,"Tiny Problems","Holes",FALSE
+248,"B",5,"Tiny Problems","Holes",FALSE
+248,"D",5,"Tiny Problems","Holes",FALSE
+249,"B",3,"Tiny Problems","Holes",FALSE
+249,"B",4,"Tiny Problems","Holes",FALSE
+249,"B",5,"Tiny Problems","Holes",FALSE
+249,"B",6,"Tiny Problems","Holes",FALSE
+249,"C",4,"Tiny Problems","Holes",FALSE
+250,"D",4,"Tiny Problems","Holes",FALSE
+252,"A",4,"Tiny Problems","Holes",FALSE
+252,"A",5,"Tiny Problems","Holes",FALSE
+253,"B",6,"Tiny Problems","Holes",FALSE
+254,"A",1,"Tiny Problems","Holes",FALSE
+254,"B",1,"Tiny Problems","Holes",FALSE
+254,"B",2,"Tiny Problems","Holes",FALSE
+254,"C",2,"Tiny Problems","Holes",FALSE
+254,"D",4,"Tiny Problems","Holes",FALSE
+256,"B",3,"Tiny Problems","Holes",FALSE
+256,"B",4,"Tiny Problems","Holes",FALSE
+256,"D",6,"Tiny Problems","Holes",FALSE
+257,"B",3,"Tiny Problems","Holes",FALSE
+257,"C",1,"Tiny Problems","Holes",FALSE
+258,"A",1,"Tiny Problems","Holes",FALSE
+258,"A",3,"Tiny Problems","Holes",FALSE
+258,"A",4,"Tiny Problems","Holes",FALSE
+258,"D",3,"Tiny Problems","Holes",FALSE
+258,"D",4,"Tiny Problems","Holes",FALSE
+258,"D",5,"Tiny Problems","Holes",FALSE
+258,"D",6,"Tiny Problems","Holes",FALSE
+259,"A",3,"Tiny Problems","Holes",FALSE
+259,"A",5,"Tiny Problems","Holes",FALSE
+259,"B",4,"Tiny Problems","Holes",FALSE
+260,"A",2,"Tiny Problems","Holes",FALSE
+261,"A",3,"Tiny Problems","Holes",FALSE
+261,"A",5,"Tiny Problems","Holes",FALSE
+261,"D",3,"Tiny Problems","Holes",FALSE
+262,"B",1,"Tiny Problems","Holes",FALSE
+262,"B",2,"Tiny Problems","Holes",FALSE
+262,"D",5,"Tiny Problems","Holes",FALSE
+262,"D",6,"Tiny Problems","Holes",FALSE
+263,"D",3,"Tiny Problems","Holes",FALSE
+264,"A",1,"Tiny Problems","Holes",FALSE
+264,"A",2,"Tiny Problems","Holes",FALSE
+264,"A",4,"Tiny Problems","Holes",FALSE
+264,"A",6,"Tiny Problems","Holes",FALSE
+264,"B",3,"Tiny Problems","Holes",FALSE
+264,"B",4,"Tiny Problems","Holes",FALSE
+264,"C",1,"Tiny Problems","Holes",FALSE
+265,"C",6,"Tiny Problems","Holes",FALSE
+267,"D",6,"Tiny Problems","Holes",FALSE
+268,"A",1,"Tiny Problems","Holes",FALSE
+268,"A",3,"Tiny Problems","Holes",FALSE
+268,"A",6,"Tiny Problems","Holes",FALSE
+268,"C",2,"Tiny Problems","Holes",FALSE
+268,"C",3,"Tiny Problems","Holes",FALSE
+268,"D",4,"Tiny Problems","Holes",FALSE
+270,"D",5,"Tiny Problems","Holes",FALSE
+274,"C",5,"Tiny Problems","Holes",FALSE
+275,"B",6,"Tiny Problems","Holes",FALSE
+275,"C",5,"Tiny Problems","Holes",FALSE
+275,"D",2,"Tiny Problems","Holes",FALSE
+275,"D",3,"Tiny Problems","Holes",FALSE
+276,"A",4,"Tiny Problems","Holes",FALSE
+277,"A",4,"Tiny Problems","Holes",FALSE
+279,"B",5,"Tiny Problems","Holes",FALSE
+279,"C",5,"Tiny Problems","Holes",FALSE
+279,"D",3,"Tiny Problems","Holes",FALSE
+280,"A",5,"Tiny Problems","Holes",FALSE
+280,"A",6,"Tiny Problems","Holes",FALSE
+280,"B",1,"Tiny Problems","Holes",FALSE
+281,"A",2,"Tiny Problems","Holes",FALSE
+281,"D",2,"Tiny Problems","Holes",FALSE
+282,"A",1,"Tiny Problems","Holes",FALSE
+282,"A",2,"Tiny Problems","Holes",FALSE
+282,"A",3,"Tiny Problems","Holes",FALSE
+282,"A",5,"Tiny Problems","Holes",FALSE
+282,"B",5,"Tiny Problems","Holes",FALSE
+282,"C",1,"Tiny Problems","Holes",FALSE
+285,"B",2,"Tiny Problems","Holes",FALSE
+286,"A",2,"Tiny Problems","Holes",FALSE
+286,"A",5,"Tiny Problems","Holes",FALSE
+286,"B",2,"Tiny Problems","Holes",FALSE
+289,"C",2,"Tiny Problems","Holes",FALSE
+289,"C",3,"Tiny Problems","Holes",FALSE
+289,"D",6,"Tiny Problems","Holes",FALSE
+290,"A",3,"Tiny Problems","Holes",FALSE
+291,"A",4,"Tiny Problems","Holes",FALSE
+291,"B",2,"Tiny Problems","Holes",FALSE
+291,"B",3,"Tiny Problems","Holes",FALSE
+291,"B",4,"Tiny Problems","Holes",FALSE
+291,"D",3,"Tiny Problems","Holes",FALSE
+292,"A",2,"Tiny Problems","Holes",FALSE
+292,"B",1,"Tiny Problems","Holes",FALSE
+292,"B",4,"Tiny Problems","Holes",FALSE
+292,"B",6,"Tiny Problems","Holes",FALSE
+292,"C",6,"Tiny Problems","Holes",FALSE
+294,"B",3,"Tiny Problems","Holes",FALSE
+296,"B",6,"Tiny Problems","Holes",FALSE
+300,"D",2,"Tiny Problems","Holes",FALSE
+300,"D",3,"Tiny Problems","Holes",FALSE
+8,"A",4,"Yikes","Holes",FALSE
+222,"B",1,"Bad","Rotation-Staging",FALSE
+222,"C",2,"Bad","Rotation-Staging",FALSE
+224,"D",5,"Bad","Rotation-Staging",FALSE
+225,"B",2,"Bad","Rotation-Staging",FALSE
+226,"B",5,"Bad","Rotation-Staging",FALSE
+228,"C",4,"Bad","Rotation-Staging",FALSE
+266,"C",5,"Bad","Rotation-Staging",FALSE
+275,"A",6,"Bad","Rotation-Staging",FALSE
+277,"D",2,"Bad","Rotation-Staging",FALSE
+295,"B",5,"Bad","Rotation-Staging",FALSE
+9,"B",5,"Problematic","Rotation-Staging",FALSE
+10,"A",1,"Problematic","Rotation-Staging",FALSE
+10,"B",4,"Problematic","Rotation-Staging",FALSE
+10,"B",5,"Problematic","Rotation-Staging",FALSE
+15,"A",6,"Problematic","Rotation-Staging",FALSE
+124,"A",1,"Problematic","Rotation-Staging",FALSE
+228,"B",3,"Problematic","Rotation-Staging",FALSE
+245,"C",2,"Problematic","Rotation-Staging",FALSE
+246,"A",6,"Problematic","Rotation-Staging",FALSE
+246,"B",4,"Problematic","Rotation-Staging",FALSE
+246,"C",1,"Problematic","Rotation-Staging",FALSE
+246,"C",2,"Problematic","Rotation-Staging",FALSE
+247,"C",2,"Problematic","Rotation-Staging",FALSE
+247,"D",2,"Problematic","Rotation-Staging",FALSE
+288,"A",4,"Problematic","Rotation-Staging",FALSE
+14,"C",3,"Tiny Problems","Rotation-Staging",FALSE
+15,"C",1,"Tiny Problems","Rotation-Staging",FALSE
+15,"C",2,"Tiny Problems","Rotation-Staging",FALSE
+15,"C",5,"Tiny Problems","Rotation-Staging",FALSE
+15,"C",6,"Tiny Problems","Rotation-Staging",FALSE
+15,"D",1,"Tiny Problems","Rotation-Staging",FALSE
+218,"D",5,"Yikes","Rotation-Staging",FALSE
+218,"D",6,"Yikes","Rotation-Staging",FALSE

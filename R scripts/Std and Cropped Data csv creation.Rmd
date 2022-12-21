@@ -1,0 +1,296 @@
+---
+title: "Std and Cropped Data csv creation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Cropped Functions 
+```{r}
+crop_X3P <- function(x3p) {
+  stopifnot(class(x3p) == "x3p")
+  dims <- dim(x3p$surface.matrix)
+  cropped_x3p <- x3p_crop(x3p, x = 0.1 * dims[1], y = 0.1 * dims[2], width = dims[1] - (0.1 * dims[1]), height = dims[2] - (0.1* dims[2]))
+  return(cropped_x3p)
+}
+
+assess_bottomempty_cropped <- function(x3p, n_cutoff = .2){
+  stopifnot(class(x3p) == "x3p")
+  
+  x3p = crop_X3P(x3p)
+  dims <- dim(x3p$surface.matrix)
+  rows <- extract_na_row(x3p)*dims[1]/100 # ordered from top of scan to bottom
+  #browser()
+  bottom <- rev(rows)[1:floor(n_cutoff* length(rows))] # take bottom thirty percent
+
+  amountmissinginthirty <- sum(bottom)
+  amountinthirty <- (prod(dims)*n_cutoff)
+
+  percentageofmissinginthirty <- (amountmissinginthirty/amountinthirty)* 100
+
+  return(percentageofmissinginthirty)
+}
+
+assess_col_na_cropped <- function(x3p, perc_of_col = 20, threshold_prop = 0.2){
+  stopifnot(class(x3p) == 'x3p')
+  x3p = crop_X3P(x3p)
+  dims <- dim(x3p$surface.matrix)
+  col_na_perc <- extract_na_column(x3p)
+  bad_cols <- sum(col_na_perc > perc_of_col)
+  threshold <- dims[1] * threshold_prop
+
+  return(bad_cols / threshold)
+}
+
+assess_median_na_proportion_cropped <- function(x3p, chopoff = 1/6, numlines = 20) {
+  # median is 50th percentile :) wrapper will give the same results
+  assess_percentile_na_proportion_cropped(x3p = x3p, chopoff = chopoff, numlines = numlines, percentile = .50)
+}
+
+assess_middle_na_proportion_cropped <- function(x3p, chopoff = 1/8) {
+
+  stopifnot(class(x3p) == "x3p")
+
+  x3p = crop_X3P(x3p)
+  
+  SurfaceMatrix = x3p$surface.matrix
+
+  meanna <- mean(is.na(SurfaceMatrix))
+
+  return(meanna)
+
+}
+
+assess_percentile_na_proportion_cropped <- function(x3p, chopoff = 1/7,
+                                                    numlines = x3p$header.info$sizeY, percentile = 0.8) {
+
+  stopifnot(class(x3p) == "x3p")
+  
+  x3p = crop_X3P(x3p)
+  
+  SurfaceMatrix = x3p$surface.matrix
+  
+  NumberOfLines <- numlines - 2
+
+  NumberofYIncrements <- x3p$header.info$sizeY
+
+  NumberOfIncrementsBetweenLines <- floor(NumberofYIncrements/NumberOfLines)
+
+  ProportionNA <- vector(mode = "numeric",length = NumberOfLines+1)
+
+  ProportionNA[1] <- mean(is.na(SurfaceMatrix[,1]))
+
+  for(i in 1:(NumberOfLines-1)){
+    ProportionNA[i+1] <- mean(is.na(SurfaceMatrix[,i*NumberOfIncrementsBetweenLines]))
+  }
+
+  ProportionNA[NumberOfLines + 1] <- mean(is.na(SurfaceMatrix[,x3p$header.info$sizeY]))
+
+  percentile <- quantile(ProportionNA, probs = percentile)
+
+  return(as.numeric(percentile))
+
+}
+
+assess_rotation_cropped <- function(x3p, width=0.2) {
+  stopifnot(class(x3p) == "x3p")
+  stopifnot(width > 0, width < 0.5)
+
+  dims <- dim(x3p$surface.matrix)
+  band <- max(floor(width*dims[1]),1) # round down, but make sure we have at least one column of values
+  half <- round(dims[2]/2)
+
+  middle <- rowMeans(x3p$surface.matrix[,half+(-5:5)], na.rm=TRUE)
+  bottom <- rowMeans(x3p$surface.matrix[,dims[2]-0:10], na.rm=TRUE)
+
+
+  na_left <- sum(is.na(middle[1:band]))
+  #na_right <- sum(is.na(middle[dims[2]+1-band:1]))
+  na_right <- sum(is.na(middle[dims[1]+1-band:dims[1]]))
+
+#browser()
+  na_left_bottom <- sum(is.na(bottom[1:band]))
+  #na_right_bottom <- sum(is.na(bottom[dims[2]+1-band:1]))
+  na_right_bottom <- sum(is.na(bottom[dims[1]+1-band:dims[1]]))
+
+  return(abs(log((na_left+1)/(na_left_bottom+1)/((na_right+1)/(na_right_bottom+1)) )))
+}
+
+extract_median_na_proportion_cropped <- function(x3p, chopoff = 1/6) {
+
+  x3p = crop_X3P(x3p)
+
+  NumberofYIncrements <- x3p$header.info$sizeY
+
+  NumberOfLines <- 18 # HH: where does the 18 come from? ## from the bottom up, + 2 lines
+
+  NumberOfIncrementsBetweenLines <- floor(NumberofYIncrements/NumberOfLines)
+
+  ProportionNA <- vector(mode = "numeric",length = NumberOfLines+1)
+
+  ProportionNA[1] <- mean(is.na(SurfaceMatrix[,1]))
+
+  for(i in 1:(NumberOfLines-1)){
+    ProportionNA[i+1] <- mean(is.na(SurfaceMatrix[,i*NumberOfIncrementsBetweenLines]))
+  }
+
+  ProportionNA[NumberOfLines + 1] <- mean(is.na(SurfaceMatrix[,x3p$header.info$sizeY]))
+
+  Median <- median(ProportionNA)
+  return(Median)
+
+}
+
+extract_na_cropped <- function(x3p) {
+  stopifnot(class(x3p) == "x3p")
+  x3p = crop_X3P(x3p)
+
+  dims <- dim(x3p$surface.matrix)
+  nas <- sum(is.na(x3p$surface.matrix))
+
+  return(nas/prod(dims)*100)
+}
+
+extract_na_column <- function(x3p) {
+  stopifnot(class(x3p) == "x3p")
+
+  dims <- dim(x3p$surface.matrix)
+  # row sum will provide a summary of each column in the scan matrix (transposed values)
+  nas <- rowSums(is.na(x3p$surface.matrix))
+
+  return(nas/dims[2]*100)
+}
+
+extract_na_row<- function(x3p) {
+  stopifnot(class(x3p) == "x3p")
+
+    dims <- dim(x3p$surface.matrix)
+  # row sum will provide a summary of each column in the scan matrix (transposed values)
+  nas <- colSums(is.na(x3p$surface.matrix))
+
+  return(nas/dims[1]*100)
+}
+
+find_brightness_cropped <- function(x3p)
+{
+  string <- x3p$general.info$Comment
+
+  brightness <- trimws(str_extract(x3p$general.info$Comment, "(?<=lighting: )(.*)(?= threshold)"))
+
+  return(brightness)
+}
+
+lighting_protocol_cropped <- function(name)
+{
+  light_start <- str_locate(name, "auto")
+  light_end <- str_locate(name, "threshold")
+  lighting <- str_sub(name, light_start[,1], light_end[,1]-1)
+  lighting=gsub(" -","",lighting)
+  lighting = trimws(lighting)
+
+  lighting = gsub(" ","", lighting)
+  lighting = ifelse(lighting=="autolightleftimage+20%", 1, 2)
+
+
+  return(lighting)
+}
+
+```
+
+
+File Scanning Function
+```{r}
+file_scanner <- function(boxData, filePath, limit = 0) {
+  library(x3ptools)
+  library(DS401)
+  library(tidyverse)
+  files <- list.files(path=filePath, pattern="*.x3p", full.names=TRUE, recursive=TRUE)
+
+  df <- data.frame(FAU = integer(),
+                   Bullet = character(),
+                   Land = integer(),
+                   assess_percentile_na_proportion = double(),
+                   assess_col_na = double(),
+                   extract_na = double(),
+                   assess_middle_na_proportion = double(),
+                   assess_rotation = double(),
+                   assess_bottomempty = double(),
+                   assess_median_na_proportion = double(),
+                   assess_percentile_na_proportion_cropped = double(),
+                   assess_col_na_cropped = double(),
+                   extract_na_cropped = double(),
+                   assess_bottomempty_cropped = double(),
+                   assess_median_na_proportion_cropped = double(),
+                   filePath = character(),
+                   stringsAsFactors=FALSE
+  )
+
+  for (i in 1:length(files)) {
+    # Nomenclature
+    fau = str_extract(files[i], "(?<=FAU\\s)(\\w+)")
+    bullet = str_extract(files[i], "(?<=Bullet\\s)(\\w+)")
+    land = str_extract(files[i], "(?<=Land\\s)(\\w+)")
+    filePath = files[i]
+
+    df[nrow(df) +1,] = c(as.integer(fau), bullet, as.integer(land), NA, NA, NA, NA, NA, NA, NA,
+                         NA, NA, NA, NA, NA, filePath)
+
+  }
+  
+  df = df %>% mutate (
+    FAU = as.numeric(FAU),
+    Land = as.numeric(Land)
+  )
+
+  postMerge = left_join(boxData, df, by=c("FAU", "Bullet", "Land"))
+
+  postMerge = postMerge[!is.na(postMerge$filePath),]
+  
+  
+  if (limit != 0) {
+    postMerge = postMerge[1:limit,]
+    print("Limit is detected")
+    print(length(postMerge[,2]))
+  }
+
+  for (i in 1:length(postMerge[,2])) {
+
+    if (i %% 10 == 0) {
+      print(paste("Currently on the", i, "scan out of", length(postMerge[,2])))
+    }
+    x3p = read_x3p(postMerge$filePath[i])
+    predictions = predict_quality_one(x3p)
+
+    postMerge$assess_percentile_na_proportion[i] = predictions$assess_percentile_na_proportion
+    postMerge$assess_col_na[i] = predictions$assess_col_na
+    postMerge$extract_na[i] = predictions$extract_na
+    postMerge$assess_middle_na_proportion[i] = predictions$assess_middle_na_proportion
+    postMerge$assess_rotation[i] = predictions$assess_rotation
+    postMerge$assess_bottomempty[i] = predictions$assess_bottomempty
+    postMerge$assess_median_na_proportion[i] = assess_median_na_proportion(x3p)
+
+    postMerge$assess_percentile_na_proportion_cropped[i] = assess_percentile_na_proportion_cropped(x3p)
+    postMerge$assess_col_na_cropped[i] = assess_col_na_cropped(x3p)
+    postMerge$extract_na_cropped[i] = extract_na_cropped(x3p)
+    postMerge$assess_bottomempty_cropped[i] = assess_bottomempty_cropped(x3p)
+    postMerge$assess_median_na_proportion_cropped[i] = assess_median_na_proportion_cropped(x3p)
+    
+
+  }
+
+  return(postMerge)
+
+}
+```
+
+
+Test fire: 
+```{r, warning=FALSE}
+filePath = "/media/Raven/LAPD"
+box_data = read.csv("~/Documents/shiny_labelled_data_12_19_2022.csv", header = TRUE)
+box_data = box_data[,1:5] #duplicates check got tacked on
+combined_data = file_scanner(box_data, filePath)
+combined_data = combined_data[-c(67, 1469), ] # These are removed duplicate rows. They are the same FAU, Bullet and Land as ones left in the dataset but with different lightings. We took sneox1 over sneox2 in both cases
+```

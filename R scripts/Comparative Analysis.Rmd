@@ -1,0 +1,97 @@
+---
+title: "Comparitive Analysis"
+author: "Craig Orman"
+date: "2022-12-09"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fastDummies)
+library(tidyverse)
+library(ggplot2)
+
+```
+
+Staging
+```{r}
+setwd("C:/Users/black/Desktop/Craig")
+full_data = read.csv("std_and_cropped_data_12_20_2022.csv", header = TRUE)
+
+```
+
+```{r}
+
+full_data = full_data %>% mutate(
+  Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
+  Problem = factor(Problem)
+)
+
+```
+
+$$
+\alpha = 0.05 \\
+H_0: \sigma^2_S = \sigma^2_C \\
+H_a: \sigma^2_S \neq \sigma^2_C \\
+ts = \frac{S^2_C}{S^2_C} \\
+Null = F_{1849,1849} \\
+RR =\{|ts| \geq qF_{1849,1849}(0.975)\}
+$$
+
+## Functions
+```{r}
+comparison <- function(standard, cropped, feature) {
+
+scatTitle = paste(feature)
+# mean difference test
+SS = var(standard)
+RR = qf(0.975, 1849, 1849)
+SC = var(cropped)
+ts = SS/SC
+if (abs(ts) >= RR) {
+  scatTitle = paste(scatTitle, "where we reject the null with 95% confidence")
+} else {
+  scatTitle = paste(scatTitle, "where we do NOT reject the null with 95% confidence")
+}
+
+upper = max(max(standard), max(cropped))
+upper = upper * 1.1
+scatty = full_data %>% ggplot(aes(x=standard, y=cropped, col=Quality)) +
+  geom_point() +
+  xlim(0,upper) +
+  ylim(0,upper) +
+  ggtitle(scatTitle)
+
+boxy = boxplot(standard, cropped,
+        horizontal = TRUE,
+        main = feature,
+        names = c("Standard", "Cropped"),
+        col = c("red", "blue"))
+        
+print(scatty)
+boxy
+df = data.frame(min = numeric(),
+                firstQ = numeric(),
+                med = numeric(),
+                mean = numeric(),
+                thirdQ = numeric(),
+                max = numeric())
+print(paste("Summary Info of", feature))
+df[1,] = summary(standard)
+df[2,] = summary(cropped)
+rownames(df) = c("Standard", "Cropped")
+print(df)
+}
+```
+
+```{r}
+comparison(full_data$extract_na, full_data$extract_na_cropped, feature = "Extract NA")
+comparison(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, feature = "Assess percentile NA proportion")
+comparison(full_data$assess_col_na, full_data$assess_col_na_cropped, feature = "assess col NA")
+comparison(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, feature = "Bottom Empty")
+comparison(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, feature = "Assess median NA proportion")
+```
+
+
+
