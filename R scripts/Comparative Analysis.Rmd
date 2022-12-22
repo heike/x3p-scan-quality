@@ -8,6 +8,10 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+if (!require(fastDummies)) install.packages('fastDummies')
+if (!require(tidyverse)) install.packages('tidyverse')
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(ggpubr)) install.packages('ggpubr')
 library(fastDummies)
 library(tidyverse)
 library(ggplot2)
