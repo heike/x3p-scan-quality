@@ -36,49 +36,72 @@ full_data = full_data %>% mutate(
 
 ## Functions
 ```{r}
-comparison <- function(standard, cropped, feature) {
+comparison <- function(df, feature) {
 
-upper = max(max(standard), max(cropped))
-upper = upper * 1.1
-scatty = full_data %>% ggplot(aes(x=standard, y=cropped, col = Quality, group = 1)) +
-  geom_point() +
-  xlim(0,upper) +
-  ylim(0,upper) +
-  ggtitle(feature) +
-  geom_smooth(method=lm, se = FALSE, aes(group = 1)) +
-  stat_regline_equation(label.y = upper, aes(label = ..eq.label..)) +
-  stat_regline_equation(label.y = upper*0.9, aes(label = ..rr.label..))
-
-boxy = boxplot(standard, cropped,
-        horizontal = TRUE,
-        main = feature,
-        names = c("Standard", "Cropped"),
-        col = c("red", "blue"))
-        
-print(scatty)
-boxy
-df = data.frame(min = numeric(),
-                firstQ = numeric(),
-                med = numeric(),
-                mean = numeric(),
-                thirdQ = numeric(),
-                max = numeric())
-
-print(paste("Summary Info of", feature))
-df[1,] = summary(standard)
-df[2,] = summary(cropped)
-rownames(df) = c("Standard", "Cropped")
-print(df)
+  upper = max(max(df[,1]), max(df[,2]))
+  upper = upper * 1.1
+  scatty = ggplot(df, aes(x=df[,1], y=df[,2])) +
+    geom_point(data = select(df,-3), col="grey") +
+    geom_point(size=2, pch=21, aes(fill=factor(df[,3]))) +
+    scale_fill_manual(values=c("blue","green","yellow", "orange", "red")) + 
+    xlim(0,upper) +
+    ylim(0,upper) +
+    xlab("Standard") +
+    ylab("Cropped") +
+    ggtitle(feature) +
+    #geom_smooth(method=lm, se = FALSE, aes(group = 1)) +
+    #stat_regline_equation(label.y = upper, aes(label = ..eq.label..)) +
+    #stat_regline_equation(label.y = upper*0.9, aes(label = ..rr.label..)) +
+    facet_grid(~df[,3])
+  
+  boxy = boxplot(df[,1], df[,2],
+          horizontal = TRUE,
+          main = feature,
+          names = c("Standard", "Cropped"),
+          col = c("red", "blue"))
+          
+  print(scatty)
+  boxy
+  summ = data.frame(min = numeric(),
+                  firstQ = numeric(),
+                  med = numeric(),
+                  mean = numeric(),
+                  thirdQ = numeric(),
+                  max = numeric())
+  
+  print(paste("Summary Info of", feature))
+  summ[1,] = summary(df[,1])
+  summ[2,] = summary(df[,2])
+  rownames(summ) = c("Standard", "Cropped")
+  print(summ)
 }
 ```
 
 ```{r}
-comparison(full_data$extract_na, full_data$extract_na_cropped, feature = "Extract NA")
-comparison(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, feature = "Assess percentile NA proportion")
-comparison(full_data$assess_col_na, full_data$assess_col_na_cropped, feature = "assess col NA")
-comparison(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, feature = "Bottom Empty")
-comparison(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, feature = "Assess median NA proportion")
+comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
+#comparison(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, feature = "Assess percentile NA proportion")
+#comparison(full_data$assess_col_na, full_data$assess_col_na_cropped, feature = "assess col NA")
+#comparison(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, feature = "Bottom Empty")
+#comparison(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, feature = "Assess median NA proportion")
 ```
 
-
+```{r}
+df = data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality)
+feature = "Extract NA"
+upper = max(max(df[,1]), max(df[,2]))
+upper = upper * 1.1
+ggplot(df, aes(x=df[,1], y=df[,2])) +
+    geom_point(data = df[,-3], col="grey", size = 1, aes(group=1)) +
+    geom_point(size=2, pch=21, aes(fill=factor(df[,3]), group=2)) +
+    scale_fill_manual(values=c("blue","green","yellow", "orange", "red")) + 
+    xlim(0,upper) +
+    ylim(0,upper) +
+    xlab("Standard") +
+    ylab("Cropped") +
+    ggtitle(feature) +
+    geom_smooth(formula = y ~ x, method=lm, se = FALSE) +
+    stat_regline_equation(label.y = upper, aes(label = ..eq.label..)) +
+    stat_regline_equation(label.y = upper*0.9, aes(label = ..rr.label..)) +
+    facet_grid(~df[,3])
+```
 
