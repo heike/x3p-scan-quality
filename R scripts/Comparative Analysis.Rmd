@@ -11,12 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 library(fastDummies)
 library(tidyverse)
 library(ggplot2)
+library(ggpubr)
 
 ```
 
 Staging
 ```{r}
-full_data = read.csv(file = "data/std_and_cropped_data_12_20_2022.csv", header = TRUE)
+full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", header=TRUE)
 ```
 
 ```{r}
@@ -35,11 +36,14 @@ comparison <- function(standard, cropped, feature) {
 
 upper = max(max(standard), max(cropped))
 upper = upper * 1.1
-scatty = full_data %>% ggplot(aes(x=standard, y=cropped, col=Quality)) +
+scatty = full_data %>% ggplot(aes(x=standard, y=cropped, col = Quality, group = 1)) +
   geom_point() +
   xlim(0,upper) +
   ylim(0,upper) +
-  ggtitle(feature)
+  ggtitle(feature) +
+  geom_smooth(method=lm, se = FALSE, aes(group = 1)) +
+  stat_regline_equation(label.y = upper, aes(label = ..eq.label..)) +
+  stat_regline_equation(label.y = upper*0.9, aes(label = ..rr.label..))
 
 boxy = boxplot(standard, cropped,
         horizontal = TRUE,
@@ -55,6 +59,7 @@ df = data.frame(min = numeric(),
                 mean = numeric(),
                 thirdQ = numeric(),
                 max = numeric())
+
 print(paste("Summary Info of", feature))
 df[1,] = summary(standard)
 df[2,] = summary(cropped)
