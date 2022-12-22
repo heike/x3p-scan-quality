@@ -39,11 +39,18 @@ full_data = full_data %>% mutate(
 
 ## Functions
 ```{r}
-source("code/comparisons.R")
+source("../R/comparison.R")
 ```
 
-```{r}
-comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
+```{r echo=FALSE}
+res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
 #comparison(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, feature = "Assess percentile NA proportion")
 #comparison(full_data$assess_col_na, full_data$assess_col_na_cropped, feature = "assess col NA")
 #comparison(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, feature = "Bottom Empty")
