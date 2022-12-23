@@ -44,5 +44,21 @@ comparison <- function(df, feature) {
   rownames(summ) = c("Standard", "Cropped")
   attr(summ, "title") <-  paste("Summary Info of", feature)
 
-  return(list(scatterplot=scatty, boxplot=boxy, summary=summ))
+  metric <- df %>% mutate(quality = quality %in% c("Good", "Tiny Problems"))
+
+  arrange(metric, full) %>% roc_auc(truth=factor(quality), estimate=full)
+  arrange(metric, cropped) %>% roc_auc(truth=factor(quality), estimate=cropped)
+
+
+  rocy <- roc_curve(metric, truth=factor(quality), Class1=full) %>%
+    ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+    geom_path(aes(colour="Full Scan")) +
+    geom_abline(lty = 3) +
+    coord_equal() +
+    theme_bw() +
+    geom_path(aes(colour="Cropped Scan"),
+              data = roc_curve(metric, truth=factor(quality), Class1=cropped)) +
+    ggtitle(feature)
+
+  return(list(scatterplot=scatty, boxplot=boxy, summary=summ, roc_curve=rocy))
 }

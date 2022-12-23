@@ -11,12 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 if (!require(fastDummies)) install.packages('fastDummies')
 if (!require(tidyverse)) install.packages('tidyverse')
 if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(RColorBrewer)) install.packages('RColorBrewer')
 if (!require(ggpubr)) install.packages('ggpubr')
+if (!require(yardstick)) install.packages('yardstick')
 library(fastDummies)
 library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
 library(ggpubr)
+library(yardstick)
 theme_set(theme_bw())
 
 # color scheme for good, tiny problems, bad to yikes
@@ -45,35 +48,23 @@ source("../R/comparison.R")
 ```{r echo=FALSE}
 res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
 
+#res <- comparison(data.frame(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, full_data$Quality), feature = "Assess percentile NA proportion")
+
+#res <- comparison(data.frame(full_data$assess_col_na, full_data$assess_col_na_cropped, full_data$Quality), feature = "assess col NA")
+#res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Bottom Empty")
+#res <- comparison(data.frame(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, full_data$Quality), feature = "Assess median NA proportion")
+
 res$scatterplot + coord_equal()
 
 res$boxplot
 
+res$roc_curve
+
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
-#comparison(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, feature = "Assess percentile NA proportion")
-#comparison(full_data$assess_col_na, full_data$assess_col_na_cropped, feature = "assess col NA")
-#comparison(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, feature = "Bottom Empty")
-#comparison(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, feature = "Assess median NA proportion")
 ```
 
 ```{r}
-df = data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality)
-feature = "Extract NA"
-upper = max(max(df[,1]), max(df[,2]))
-upper = upper * 1.1
-ggplot(df, aes(x=df[,1], y=df[,2])) +
-    geom_point(data = df[,-3], col="grey", size = 1, aes(group=1)) +
-    geom_point(size=2, pch=21, aes(fill=factor(df[,3]), group=2)) +
-    scale_fill_manual(values=c("blue","green","yellow", "orange", "red")) + 
-    xlim(0,upper) +
-    ylim(0,upper) +
-    xlab("Standard") +
-    ylab("Cropped") +
-    ggtitle(feature) +
-    geom_smooth(formula = y ~ x, method=lm, se = FALSE) +
-    stat_regline_equation(label.y = upper, aes(label = ..eq.label..)) +
-    stat_regline_equation(label.y = upper*0.9, aes(label = ..rr.label..)) +
-    facet_grid(~df[,3])
+# Test Zone
 ```
 
