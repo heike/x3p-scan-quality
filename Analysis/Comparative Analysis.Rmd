@@ -5,10 +5,6 @@ date: "2022-12-09"
 output: html_document
 ---
 
-XXX Motivate the use of cropped scans in the quality assessment functions
-
-XXX Show an example of a full scan with a markup of which part is used for cropping, and which parameters (margins) you are using.
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -25,38 +21,44 @@ library(RColorBrewer)
 library(ggpubr)
 library(yardstick)
 theme_set(theme_bw())
+## Load Functions - eventually we would like to just load a library
 
-```
-
-Staging
-```{r}
-full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", header=TRUE)
-```
-
-```{r}
-full_data = full_data %>% mutate(
-  Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
-  Problem = factor(Problem)
-)
-
-```
-
-
-## Functions
-
-```{r}
 source("../R/comparison.R")
 ```
 
-## Comparison of features on Full and Cropped Scans
+```{r data, echo=FALSE, cache=TRUE}
+full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", header=TRUE)
 
-# Extract NA
+# some prepping
+full_data = full_data %>% mutate(
+  Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
+  Problem = factor(Problem),
+  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor()
+)
+```
+
+
+# Comparison of features on Full and Cropped Scans
+
+XXX Motivate the use of cropped scans in the quality assessment functions
+
+XXX Show an example of a full scan with a markup of which part is used for cropping, and which parameters (margins) you are using.
+
+### TL;DR 
+
+XXX List the results here - we will pull from this list when we write things up and source figures/code from this document as needed.
+
+## Extract NA
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in R^{m, n}$ the percentage of missing values is defined as:
 
 XXX write out body of function in math
 
+### Which of the features is better for discriminating between good and bad scans?
+
 ```{r echo=FALSE}
+cor(full_data$extract_na, full_data$extract_na_cropped)
+
 res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
 
 #res <- comparison(data.frame(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, full_data$Quality), feature = "Assess percentile NA proportion")
@@ -74,6 +76,27 @@ res$roc_curve
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
 ```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~extract_na+extract_na_cropped, data = full_data, family = binomial())
+summary(logistic_base)
+
+# extract_na_cropped is the better single predictor. 
+full_data %>% pivot_longer(starts_with("extract_na"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Extract NA
+
+The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+
 
 ```{r}
 # Test Zone
