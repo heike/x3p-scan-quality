@@ -1,9 +1,13 @@
 ---
-title: "Comparative Analysis"
+title: "Comparative Analysis: features of full and cropped scans"
 author: "Craig Orman, Naga Vempati, Heike Hofmann"
 date: "2022-12-09"
 output: html_document
 ---
+
+XXX Motivate the use of cropped scans in the quality assessment functions
+
+XXX Show an example of a full scan with a markup of which part is used for cropping, and which parameters (margins) you are using.
 
 
 ```{r setup, include=FALSE}
@@ -39,9 +43,18 @@ full_data = full_data %>% mutate(
 
 
 ## Functions
+
 ```{r}
 source("../R/comparison.R")
 ```
+
+## Comparison of features on Full and Cropped Scans
+
+# Extract NA
+
+The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in R^{m, n}$ the percentage of missing values is defined as:
+
+XXX write out body of function in math
 
 ```{r echo=FALSE}
 res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
