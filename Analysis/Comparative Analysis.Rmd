@@ -33,7 +33,8 @@ full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", heade
 full_data = full_data %>% mutate(
   Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
   Problem = factor(Problem),
-  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor()
+  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor(),
+  LAPD_id = sprintf("FAU%3d-B%s-L%d",FAU, Bullet, Land)
 )
 ```
 
@@ -96,6 +97,21 @@ The values for feature `extract_NA` are highly correlated between the cropped an
 
 Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
 
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & extract_na_cropped>15)
+full_data %>% 
+  ggplot(aes(x = extract_na_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+
+
+full_data$LAPD_id[full_data$followup]
+```
 
 
 ```{r}
