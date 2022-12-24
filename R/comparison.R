@@ -38,6 +38,7 @@ comparison <- function(df, feature) {
     ggplot(aes( x = Scan, y = value, fill=Scan)) +
     geom_boxplot() + facet_grid(.~quality) +
     ylab(feature) +
+    ggtitle(feature) +
     scale_fill_manual(values=col_scans_light)
 
   summ = data.frame(min = numeric(),
@@ -60,14 +61,14 @@ comparison <- function(df, feature) {
 
   rocy <- roc_curve(metric, truth=factor(quality), Class1=full) %>%
     ggplot(aes(x = 1 - specificity, y = sensitivity)) +
-    geom_path(aes(colour="Full Scan")) +
+    geom_path(aes(colour="Full")) +
     geom_abline(lty = 3) +
     coord_equal() +
     theme_bw() +
-    geom_path(aes(colour="Cropped Scan"),
+    geom_path(aes(colour="Cropped"),
               data = roc_curve(metric, truth=factor(quality), Class1=cropped)) +
     ggtitle(feature) +
-    scale_colour_manual(values=col_scans_dark)
+    scale_colour_manual("Scan",values=col_scans_dark)
 
   return(list(scatterplot=scatty, boxplot=boxy, summary=summ, roc_curve=rocy))
 }
