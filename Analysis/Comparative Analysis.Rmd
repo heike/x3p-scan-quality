@@ -22,8 +22,6 @@ library(ggpubr)
 library(yardstick)
 theme_set(theme_bw())
 
-# color scheme for good, tiny problems, bad to yikes
-col_quality <- brewer.pal(n=8, name="RdBu")[rev(c(1:3, 5, 7))]
 ```
 
 Staging

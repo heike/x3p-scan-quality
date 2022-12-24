@@ -1,3 +1,11 @@
+# color scheme for good, tiny problems, bad to yikes
+col_quality <- brewer.pal(n=8, name="RdBu")[rev(c(1:3, 5, 7))]
+
+# color scheme for standard versus cropped scans
+col_scans_light <- brewer.pal(n=9, name="BrBG")[c(3,7)]
+col_scans_dark <- brewer.pal(n=9, name="BrBG")[c(2,8)]
+
+
 #' Create visual and numeric summaries for feature comparison
 #'
 comparison <- function(df, feature) {
@@ -30,7 +38,7 @@ comparison <- function(df, feature) {
     ggplot(aes( x = Scan, y = value, fill=Scan)) +
     geom_boxplot() + facet_grid(.~quality) +
     ylab(feature) +
-    scale_fill_manual(values=c("yellow", "green"))
+    scale_fill_manual(values=col_scans_light)
 
   summ = data.frame(min = numeric(),
                     firstQ = numeric(),
@@ -58,7 +66,8 @@ comparison <- function(df, feature) {
     theme_bw() +
     geom_path(aes(colour="Cropped Scan"),
               data = roc_curve(metric, truth=factor(quality), Class1=cropped)) +
-    ggtitle(feature)
+    ggtitle(feature) +
+    scale_colour_manual(values=col_scans_dark)
 
   return(list(scatterplot=scatty, boxplot=boxy, summary=summ, roc_curve=rocy))
 }
