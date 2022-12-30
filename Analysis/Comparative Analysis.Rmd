@@ -53,12 +53,12 @@ XXX List the results here - we will pull from this list when we write things up 
 
 ## Extract NA
 
-The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in R^{m, n}$ the percentage of missing values is defined as:
+The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
 
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values $R$ contains $A$:
-$R:= R \cup A$. 
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
 
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integer values, $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$ The proportion of missing values in X is then defined as: 
+With that, let $X \in {\rm I\!R}^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integer values, $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$ The proportion of missing values in X is then defined as: 
 $$
 \frac{1}{m*n} \sum^m_{i=1} \sum^n_{j=1} \theta_A(x_{ij}) \\
 \text{Where } \theta_A(x) = \left\{\begin{aligned}
