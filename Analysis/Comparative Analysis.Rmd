@@ -125,6 +125,61 @@ full_data %>%
 full_data$LAPD_id[full_data$followup]
 ```
 
+## Assess Bottomempty
+
+The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
+
+XXX explain the function in math
+
+### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+cor(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped)
+
+res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Assess Bottomempty")
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_bottomempty+assess_bottomempty_cropped, data = full_data, family = binomial())
+summary(logistic_base)
+
+# assess_bottomempty_cropped is the better single predictor. 
+full_data %>% pivot_longer(starts_with("assess_bottomempty"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Assess Bottomempty
+
+The values for feature `assess_bottomempty` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_bottomempty_cropped>30)
+full_data %>% 
+  ggplot(aes(x = assess_bottomempty_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full_data$LAPD_id[full_data$followup]
+```
+
 
 ```{r}
 # Test Zone
