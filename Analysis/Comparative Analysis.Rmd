@@ -137,11 +137,15 @@ With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x
 Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
 $$
 \forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
-
 \text{Where } \theta_A(x) = \left\{\begin{aligned}
 &1 &&: \text{if }x \in A\\
 &0 &&: \text{otherwise}\\
 \end{aligned} \right.
+$$
+
+Let $B \subset R$ be a set, which is the set of all values in $R_i$, given that $i \geq m*0.8$. Therefore, the proportion of missing values in $X$'s bottom 20% can be given by:
+$$
+\frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
 $$
 
 ### Which of the features is better for discriminating between good and bad scans?
@@ -193,6 +197,66 @@ full_data %>%
 full_data$LAPD_id[full_data$followup]
 ```
 
+## Assess Col NA
+
+The function `assess_col_na` calculates the percentage of missing values 
+
+XXX Explanation of function
+
+XXX Maths
+
+
+### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+cor(full_data$assess_col_na, full_data$assess_col_na_cropped)
+
+res <- comparison(data.frame(full_data$assess_col_na, full_data$assess_col_na_cropped, full_data$Quality), feature = "Assess Col NA")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_col_na+assess_col_na_cropped, data = full_data, family = binomial())
+summary(logistic_base)
+
+# Both predictors are about the same. . 
+full_data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Assess Col NA
+
+The values for feature `assess_col_na` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_col_na_cropped>1.35)
+full_data %>% 
+  ggplot(aes(x = assess_col_na_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+
+
+full_data$LAPD_id[full_data$followup]
+```
 
 ```{r}
 # Test Zone
