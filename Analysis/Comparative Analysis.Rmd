@@ -129,7 +129,20 @@ full_data$LAPD_id[full_data$followup]
 
 The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
 
-XXX explain the function in math
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
+$$
+\forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
+
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
 
 ### Which of the features is better for discriminating between good and bad scans?
 
