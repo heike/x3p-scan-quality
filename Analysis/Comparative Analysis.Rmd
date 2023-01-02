@@ -1,0 +1,186 @@
+---
+title: "Comparative Analysis: features of full and cropped scans"
+author: "Craig Orman, Naga Vempati, Heike Hofmann"
+date: "2022-12-09"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(fastDummies)) install.packages('fastDummies')
+if (!require(tidyverse)) install.packages('tidyverse')
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(RColorBrewer)) install.packages('RColorBrewer')
+if (!require(ggpubr)) install.packages('ggpubr')
+if (!require(yardstick)) install.packages('yardstick')
+library(fastDummies)
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(ggpubr)
+library(yardstick)
+theme_set(theme_bw())
+## Load Functions - eventually we would like to just load a library
+
+source("../R/comparison.R")
+```
+
+```{r data, echo=FALSE, cache=TRUE}
+full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", header=TRUE)
+
+# some prepping
+full_data = full_data %>% mutate(
+  Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
+  Problem = factor(Problem),
+  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor(),
+  LAPD_id = sprintf("FAU%3d-B%s-L%d",FAU, Bullet, Land)
+)
+```
+
+
+# Comparison of features on Full and Cropped Scans
+
+XXX Motivate the use of cropped scans in the quality assessment functions
+
+XXX Show an example of a full scan with a markup of which part is used for cropping, and which parameters (margins) you are using.
+
+
+
+### TL;DR 
+
+XXX List the results here - we will pull from this list when we write things up and source figures/code from this document as needed.
+
+## Extract NA
+
+The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in {\rm I\!R}^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integer values, $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$ The proportion of missing values in X is then defined as: 
+$$
+\frac{1}{m*n} \sum^m_{i=1} \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+cor(full_data$extract_na, full_data$extract_na_cropped)
+
+res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
+
+#res <- comparison(data.frame(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, full_data$Quality), feature = "Assess percentile NA proportion")
+
+#res <- comparison(data.frame(full_data$assess_col_na, full_data$assess_col_na_cropped, full_data$Quality), feature = "assess col NA")
+#res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Bottom Empty")
+#res <- comparison(data.frame(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, full_data$Quality), feature = "Assess median NA proportion")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~extract_na+extract_na_cropped, data = full_data, family = binomial())
+summary(logistic_base)
+
+# extract_na_cropped is the better single predictor. 
+full_data %>% pivot_longer(starts_with("extract_na"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Extract NA
+
+The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & extract_na_cropped>15)
+full_data %>% 
+  ggplot(aes(x = extract_na_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+
+
+full_data$LAPD_id[full_data$followup]
+```
+
+## Assess Bottomempty
+
+The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
+
+XXX explain the function in math
+
+### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+cor(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped)
+
+res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Assess Bottomempty")
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_bottomempty+assess_bottomempty_cropped, data = full_data, family = binomial())
+summary(logistic_base)
+
+# assess_bottomempty_cropped is the better single predictor. 
+full_data %>% pivot_longer(starts_with("assess_bottomempty"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Assess Bottomempty
+
+The values for feature `assess_bottomempty` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_bottomempty_cropped>30)
+full_data %>% 
+  ggplot(aes(x = assess_bottomempty_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full_data$LAPD_id[full_data$followup]
+```
+
+
+```{r}
+# Test Zone
+```
