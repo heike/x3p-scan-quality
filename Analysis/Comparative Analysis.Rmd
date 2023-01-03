@@ -51,6 +51,14 @@ XXX Show an example of a full scan with a markup of which part is used for cropp
 
 XXX List the results here - we will pull from this list when we write things up and source figures/code from this document as needed.
 
+Extract NA, Cropped is better
+
+Assess Bottomempty, cropped is better
+
+assess column empty, about equal, cropped might be slightly better
+
+Assess Median NA Proportion, full is better
+
 ## Extract NA
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
@@ -203,8 +211,33 @@ The function `assess_col_na` calculates the percentage of missing values
 
 XXX Explanation of function
 
-XXX Maths
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
 
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the sum of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \sum^m_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We define $P$ as the proportion of all NAs per column for every row, as defined here:
+$$
+\forall i \in R: P_i = \frac{R_i}{n} * 100
+$$
+
+
+$$
+\frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
+\text{Where } \beta_B(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x > 20\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
 
 ### Which of the features is better for discriminating between good and bad scans?
 
@@ -229,7 +262,7 @@ knitr::kable(res$summ, caption=attr(res$summ, "title"))
 logistic_base <- glm(GoodScan~assess_col_na+assess_col_na_cropped, data = full_data, family = binomial())
 summary(logistic_base)
 
-# Both predictors are about the same. . 
+# Both predictors are about the same.
 full_data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>% 
   ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
   facet_grid(.~Scan)
@@ -237,6 +270,8 @@ full_data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>%
 
 
 ### Conclusion for Assess Col NA
+
+XXX need to decide between full or cropped
 
 The values for feature `assess_col_na` are highly correlated between the cropped and the full scan. 
 
@@ -257,6 +292,88 @@ full_data %>%
 
 full_data$LAPD_id[full_data$followup]
 ```
+
+## Assess Median NA Proportion
+
+The function `assess_median_na_proportion` 
+
+The code: 
+assess_median_na_proportion <- function(x3p, chopoff = 1/6, numlines = 20) {
+  # median is 50th percentile :) wrapper will give the same results
+  assess_percentile_na_proportion(x3p = x3p, chopoff = chopoff, numlines = numlines, percentile = .50)
+
+XXX Explanation of function
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the mean of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \frac{\sum^m_{j=1} \theta_A(x_{ij})}{m} \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We then sort, and select the median of $R$
+
+### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+cor(full_data$extract_na, full_data$extract_na_cropped)
+
+
+res <- comparison(data.frame(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, full_data$Quality), feature = "Assess median NA proportion")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_median_na_proportion+assess_median_na_proportion_cropped,
+                     data = full_data, family = binomial())
+summary(logistic_base)
+
+# assess_median_na_proportion is the better single predictor. 
+full_data %>% pivot_longer(starts_with("assess_median_na_proportion"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+### Conclusion for Assess Median NA Proportion
+
+The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to full scans has an increased accuracy compared to the feature values from the cropped scan. 
+
+We might want to follow up on the orange colored scans:
+
+XXX Is 0.095 really what we want?
+
+```{r echo=FALSE, fig.height=3}
+full_data  <- full_data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_median_na_proportion>0.095)
+full_data %>% 
+  ggplot(aes(x = assess_median_na_proportion, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full_data$LAPD_id[full_data$followup]
+```
+
 
 ```{r}
 # Test Zone
