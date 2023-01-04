@@ -41,11 +41,10 @@ full_data = full_data %>% mutate(
 
 # Comparison of features on Full and Cropped Scans
 
-XXX Motivate the use of cropped scans in the quality assessment functions
+This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the top of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, and a cropped image.
 
-XXX Show an example of a full scan with a markup of which part is used for cropping, and which parameters (margins) you are using.
-
-
+![Image of a scan without cropping](../Images/FAU-278-BD-L1-Full.png)
+![Image of a scan with cropping](../Images/FAU-278-BD-L1-Cropped.png)
 
 ### TL;DR 
 
@@ -209,7 +208,7 @@ full_data$LAPD_id[full_data$followup]
 
 The function `assess_col_na` calculates the percentage of missing values 
 
-XXX Explanation of function
+For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
 
 Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
 ${\rm I\!R}:= {\rm I\!R} \cup A$. 
@@ -230,7 +229,7 @@ $$
 \forall i \in R: P_i = \frac{R_i}{n} * 100
 $$
 
-
+We now find the proportion of threshold adjusted columns in the matrix 
 $$
 \frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
 \text{Where } \beta_B(x) = \left\{\begin{aligned}
