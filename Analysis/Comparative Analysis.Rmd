@@ -130,7 +130,34 @@ full_data %>%
 
 
 full_data$LAPD_id[full_data$followup]
+# All followups for extract_na are mislabelled scans. They are all labelled as tiny problems but should be problematic or worse.
 ```
+
+```{r, include = FALSE, eval = FALSE}
+library(x3ptools)
+# /media/Raven/LAPD
+f1 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BA-L4 is labelled tiny-problems but should be labelled Problematic or worse
+
+f2 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 1 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BC-L1 is labelled tiny-problems but should be labelled Problematic or worse
+
+f3 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BC-L3 is labelled tiny-problems but should be labelled Problematic or worse
+
+f4 <- x3p_read("/media/Raven/LAPD/FAU 287/Bullet C/LAPD - 287 - Bullet C - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU287-BC-L5 is labelled tiny-problems but should be labelled Problematic or worse
+
+f5 <- x3p_read("/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p")
+# FAU154-BD-L2 is labelled tiny-problems but should be labelled Problematic or worse
+
+f6 <- x3p_read("/media/Raven/LAPD/FAU 277/Bullet A/LAPD - 277 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU277-BA-L4 is labelled tiny-problems but should be labelled Problematic or worse
+
+f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU286-BA-L5 is labelled tiny-problems but should be labelled Problematic or worse
+```
+
 
 ## Assess Bottomempty
 
@@ -201,8 +228,35 @@ full_data %>%
   scale_colour_manual(values=c("grey50", "darkorange"))
 ```
 ```{r}
-full_data$LAPD_id[full_data$followup]
+followup <- full_data$LAPD_id[full_data$followup]
 ```
+
+```{r, include = FALSE, eval = FALSE}
+# All problems are registered as tiny problems
+followup <- c("FAU263-BA-L4", "FAU287-BC-L5", "FAU254-BD-L4", "FAU275-BC-L5", "FAU275-BD-L3", "FAU277-BA-L4", "FAU286-BA-L5")
+f1 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f1, main=followup[1])
+
+f2 <- x3p_read("/media/Raven/LAPD/FAU 287/Bullet C/LAPD - 287 - Bullet C - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f2, main=followup[2])
+
+f3 <- x3p_read("/media/Raven/LAPD/FAU 254/Bullet D/LAPD - 254 - Bullet D - Land 4 - Sneox2 - 20x - auto light left image +20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f3, main=followup[3])
+
+f4 <- x3p_read("/media/Raven/LAPD/FAU 275/Bullet C/LAPD - 275 - Bullet C - Land 5 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f4, main=followup[4])
+
+f5 <- x3p_read("/media/Raven/LAPD/FAU 275/Bullet D/LAPD - 275 - Bullet D - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f5, main=followup[5])
+
+f6 <- x3p_read("/media/Raven/LAPD/FAU 277/Bullet A/LAPD - 277 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f6, main=followup[6])
+
+f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f7, main=followup[7])
+
+```
+
 
 ## Assess Col NA
 
@@ -287,9 +341,16 @@ full_data %>%
   scale_colour_manual(values=c("grey50", "darkorange"))
 ```
 ```{r}
-
-
 full_data$LAPD_id[full_data$followup]
+```
+
+```{r, include = FALSE, eval = FALSE}
+followup <- data.frame(LAPD_ID = c("FAU263-BA-L4", "FAU263-BB-L3", "FAU263-BC-L1", "FAU263-BC-L3", "FAU154-BD-L2", "FAU286-BA-L5"), filePAth = c("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet B/LAPD - 263 - Bullet B - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 1 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p"  , "/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p"))
+
+for (i in 1:nrow(followup)) {
+  f <- x3p_read(followup[i,2])
+  image(f, main=followup[i,1])
+}
 ```
 
 ## Assess Median NA Proportion
@@ -372,6 +433,16 @@ full_data %>%
 ```{r}
 full_data$LAPD_id[full_data$followup]
 ```
+```{r, include = FALSE, eval = FALSE}
+followup <- data.frame(LAPD_ID = c("FAU263-BC-L3", "FAU154-BD-L2", "FAU204-BC-L4"), filePAth = c("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p", "/media/Raven/LAPD/FAU 204/Bullet C/LAPD - 204 - Bullet C - Land 4 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p"))
+
+for (i in 1:nrow(followup)) {
+  f <- x3p_read(followup[i,2])
+  image(f, main=followup[i,1])
+}
+# all should be relabbeled, FAU 204, BC, L4 is particularly Yikes looking
+```
+
 
 
 ```{r}
