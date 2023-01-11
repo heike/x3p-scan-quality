@@ -50,11 +50,11 @@ This analysis is to compare the difference between the cropped versus non-croppe
 
 XXX List the results here - we will pull from this list when we write things up and source figures/code from this document as needed.
 
-Extract NA, Cropped is better
+Extract NA, cropped is better
 
 Assess Bottomempty, cropped is better
 
-assess column empty, about equal, cropped might be slightly better
+Assess Column Empty, about equal, cropped might be slightly better
 
 Assess Median NA Proportion, full is better
 
@@ -355,14 +355,7 @@ for (i in 1:nrow(followup)) {
 
 ## Assess Median NA Proportion
 
-The function `assess_median_na_proportion` 
-
-The code: 
-assess_median_na_proportion <- function(x3p, chopoff = 1/6, numlines = 20) {
-  # median is 50th percentile :) wrapper will give the same results
-  assess_percentile_na_proportion(x3p = x3p, chopoff = chopoff, numlines = numlines, percentile = .50)
-
-XXX Explanation of function
+The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
 
 Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
 ${\rm I\!R}:= {\rm I\!R} \cup A$. 
