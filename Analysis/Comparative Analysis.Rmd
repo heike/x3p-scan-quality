@@ -48,15 +48,15 @@ This analysis is to compare the difference between the cropped versus non-croppe
 
 ### TL;DR 
 
-XXX List the results here - we will pull from this list when we write things up and source figures/code from this document as needed.
+Extract NA, cropped is better.
 
-Extract NA, cropped is better
+Assess Bottomempty, cropped is better.
 
-Assess Bottomempty, cropped is better
+Assess Column Empty, cropped is slightly better.
 
-Assess Column Empty, about equal, cropped might be slightly better
+Assess Median NA Proportion, full is better.
 
-Assess Median NA Proportion, full is better
+Upon investigation, all of the followup scans appeared to be "Tiny Problems" labelled and could reasonably be reclassified as "Problematic".
 
 ## Extract NA
 
@@ -324,8 +324,6 @@ full_data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>%
 
 ### Conclusion for Assess Col NA
 
-XXX need to decide between full or cropped
-
 The values for feature `assess_col_na` are highly correlated between the cropped and the full scan. 
 
 Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
@@ -412,8 +410,6 @@ The values for feature `extract_NA` are highly correlated between the cropped an
 Using good and scans with only tiny problems as overall 'good' scans, the feature applied to full scans has an increased accuracy compared to the feature values from the cropped scan. 
 
 We might want to follow up on the orange colored scans:
-
-XXX Is 0.095 really what we want?
 
 ```{r echo=FALSE, fig.height=3}
 full_data  <- full_data %>% 
