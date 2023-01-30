@@ -65,6 +65,8 @@ This analysis is to compare the difference between the cropped versus non-croppe
 
 xxx Overview of features with links (anchors)
 
+XXX move mathematical definitions that you need for multiple features here. Give the definitions numbers or names and then refer to these definitions as needed below.
+
 ### Extract NA
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
