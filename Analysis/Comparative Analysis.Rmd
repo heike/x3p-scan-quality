@@ -67,6 +67,9 @@ xxx Overview of features with links (anchors)
 
 XXX move mathematical definitions that you need for multiple features here. Give the definitions numbers or names and then refer to these definitions as needed below.
 
+XXX I realized that I just knocked down the features by one level in the hierarchy - could you propagate that through, so that we have a heading level 4 within a feature and consistently level 3 headings for each feature?
+
+
 ### Extract NA
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
