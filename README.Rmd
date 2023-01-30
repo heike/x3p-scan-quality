@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## CSAFE X3P Bullet Scan Quality Analysis
 
-
 Folder structure of this repo
 
     -- R
@@ -30,12 +29,11 @@ Folder structure of this repo
 
 Assess and discuss results from evaluating features on full scans and cropped scans.
 
-Files needed: 
+Files needed:
 
-- Writeup: [Comparative Analysis.Rmd](Analysis/Comparative Analysis.Rmd): 
-- Data: [std_and_cropped_data_12_20_2022.csv](data/std_and_cropped_data_12_20_2022.csv)
-- R scripts: [comparison.R](R/comparison.R)  compares features evaluated on full scans versus cropped scans
-
+-   Writeup: [Comparative Analysis](Analysis/Comparative-Analysis.html)
+-   Data: [std_and_cropped_data_12_20_2022.csv](data/std_and_cropped_data_12_20_2022.csv)
+-   R scripts: [comparison.R](R/comparison.R) compares features evaluated on full scans versus cropped scans
 
 ## Data
 

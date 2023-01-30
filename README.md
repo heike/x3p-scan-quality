@@ -26,8 +26,7 @@ cropped scans.
 
 Files needed:
 
-- Writeup: [Comparative
-  Analysis.Rmd](Analysis/Comparative%20Analysis.Rmd):
+- Writeup: [Comparative Analysis](Analysis/Comparative-Analysis.html)
 - Data:
   [std_and_cropped_data_12_20_2022.csv](data/std_and_cropped_data_12_20_2022.csv)
 - R scripts: [comparison.R](R/comparison.R) compares features evaluated
