@@ -57,8 +57,8 @@ Upon investigation, all of the followup scans appeared to be "Tiny Problems" lab
 
 This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the top of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, and a cropped image.
 
-![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-278-BD-L1-Full.png)
-![Image of a scan with cropping](./Comparative-Analysis_files/figure-html/FAU-278-BD-L1-Cropped.png)
+![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
+![Image of a scan with cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-Cropped.png)
 
 
 ## Features
