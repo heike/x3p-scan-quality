@@ -1,0 +1,6 @@
+library(x3ptools)
+source("./crop_X3P.R")
+x3p <- read_x3p("../x3p-scan-quality/Data/LAPD - 254 - Bullet B - Land 1 - Sneox2 - 20x - auto light left image +20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+x3p_cropped = crop_X3P(x3p)
+x3p_image(x3p, "../x3p-scan-quality/Analysis/Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png")
+x3p_image(x3p_cropped)
