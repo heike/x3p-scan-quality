@@ -53,13 +53,25 @@ To conduct our analysis, we did a series of tests to compare the cropped version
 
 [Assess Median NA Proportion](#assess-median-na-proportion), calculates the mean number of NA's in each column, and then finds the median out of all those values. This feature performed better when left as the full scan. The ROC area for the cropped was better by only 0.001, the p values for both features were found to be extremely significant, but the full scan was lower. The kernel density graph was more distinct for the full images. 
 
+```{r, echo = FALSE}
+feature_table <- data.frame(matrix(nrow = 4, ncol=5, dimnames=list(c("Extract NA", "Assess Bottomempty", "Assess Col NA", "Assess Median NA Proportion"), c("Correlation", "pvalue_Full", "pvalue_cropped", "auc_Full", "auc_Cropped"))))
+
+feature_table[1,] <- c(0.908, "0.229", "<2e-16", 0.871, 0.902)
+feature_table[2,] <- c(0.905, "5.86e-10", "<2e-16", 0.783, 0.859)
+feature_table[3,] <- c(0.919, "1.62e-06", "1.17e-14", 0.888, 0.896)
+feature_table[4,] <- c(0.908, "<2e-16", "6.77e-10", 0.907, 0.863)
+
+knitr::kable(feature_table)
+```
+
 All of the features had significant outliers for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
 ## Background and Introduction
 
-This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the top of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, and a cropped image.
+This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the top of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, full with marked edges, and a cropped image.
 
 ![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
+![Image of a scan with the edges colored](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-masked.png)
 ![Image of a scan with cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-Cropped.png)
 
 
@@ -119,6 +131,7 @@ full_data %>% pivot_longer(starts_with("extract_na"), names_to="Scan") %>%
   scale_fill_manual(values=col_scans_light) +
   scale_colour_manual(values=col_scans_dark) +
   facet_grid(.~Scan)
+
 ```
 
 
