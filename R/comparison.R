@@ -70,5 +70,9 @@ comparison <- function(df, feature) {
     ggtitle(feature) +
     scale_colour_manual("Scan",values=col_scans_dark)
 
-  return(list(scatterplot=scatty, boxplot=boxy, summary=summ, roc_curve=rocy))
+  aucy <- data.frame(matrix(data=0, nrow = 1, ncol = 2, dimnames=list(c(), c("Full_AUC", "Cropped_AUC"))))
+    aucy$Full_AUC <- roc_auc(data=metric, truth=factor(quality), Class1=full)$.estimate
+    aucy$Cropped_AUC <- roc_auc(data=metric, truth=factor(quality), Class1=cropped)$.estimate
+
+  return(list(scatterplot=scatty, boxplot=boxy, summary=summ, roc_curve=rocy, roc_auc = aucy))
 }

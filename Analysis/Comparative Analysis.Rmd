@@ -43,15 +43,17 @@ full_data = full_data %>% mutate(
 
 ### TL;DR 
 
-Extract NA, cropped is better.
+To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis We trained a Generalized Linear Model (glm) to test the p scores, or importance, of each variable in the model, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.
 
-Assess Bottomempty, cropped is better.
+[Extract NA](#extract-na), a measure of the total missing value count in the scan over the total value count. This feature performed better when it is cropped with no reservations. The ROC curve and p score in the glm were both better for the cropped image. The kernel density graph was also more distinct for the cropped image. 
 
-Assess Column Empty, cropped is slightly better.
+[Assess Bottomempty](#assess-bottomempty), a measure of missing value count in the bottom 20% of the scan compared to the total value count in the same area. This feature performed better when it is cropped with no reservations. The ROC curve and p score in the glm were both better for the cropped image. The kernel density graph was also more distinct for the cropped image. 
 
-Assess Median NA Proportion, full is better.
+[Assess Col NA](#assess-col-na), the proportion of columns in the scans matrix which have more than 20% missing values. This feature performed only marginally better when cropped. The ROC area difference is only 0.008, and the p scores for both features were found to be extremely significant. The kernal density graphs are very similar with the cropped graph being slightly more distinct.
 
-Upon investigation, all of the followup scans appeared to be "Tiny Problems" labelled and could reasonably be reclassified as "Problematic".
+[Assess Median NA Proportion](#assess-median-na-proportion), calculates the mean number of NA's in each column, and then finds the median out of all those values. This feature performed better when left as the full scan. The ROC area for the cropped was better by only 0.001, the p values for both features were found to be extremely significant, but the full scan was lower. The kernel density graph was more distinct for the full images. 
+
+All of the features had significant outliers for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
 ## Background and Introduction
 
@@ -64,10 +66,9 @@ This analysis is to compare the difference between the cropped versus non-croppe
 ## Features
 
 xxx Overview of features with links (anchors)
+We have identified four potential features of our scan quality assessor which could benefit from being cropped. [Extract NA](#extract-na)
 
 XXX move mathematical definitions that you need for multiple features here. Give the definitions numbers or names and then refer to these definitions as needed below.
-
-XXX I realized that I just knocked down the features by one level in the hierarchy - could you propagate that through, so that we have a heading level 4 within a feature and consistently level 3 headings for each feature?
 
 
 ### Extract NA
@@ -86,18 +87,12 @@ $$
 \end{aligned} \right.
 $$
 
-### Which of the features is better for discriminating between good and bad scans?
+#### Which of the features is better for discriminating between good and bad scans?
 
 ```{r echo=FALSE}
-cor(full_data$extract_na, full_data$extract_na_cropped)
+correlation <- cor(full_data$extract_na, full_data$extract_na_cropped)
 
 res <- comparison(data.frame(full_data$extract_na, full_data$extract_na_cropped, full_data$Quality), feature = "Extract NA")
-
-#res <- comparison(data.frame(full_data$assess_percentile_na_proportion, full_data$assess_percentile_na_proportion_cropped, full_data$Quality), feature = "Assess percentile NA proportion")
-
-#res <- comparison(data.frame(full_data$assess_col_na, full_data$assess_col_na_cropped, full_data$Quality), feature = "assess col NA")
-#res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Bottom Empty")
-#res <- comparison(data.frame(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, full_data$Quality), feature = "Assess median NA proportion")
 
 res$scatterplot + coord_equal()
 
@@ -105,10 +100,12 @@ res$boxplot
 
 res$roc_curve
 
+print(paste("Extract NA. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
 ```
-### Should we use features from just one type of scan or both?
+#### Should we use features from just one type of scan or both?
 
 ```{r, echo=FALSE}
 # logistic regression in the two features
@@ -117,12 +114,15 @@ summary(logistic_base)
 
 # extract_na_cropped is the better single predictor. 
 full_data %>% pivot_longer(starts_with("extract_na"), names_to="Scan") %>% 
-  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) +
+  geom_density(alpha=0.8) +
+  scale_fill_manual(values=col_scans_light) +
+  scale_colour_manual(values=col_scans_dark) +
   facet_grid(.~Scan)
 ```
 
 
-### Conclusion for Extract NA
+#### Conclusion for Extract NA
 
 The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
 
@@ -171,7 +171,7 @@ f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 
 ```
 
 
-## Assess Bottomempty
+### Assess Bottomempty
 
 The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
 
@@ -194,10 +194,10 @@ $$
 \frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
 $$
 
-### Which of the features is better for discriminating between good and bad scans?
+#### Which of the features is better for discriminating between good and bad scans?
 
 ```{r echo=FALSE}
-cor(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped)
+correlation <- cor(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped)
 
 res <- comparison(data.frame(full_data$assess_bottomempty, full_data$assess_bottomempty_cropped, full_data$Quality), feature = "Assess Bottomempty")
 res$scatterplot + coord_equal()
@@ -206,10 +206,12 @@ res$boxplot
 
 res$roc_curve
 
+print(paste("Assess Bottomempty. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
 ```
-### Should we use features from just one type of scan or both?
+#### Should we use features from just one type of scan or both?
 
 ```{r, echo=FALSE}
 # logistic regression in the two features
@@ -223,7 +225,7 @@ full_data %>% pivot_longer(starts_with("assess_bottomempty"), names_to="Scan") %
 ```
 
 
-### Conclusion for Assess Bottomempty
+#### Conclusion for Assess Bottomempty
 
 The values for feature `assess_bottomempty` are highly correlated between the cropped and the full scan. 
 
@@ -270,7 +272,7 @@ image(f7, main=followup[7])
 ```
 
 
-## Assess Col NA
+### Assess Col NA
 
 The function `assess_col_na` calculates the percentage of missing values 
 
@@ -304,10 +306,10 @@ $$
 \end{aligned} \right.
 $$
 
-### Which of the features is better for discriminating between good and bad scans?
+#### Which of the features is better for discriminating between good and bad scans?
 
 ```{r echo=FALSE}
-cor(full_data$assess_col_na, full_data$assess_col_na_cropped)
+correlation <- cor(full_data$assess_col_na, full_data$assess_col_na_cropped)
 
 res <- comparison(data.frame(full_data$assess_col_na, full_data$assess_col_na_cropped, full_data$Quality), feature = "Assess Col NA")
 
@@ -317,10 +319,12 @@ res$boxplot
 
 res$roc_curve
 
+print(paste("Assess Col NA Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
 ```
-### Should we use features from just one type of scan or both?
+#### Should we use features from just one type of scan or both?
 
 ```{r, echo=FALSE}
 # logistic regression in the two features
@@ -334,7 +338,7 @@ full_data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>%
 ```
 
 
-### Conclusion for Assess Col NA
+#### Conclusion for Assess Col NA
 
 The values for feature `assess_col_na` are highly correlated between the cropped and the full scan. 
 
@@ -363,7 +367,7 @@ for (i in 1:nrow(followup)) {
 }
 ```
 
-## Assess Median NA Proportion
+### Assess Median NA Proportion
 
 The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
 
@@ -383,10 +387,10 @@ $$
 
 We then sort, and select the median of $R$
 
-### Which of the features is better for discriminating between good and bad scans?
+#### Which of the features is better for discriminating between good and bad scans?
 
 ```{r echo=FALSE}
-cor(full_data$extract_na, full_data$extract_na_cropped)
+correlation <- cor(full_data$extract_na, full_data$extract_na_cropped)
 
 
 res <- comparison(data.frame(full_data$assess_median_na_proportion, full_data$assess_median_na_proportion_cropped, full_data$Quality), feature = "Assess median NA proportion")
@@ -397,10 +401,12 @@ res$boxplot
 
 res$roc_curve
 
+print(paste("Assess Median NA Proportion. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
 
 ```
-### Should we use features from just one type of scan or both?
+#### Should we use features from just one type of scan or both?
 
 ```{r, echo=FALSE}
 # logistic regression in the two features
@@ -415,7 +421,7 @@ full_data %>% pivot_longer(starts_with("assess_median_na_proportion"), names_to=
 ```
 
 
-### Conclusion for Assess Median NA Proportion
+#### Conclusion for Assess Median NA Proportion
 
 The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
 
@@ -444,7 +450,7 @@ for (i in 1:nrow(followup)) {
 # all should be relabbeled, FAU 204, BC, L4 is particularly Yikes looking
 ```
 
-
+## Appendix
 
 ```{r}
 # Test Zone
