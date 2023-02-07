@@ -14,12 +14,14 @@ if (!require(ggplot2)) install.packages('ggplot2')
 if (!require(RColorBrewer)) install.packages('RColorBrewer')
 if (!require(ggpubr)) install.packages('ggpubr')
 if (!require(yardstick)) install.packages('yardstick')
+if (!require(x3ptools)) install.packages('x3ptools')
 library(fastDummies)
 library(tidyverse)
 library(ggplot2)
 library(RColorBrewer)
 library(ggpubr)
 library(yardstick)
+library(x3ptools)
 theme_set(theme_bw())
 ## Load Functions - eventually we would like to just load a library
 
@@ -36,6 +38,8 @@ full_data = full_data %>% mutate(
   GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor(),
   LAPD_id = sprintf("FAU%3d-B%s-L%d",FAU, Bullet, Land)
 )
+
+followupScans <- data.frame()
 ```
 
 
@@ -78,12 +82,10 @@ This analysis is to compare the difference between the cropped versus non-croppe
 ## Features
 
 xxx Overview of features with links (anchors)
-We have identified four potential features of our scan quality assessor which could benefit from being cropped. [Extract NA](#extract-na)
-
+We have identified four potential features of our scan quality assessor which could benefit from being cropped. 
 XXX move mathematical definitions that you need for multiple features here. Give the definitions numbers or names and then refer to these definitions as needed below.
 
-
-### Extract NA
+[Extract NA](#extract-na)
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
 
@@ -98,6 +100,85 @@ $$
 &0 &&: \text{otherwise}\\
 \end{aligned} \right.
 $$
+[Assess Bottomempty](#assess-bottomempty)
+
+The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
+$$
+\forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+Let $B \subset R$ be a set, which is the set of all values in $R_i$, given that $i \geq m*0.8$. Therefore, the proportion of missing values in $X$'s bottom 20% can be given by:
+$$
+\frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
+$$
+[Assess Col NA](#assess-col-na)
+
+The function `assess_col_na` calculates the percentage of missing values 
+
+For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the sum of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \sum^m_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We define $P$ as the proportion of all NAs per column for every row, as defined here:
+$$
+\forall i \in R: P_i = \frac{R_i}{n} * 100
+$$
+
+We now find the proportion of threshold adjusted columns in the matrix 
+$$
+\frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
+\text{Where } \beta_B(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x > 20\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+[Assess Median NA proportion](#assess-median-na-proportion)
+
+The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the mean of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \frac{\sum^m_{j=1} \theta_A(x_{ij})}{m} \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We then sort, and select the median of $R$
+
+## Appendix
+
+### Extract NA
 
 #### Which of the features is better for discriminating between good and bad scans?
 
@@ -150,11 +231,14 @@ full_data %>%
   ggplot(aes(x = extract_na_cropped, y = GoodScan, color = followup)) + 
   geom_jitter() +
   scale_colour_manual(values=c("grey50", "darkorange"))
+
+
 ```
 ```{r}
 
-
 full_data$LAPD_id[full_data$followup]
+
+followupScans <- rbind(followupScans, full_data[full_data$followup == TRUE,])
 # All followups for extract_na are mislabelled scans. They are all labelled as tiny problems but should be problematic or worse.
 ```
 
@@ -185,27 +269,6 @@ f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 
 
 
 ### Assess Bottomempty
-
-The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
-
-Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
-$$
-\forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
-\text{Where } \theta_A(x) = \left\{\begin{aligned}
-&1 &&: \text{if }x \in A\\
-&0 &&: \text{otherwise}\\
-\end{aligned} \right.
-$$
-
-Let $B \subset R$ be a set, which is the set of all values in $R_i$, given that $i \geq m*0.8$. Therefore, the proportion of missing values in $X$'s bottom 20% can be given by:
-$$
-\frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
-$$
 
 #### Which of the features is better for discriminating between good and bad scans?
 
@@ -255,7 +318,9 @@ full_data %>%
   scale_colour_manual(values=c("grey50", "darkorange"))
 ```
 ```{r}
-followup <- full_data$LAPD_id[full_data$followup]
+full_data$LAPD_id[full_data$followup]
+
+followupScans <- rbind(followupScans, full_data[full_data$followup == TRUE,])
 ```
 
 ```{r, include = FALSE, eval = FALSE}
@@ -286,38 +351,6 @@ image(f7, main=followup[7])
 
 
 ### Assess Col NA
-
-The function `assess_col_na` calculates the percentage of missing values 
-
-For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
-
-Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the sum of the NA's for the given column, defined as:
-$$
-\forall i \in R: R_i = \sum^m_{j=1} \theta_A(x_{ij}) \\
-\text{Where } \theta_A(x) = \left\{\begin{aligned}
-&1 &&: \text{if }x \in A\\
-&0 &&: \text{otherwise}\\
-\end{aligned} \right.
-$$
-
-We define $P$ as the proportion of all NAs per column for every row, as defined here:
-$$
-\forall i \in R: P_i = \frac{R_i}{n} * 100
-$$
-
-We now find the proportion of threshold adjusted columns in the matrix 
-$$
-\frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
-\text{Where } \beta_B(x) = \left\{\begin{aligned}
-&1 &&: \text{if }x > 20\\
-&0 &&: \text{otherwise}\\
-\end{aligned} \right.
-$$
 
 #### Which of the features is better for discriminating between good and bad scans?
 
@@ -369,6 +402,8 @@ full_data %>%
 ```
 ```{r}
 full_data$LAPD_id[full_data$followup]
+
+followupScans <- rbind(followupScans, full_data[full_data$followup == TRUE,])
 ```
 
 ```{r, include = FALSE, eval = FALSE}
@@ -381,24 +416,6 @@ for (i in 1:nrow(followup)) {
 ```
 
 ### Assess Median NA Proportion
-
-The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
-
-Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the mean of the NA's for the given column, defined as:
-$$
-\forall i \in R: R_i = \frac{\sum^m_{j=1} \theta_A(x_{ij})}{m} \\
-\text{Where } \theta_A(x) = \left\{\begin{aligned}
-&1 &&: \text{if }x \in A\\
-&0 &&: \text{otherwise}\\
-\end{aligned} \right.
-$$
-
-We then sort, and select the median of $R$
 
 #### Which of the features is better for discriminating between good and bad scans?
 
@@ -452,6 +469,8 @@ full_data %>%
 ```
 ```{r}
 full_data$LAPD_id[full_data$followup]
+
+followupScans <- rbind(followupScans, full_data[full_data$followup == TRUE,])
 ```
 ```{r, include = FALSE, eval = FALSE}
 followup <- data.frame(LAPD_ID = c("FAU263-BC-L3", "FAU154-BD-L2", "FAU204-BC-L4"), filePAth = c("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p", "/media/Raven/LAPD/FAU 204/Bullet C/LAPD - 204 - Bullet C - Land 4 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p"))
@@ -463,8 +482,50 @@ for (i in 1:nrow(followup)) {
 # all should be relabbeled, FAU 204, BC, L4 is particularly Yikes looking
 ```
 
-## Appendix
+### Followup Scans
 
 ```{r}
-# Test Zone
+followupUnique <- followupScans[duplicated(followupScans) == FALSE,]
+followupScans %>% group_by(followupScans$LAPD_id) %>% summarize(
+  count = n()
+)
+
+# 3 hits: FAU154-BD-L2, FAU263-BA-L4, FAU263-BC-L3, FAU286-BA-L5
+# 2 hits: FAU263-BC-L1, FAU277-BA-L4, FAU287-BC-L5
+# 1 hits: FAU204-BC-L4, FAU254-BD-L4, FAU263-BB-L3, FAU275-BC-L5, FAU275-BD-L3
 ```
+
+```{r, eval=FALSE}
+FAU263_BA_L4 <- x3p_read("../data/followup_scans/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+FAU263_BC_L1 <- x3p_read("../data/followup_scans/LAPD - 263 - Bullet C - Land 1 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+FAU263_BC_L3 <- x3p_read("../data/followup_scans/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+FAU277_BA_L4 <- x3p_read("../data/followup_scans/LAPD - 277 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+x3p_image(FAU263_BA_L4, file="./Comparative-Analysis_files/figure-html/FAU263_BA_L4.png")
+x3p_image(FAU263_BC_L1, file="./Comparative-Analysis_files/figure-html/FAU263-BC-L1.png")
+x3p_image(FAU263_BC_L3, file="./Comparative-Analysis_files/figure-html/FAU263_BC_L3.png")
+x3p_image(FAU277_BA_L4, file="./Comparative-Analysis_files/figure-html/FAU277-BA-L4.png")
+```
+# 3 hits: FAU154-BD-L2, FAU263-BA-L4, FAU263-BC-L3, FAU286-BA-L5
+# 2 hits: FAU263-BC-L1, FAU277-BA-L4, FAU287-BC-L5
+# 1 hits: FAU204-BC-L4, FAU254-BD-L4, FAU263-BB-L3, FAU275-BC-L5, FAU275-BD-L3
+```{r, echo = FALSE}
+followup_table <- data.frame(matrix(nrow = 12, ncol=5, dimnames=list(c(), c("LAPD-ID", "Hit-Count", "Current-Quality", "Current-Problem", "Recommended-Quality"))))
+followup_table[,1] = followupCleaned$LAPD_id
+followup_table[,2] = c(3, 2, 3, 2, 3, 2, 3, 1, 1, 1, 1, 1)
+followup_table[,3] = followupCleaned$Quality
+followup_table[,4] = followupCleaned$Problem
+followup_table <- followup_table[order(-followup_table$Hit.Count),]
+knitr::kable(followup_table)
+```
+
+![FAU263_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU263_BA_L4.png)
+FAU263_BA_L4 (Tiny Problems, Feathering): Significant feathering on right side image, missing most of the left, and many missing values on bottom 
+
+![FAU263_BC_L1 Image](./Comparative-Analysis_files/figure-html/FAU263-BC-L1.png)
+FAU263_BC_L1 (Tiny Problems, Feathering): Significant feathering on right hand side, left side is missing most of the values, then feathering, then holes as it moves towards the middle. Bottom is also speckled with missing values.
+
+![FAU263_BC_L3 Image](./Comparative-Analysis_files/figure-html/FAU263_BC_L3.png)
+FAU263_BC_L3 (Tiny Problems, Feathering): Contains significant feathering, holes, disproportionate edges and missing values at the bottom. 
+
+![FAU277_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU277-BA-L4.png)
+FAU263_BC_L1 (Tiny Problems, Holes): A few holes, significant missing values on the left, right, and bottom.
