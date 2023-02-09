@@ -505,27 +505,45 @@ x3p_image(FAU263_BC_L1, file="./Comparative-Analysis_files/figure-html/FAU263-BC
 x3p_image(FAU263_BC_L3, file="./Comparative-Analysis_files/figure-html/FAU263_BC_L3.png")
 x3p_image(FAU277_BA_L4, file="./Comparative-Analysis_files/figure-html/FAU277-BA-L4.png")
 ```
-# 3 hits: FAU154-BD-L2, FAU263-BA-L4, FAU263-BC-L3, FAU286-BA-L5
-# 2 hits: FAU263-BC-L1, FAU277-BA-L4, FAU287-BC-L5
-# 1 hits: FAU204-BC-L4, FAU254-BD-L4, FAU263-BB-L3, FAU275-BC-L5, FAU275-BD-L3
+
 ```{r, echo = FALSE}
-followup_table <- data.frame(matrix(nrow = 12, ncol=5, dimnames=list(c(), c("LAPD-ID", "Hit-Count", "Current-Quality", "Current-Problem", "Recommended-Quality"))))
-followup_table[,1] = followupCleaned$LAPD_id
+followup_table <- data.frame(matrix(nrow = 12, ncol=5, dimnames=list(c(), c("LAPD.ID", "Hit Count", "Current Quality", "Current Problem", "Recommended Quality"))))
+followup_table[,1] = followupUnique$LAPD_id
 followup_table[,2] = c(3, 2, 3, 2, 3, 2, 3, 1, 1, 1, 1, 1)
-followup_table[,3] = followupCleaned$Quality
-followup_table[,4] = followupCleaned$Problem
+followup_table[,3] = followupUnique$Quality
+followup_table[,4] = followupUnique$Problem
 followup_table <- followup_table[order(-followup_table$Hit.Count),]
+rownames(followup_table) <- NULL
 knitr::kable(followup_table)
 ```
 
+![FAU154_BD_L2 Image](./Comparative-Analysis_files/figure-html/FAU154_BD_L2.png)
+FAU154_BD_L2 (3 hits, Tiny Problems, Holes): Significant feathering across image.
+
+![FAU204_BC_L4 Image](./Comparative-Analysis_files/figure-html/FAU204_BC_L4.png)
+FAU204_BC_L4 (1 hits, Tiny Problems, Holes): Feathering on each end of image, rotational issues on left edge, holes in the center
+
+![FAU254_BD_L4 Image](./Comparative-Analysis_files/figure-html/FAU254_BD_L4.png)
+FAU254_BD_L4 (1 hits, Tiny Problems, Holes): Significant missing values on the bottom, holes across the center, missing section on right side.
+
 ![FAU263_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU263_BA_L4.png)
-FAU263_BA_L4 (Tiny Problems, Feathering): Significant feathering on right side image, missing most of the left, and many missing values on bottom 
+FAU263_BA_L4 (3 hits, Tiny Problems, Feathering): Significant feathering on right side image, missing most of the left, and many missing values on bottom 
 
 ![FAU263_BC_L1 Image](./Comparative-Analysis_files/figure-html/FAU263-BC-L1.png)
-FAU263_BC_L1 (Tiny Problems, Feathering): Significant feathering on right hand side, left side is missing most of the values, then feathering, then holes as it moves towards the middle. Bottom is also speckled with missing values.
+FAU263_BC_L1 (2 hits, Tiny Problems, Feathering): Significant feathering on right hand side, left side is missing most of the values, then feathering, then holes as it moves towards the middle. Bottom is also speckled with missing values.
 
 ![FAU263_BC_L3 Image](./Comparative-Analysis_files/figure-html/FAU263_BC_L3.png)
-FAU263_BC_L3 (Tiny Problems, Feathering): Contains significant feathering, holes, disproportionate edges and missing values at the bottom. 
+FAU263_BC_L3 (3 hits, Tiny Problems, Feathering): Contains significant feathering, holes, disproportionate edges and missing values at the bottom. 
 
-![FAU277_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU277-BA-L4.png)
-FAU263_BC_L1 (Tiny Problems, Holes): A few holes, significant missing values on the left, right, and bottom.
+![FAU275_BC_L5 Image](./Comparative-Analysis_files/figure-html/FAU275_BC_L5.png)
+FAU275_BC_L5 (1 hits, Tiny Problems, Holes): 
+
+![FAU275_BD_L3 Image](./Comparative-Analysis_files/figure-html/FAU275_BD_L3.png)
+FAU275_BD_L3 (1 hits, Tiny Problems, Holes): 
+
+![FAU277_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU277_BA_L4.png)
+FAU277_BA_L4 (2 hits, Tiny Problems, Holes): A few holes, significant missing values on the left, right, and bottom.
+
+
+![FAU286_BA_L5 Image](./Comparative-Analysis_files/figure-html/FAU286_BA_L5.png)
+FAU286_BA_L5 (3 hits, Tiny Problems, Holes):
