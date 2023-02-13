@@ -68,7 +68,7 @@ feature_table[4,] <- c(0.908, "<2e-16", "6.77e-10", 0.907, 0.863)
 knitr::kable(feature_table)
 ```
 
-All of the features had significant outliers for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
+All of the features had significant outliers, which we have called "[Followup Scans](#followup-scans)", for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
 ## Background and Introduction
 
@@ -81,18 +81,19 @@ This analysis is to compare the difference between the cropped versus non-croppe
 
 ## Features
 
-xxx Overview of features with links (anchors)
-We have identified four potential features of our scan quality assessor which could benefit from being cropped. 
-XXX move mathematical definitions that you need for multiple features here. Give the definitions numbers or names and then refer to these definitions as needed below.
+Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+Let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
 
 [Extract NA](#extract-na)
 
 The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
 
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in {\rm I\!R}^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integer values, $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$ The proportion of missing values in X is then defined as: 
+The proportion of missing values in X is then defined as: 
 $$
 \frac{1}{m*n} \sum^m_{i=1} \sum^n_{j=1} \theta_A(x_{ij}) \\
 \text{Where } \theta_A(x) = \left\{\begin{aligned}
@@ -103,11 +104,6 @@ $$
 [Assess Bottomempty](#assess-bottomempty)
 
 The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
 
 Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
 $$
@@ -127,11 +123,6 @@ $$
 The function `assess_col_na` calculates the percentage of missing values 
 
 For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
 
 Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the sum of the NA's for the given column, defined as:
 $$
@@ -159,11 +150,6 @@ $$
 [Assess Median NA proportion](#assess-median-na-proportion)
 
 The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
-
-Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
-${\rm I\!R}:= {\rm I\!R} \cup A$. 
-
-With that, let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
 
 Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the mean of the NA's for the given column, defined as:
 $$
@@ -518,32 +504,42 @@ knitr::kable(followup_table)
 ```
 
 ![FAU154_BD_L2 Image](./Comparative-Analysis_files/figure-html/FAU154_BD_L2.png)
+
 FAU154_BD_L2 (3 hits, Tiny Problems, Holes): Significant feathering across image.
 
 ![FAU204_BC_L4 Image](./Comparative-Analysis_files/figure-html/FAU204_BC_L4.png)
+
 FAU204_BC_L4 (1 hits, Tiny Problems, Holes): Feathering on each end of image, rotational issues on left edge, holes in the center
 
 ![FAU254_BD_L4 Image](./Comparative-Analysis_files/figure-html/FAU254_BD_L4.png)
+
 FAU254_BD_L4 (1 hits, Tiny Problems, Holes): Significant missing values on the bottom, holes across the center, missing section on right side.
 
 ![FAU263_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU263_BA_L4.png)
+
 FAU263_BA_L4 (3 hits, Tiny Problems, Feathering): Significant feathering on right side image, missing most of the left, and many missing values on bottom 
 
 ![FAU263_BC_L1 Image](./Comparative-Analysis_files/figure-html/FAU263-BC-L1.png)
+
 FAU263_BC_L1 (2 hits, Tiny Problems, Feathering): Significant feathering on right hand side, left side is missing most of the values, then feathering, then holes as it moves towards the middle. Bottom is also speckled with missing values.
 
 ![FAU263_BC_L3 Image](./Comparative-Analysis_files/figure-html/FAU263_BC_L3.png)
+
 FAU263_BC_L3 (3 hits, Tiny Problems, Feathering): Contains significant feathering, holes, disproportionate edges and missing values at the bottom. 
 
 ![FAU275_BC_L5 Image](./Comparative-Analysis_files/figure-html/FAU275_BC_L5.png)
+
 FAU275_BC_L5 (1 hits, Tiny Problems, Holes): 
 
 ![FAU275_BD_L3 Image](./Comparative-Analysis_files/figure-html/FAU275_BD_L3.png)
+
 FAU275_BD_L3 (1 hits, Tiny Problems, Holes): 
 
 ![FAU277_BA_L4 Image](./Comparative-Analysis_files/figure-html/FAU277_BA_L4.png)
+
 FAU277_BA_L4 (2 hits, Tiny Problems, Holes): A few holes, significant missing values on the left, right, and bottom.
 
 
 ![FAU286_BA_L5 Image](./Comparative-Analysis_files/figure-html/FAU286_BA_L5.png)
+
 FAU286_BA_L5 (3 hits, Tiny Problems, Holes):
