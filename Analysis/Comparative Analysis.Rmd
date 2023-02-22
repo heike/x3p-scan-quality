@@ -76,9 +76,15 @@ XXX Related Works
 
 ## Background and Introduction
 
+XXX General stylistic comments
+
+- there are no 'you's in a scientific paper. Make sure to be specific of each actor.
+
+
 XXX Writing in progress
 
-In many court cases, determining the authenticity of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. This information is often important during the trial process as firearms are mass produced, so even if you knew the model and make of a firearm, that is insufficient evidence to say that any particular firearm you bring to court is relevant to the case. A method is needed to be able to prove that a particular bullet came from a particular firearm with a one-to-one match. A match that cannot be replicated in any other firearm, even if they are of the same make and model.
+In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
+
 
 Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
 
