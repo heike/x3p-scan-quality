@@ -3,11 +3,13 @@ title: "Comparative Analysis: features of full and cropped scans"
 author: "Craig Orman, Naga Vempati, Heike Hofmann"
 date: "2022-12-09"
 output: html_document
+bibliography: zotero.bib
 ---
 
+<!-- "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`" -->
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
 if (!require(fastDummies)) install.packages('fastDummies')
 if (!require(tidyverse)) install.packages('tidyverse')
 if (!require(ggplot2)) install.packages('ggplot2')
@@ -26,6 +28,27 @@ theme_set(theme_bw())
 ## Load Functions - eventually we would like to just load a library
 
 source("../R/comparison.R")
+
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+hh <- function(x) {
+  colorize(x, "darkorange")
+}
+
+nv <- function(x) {
+  colorize(x, "chartreuse3")
+}
+
+co <- function(x) {
+  colorize(x, "purple")
+}
 ```
 
 ```{r data, echo=FALSE, cache=TRUE}
@@ -44,6 +67,11 @@ followupScans <- data.frame()
 
 
 # Comparison of features on Full and Cropped Scans
+
+
+
+
+@nationalresearchcouncilu.s.StrengtheningForensicScience2009
 
 ### Abstract
 
@@ -78,7 +106,15 @@ XXX Related Works
 
 XXX General stylistic comments
 
-- there are no 'you's in a scientific paper. Make sure to be specific of each actor.
+- `r hh("there are no 'you's in a scientific paper. Make sure to be specific of each actor.") co("got it")`  
+
+Relevant citations for criticism of the subjective nature of current firearms comparisons:
+[@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016; 
+@nationalresearchcouncilu.s.StrengtheningForensicScience2009]
+
+@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016,  
+@nationalresearchcouncilu.s.StrengtheningForensicScience2009
+
 
 
 XXX Writing in progress
