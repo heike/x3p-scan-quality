@@ -5,8 +5,9 @@ date: "2022-12-09"
 output: html_document
 bibliography: zotero.bib
 ---
-
-<!-- "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`" -->
+```{r, include = FALSE, eval=FALSE}
+### <!-- "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`" -->
+```
 
 ```{r setup, include=FALSE, cache=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
@@ -47,7 +48,7 @@ nv <- function(x) {
 }
 
 co <- function(x) {
-  colorize(x, "purple")
+  colorize(x, "red")
 }
 ```
 
@@ -68,14 +69,13 @@ followupScans <- data.frame()
 
 # Comparison of features on Full and Cropped Scans
 
-
-
-
 @nationalresearchcouncilu.s.StrengtheningForensicScience2009
 
 ### Abstract
 
-XXX Clean up this area
+- `r co("What do y'all think of this paragraph? Is the abstract section looking good?")`  
+
+Deciding if a scan's quality is often difficult, and time consuming if a scan needs to be redone. The scanner, often not familiar with the statistical processes to follow, needs an evaluater to consider each scan's quality before it leaves the microscope mount. We propose using the X3P scan quality indicator, and in this comparative analysis, we evaluate four of the features used to determine if a scan is of sufficient quality. We found that two of the features give superior results when calculated on a cropped version of an image, one of them is impartial to cropped or full image, and the last feature is best ran over the full image. 
 
 To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis We trained a Generalized Linear Model (glm) to test the p scores, or importance, of each variable in the model, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.
 
@@ -101,12 +101,14 @@ knitr::kable(feature_table)
 All of the features had significant outliers, which we have called "[Followup Scans](#followup-scans)", for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
 XXX Related Works
+- `r co("Do we need forensics specific papers here, or can we use general imagery comparative analysis?")`  
+
 
 ## Background and Introduction
 
 XXX General stylistic comments
 
-- `r hh("there are no 'you's in a scientific paper. Make sure to be specific of each actor.") co("got it")`  
+- `r hh("there are no 'you's in a scientific paper. Make sure to be specific of each actor.")`  
 
 Relevant citations for criticism of the subjective nature of current firearms comparisons:
 [@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016; 
@@ -118,26 +120,25 @@ Relevant citations for criticism of the subjective nature of current firearms co
 
 
 XXX Writing in progress
+- `r co("Some questions on this section, am I being too generic? Do I need to add more sources in this section?")`  
+
 
 In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
 
+Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[- `r co("XXX Source on uniqueness")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
 
-Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
+Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[- `r co("Miami and Ames studies respectively")`]. 
 
-Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with forensic examiners is that despite their incredible effectiveness[1], they are still subjective, and can only give binary interpretations instead of more quantitative confidence levels or intervals. 
-
-To further aid in forensic abilities and quantitative methods, CSAFE has created bulletr, which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. bulletr has a flaw that this paper will hereby address and seek to remedy. In order to compare the scans, each bullet must be under a microscope and a digital scan must be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan. 
+To further aid in forensic abilities and quantitative methods, CSAFE has created bulletr[- `r co("Does bulletr have an associated paper?")`], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. bulletr has a flaw that this paper will hereby address and seek to remedy. In order to compare the scans, each bullet must be under a microscope and a digital scan must be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan. 
 
 To increase the speed and performance of our quality scanner, we decided to crop the X3P files, this helps eliminate the 'noise' around the images that can skew the accuracy of the results. By using smaller images, we also increase the speed of evaluation, as there is less to process. 
-
-XXX
-
-XXX Explain the whole project and where this analysis fits
-    Start with basic striation comparison
 
 This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the top of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, full with marked edges, and a cropped image.
 
 ![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
+
+- `r co("Is this the kind of image you were imagining? I think we need to make the red lines beefier and more obvious")`  
+
 ![Image of a scan with the edges colored](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-masked.png)
 ![Image of a scan with cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-Cropped.png)
 
@@ -183,9 +184,7 @@ $$
 $$
 [Assess Col NA](#assess-col-na)
 
-The function `assess_col_na` calculates the percentage of missing values 
-
-XXX redo description
+The function `assess_col_na` is the proportion of columns in the image matrix which have more NA's than 20%.
 
 For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
 
@@ -604,11 +603,8 @@ FAU275_BD_L3 (1 hits, Tiny Problems, Holes):
 
 FAU277_BA_L4 (2 hits, Tiny Problems, Holes): A few holes, significant missing values on the left, right, and bottom.
 
-
 ![FAU286_BA_L5 Image](./Comparative-Analysis_files/figure-html/FAU286_BA_L5.png)
 
 FAU286_BA_L5 (3 hits, Tiny Problems, Holes):
 
 ### Bibliography
-
-1. Monson, K. L., Smith, E. D., & Bajic, S. J. (2021). Planning, design and logistics of a decision analysis study: The FBI/Ames study involving forensic firearms examiners. Forensic Science International: Synergy, 4. https://doi.org/10.1016/j.fsisyn.2022.100221
