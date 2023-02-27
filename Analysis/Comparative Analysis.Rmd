@@ -73,8 +73,6 @@ followupScans <- data.frame()
 
 ### Abstract
 
-- `r co("What do y'all think of this paragraph? Is the abstract section looking good?")`  
-
 Deciding if a scan's quality is often difficult, and time consuming if a scan needs to be redone. The scanner, often not familiar with the statistical processes to follow, needs an evaluater to consider each scan's quality before it leaves the microscope mount. We propose using the X3P scan quality indicator, and in this comparative analysis, we evaluate four of the features used to determine if a scan is of sufficient quality. We found that two of the features give superior results when calculated on a cropped version of an image, one of them is impartial to cropped or full image, and the last feature is best ran over the full image. 
 
 To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis We trained a Generalized Linear Model (glm) to test the p scores, or importance, of each variable in the model, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.
@@ -117,19 +115,17 @@ Relevant citations for criticism of the subjective nature of current firearms co
 @presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016,  
 @nationalresearchcouncilu.s.StrengtheningForensicScience2009
 
-
-
 XXX Writing in progress
 - `r co("Some questions on this section, am I being too generic? Do I need to add more sources in this section?")`  
 
 
 In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
 
-Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[- `r co("XXX Source on uniqueness")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
+Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[- `r co("[3]")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
 
-Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[- `r co("Miami and Ames studies respectively")`]. 
+Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[- `r co("Miami and Ames studies respectively, [1]")`]. 
 
-To further aid in forensic abilities and quantitative methods, CSAFE has created bulletr[- `r co("Does bulletr have an associated paper?")`], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. bulletr has a flaw that this paper will hereby address and seek to remedy. In order to compare the scans, each bullet must be under a microscope and a digital scan must be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan. 
+To further aid in forensic abilities and quantitative methods, CSAFE has been researching ways to use machine learning and other methods to automatically and quantitatively compare bullet striation marks.[- `r co("[2]")`], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. Automated methods and forensic examiners alike have a similar issue that this paper will hereby address. The problem is quality of microscopy scan quality. In order to compare the scans, each bullet must be under a microscope and a digital scan must be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan. 
 
 To increase the speed and performance of our quality scanner, we decided to crop the X3P files, this helps eliminate the 'noise' around the images that can skew the accuracy of the results. By using smaller images, we also increase the speed of evaluation, as there is less to process. 
 
@@ -608,3 +604,14 @@ FAU277_BA_L4 (2 hits, Tiny Problems, Holes): A few holes, significant missing va
 FAU286_BA_L5 (3 hits, Tiny Problems, Holes):
 
 ### Bibliography
+
+
+- `r co("I found these on the Zotero, but I don't remember where to find the ID thing we discusses")` 
+
+1. Hamby, J. E., Brundage, D. J., Petraco, N. D. K., & Thorpe, J. W. (2019). A Worldwide Study of Bullets Fired From 10 Consecutively Rifled 9MM RUGER Pistol Barrels—Analysis of Examiner Error Rate. Journal of Forensic Sciences, 64(2), 551–557. https://doi.org/10/gn65bd
+
+2. Vanderplas, S., Nally, M., Klep, T., Cadevall, C., & Hofmann, H. (2020). Comparison of three similarity scores for bullet LEA matching. Forensic Science International, 110167. https://doi.org/10/gn6487
+
+3. Gouwe, J., Hamby, J., & Norris, S. (2008). Comparison of 10,000 consecutively fired cartridge cases from a model 22 Glock. 40 S&W caliber semiautomatic pistol. AFTE JOURNAL, 40(1), 57.
+
+
