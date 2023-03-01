@@ -3,8 +3,9 @@ title: "Comparative Analysis: features of full and cropped scans"
 author: "Craig Orman, Naga Vempati, Heike Hofmann"
 date: "2022-12-09"
 output: html_document
-bibliography: zotero.bib
+bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
 ---
+
 ```{r, include = FALSE, eval=FALSE}
 ### <!-- "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`" -->
 ```
@@ -124,7 +125,7 @@ XXX Writing in progress
 
 In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
 
-Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[`r co("[3]")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
+Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves striation marks on the bullets. Here, we are only interested in striation marks on land-engraved areas (LEAs). Striation marks show strong similarities between bullets from different firings through the same barrel, to the degree that they are considered in the forensic community to be 'unique' to the particular barrel [@pageUniquenessForensicIdentification2011], but a general assessment of the random matching probability has so far proven to be elusive. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
 
 Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[`r co("Should we just mention the report to the president, or cite the sources they cite? Miami Dade and Ames [1], [4], [5]")`]. `r hh("NRC and PCAST reports speak for themselves :) ")`
 
