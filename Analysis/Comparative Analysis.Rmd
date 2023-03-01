@@ -99,8 +99,9 @@ knitr::kable(feature_table)
 All of the features had significant outliers, which we have called "[Followup Scans](#followup-scans)", for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
 XXX Related Works
-- `r co("Do we need forensics specific papers here, or can we use general imagery comparative analysis?")`  
+- `r co("Do we need forensics specific papers here, or can we use general imagery comparative analysis?")` 
 
+`r hh("Good question, and I don't know - I'm not sure that there is any kind of forensic specific work out (yet). I'm waiting for a NIST paper to finally come out :) ")`
 
 ## Background and Introduction
 
@@ -118,12 +119,14 @@ Relevant citations for criticism of the subjective nature of current firearms co
 XXX Writing in progress
 - `r co("Some questions on this section, am I being too generic? Do I need to add more sources in this section?")`  
 
+`r hh("Generally, it looks good, but we can probably get away with fewer words and more images :)")`
+
 
 In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
 
-Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[- `r co("[3]")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
+Currently, the method used to determine if a specific bullet came from a specific firearm requires you to have the bullet, preferably as undamaged as possible, and the firearm. You would fire the weapon into a kevlar tube so that you have a second bullet to use as your control, that you know came from the firearm. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves unique grooves on the bullets that are individually identifiable[`r co("[3]")`] to the particular barrel. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
 
-Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[- `r co("Should we just mention the report to the president, or cite the sources they cite? Miami Dade and Ames [1], [4], [5]")`]. 
+Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective[Report to the president], and have been proven to have higher than a 1% error rate[`r co("Should we just mention the report to the president, or cite the sources they cite? Miami Dade and Ames [1], [4], [5]")`]. `r hh("NRC and PCAST reports speak for themselves :) ")`
 
 To further aid in forensic abilities and quantitative methods, CSAFE has been researching ways to use machine learning and other methods to automatically and quantitatively compare bullet striation marks.[- `r co("[2]")`], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. Automated methods and forensic examiners alike have a similar issue that this paper will hereby address. The problem is differing quality of microscopy scans. In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan. 
 
@@ -607,6 +610,8 @@ FAU286_BA_L5 (3 hits, Tiny Problems, Holes):
 
 
 - `r co("I found these on the Zotero, but I don't remember where to find the ID thing we discusses")` 
+
+`r hh("Great! You can set up the Zotero link to RStudio by following the instructions at https://gsverhoeven.github.io/post/zotero-rmarkdown-csl/")`
 
 1. Hamby, J. E., Brundage, D. J., Petraco, N. D. K., & Thorpe, J. W. (2019). A Worldwide Study of Bullets Fired From 10 Consecutively Rifled 9MM RUGER Pistol Barrels—Analysis of Examiner Error Rate. Journal of Forensic Sciences, 64(2), 551–557. https://doi.org/10/gn65bd
 
