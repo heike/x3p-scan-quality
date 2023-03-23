@@ -1,0 +1,248 @@
+---
+title: "Scan Quality Assessor"
+author: "Heike Hofmann, Craig Orman, Naga Vempati"
+output: html_document
+bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+if (!require(fastDummies)) install.packages('fastDummies')
+if (!require(tidyverse)) install.packages('tidyverse')
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(RColorBrewer)) install.packages('RColorBrewer')
+if (!require(ggpubr)) install.packages('ggpubr')
+if (!require(yardstick)) install.packages('yardstick')
+if (!require(x3ptools)) install.packages('x3ptools')
+if (!require(quarto)) install.packages('quarto')
+if (!require(remotes)) install.packages('remotes')
+library(remotes)
+if (!require(quarto)) remotes::install_github("paleolimbot/rbbt")
+library(fastDummies)
+library(tidyverse)
+library(ggplot2)
+library(RColorBrewer)
+library(ggpubr)
+library(yardstick)
+library(x3ptools)
+library(quarto)
+library(rbbt)
+## Load Functions - eventually we would like to just load a library
+theme_set(theme_bw())
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+
+source("../R/comparison.R")
+
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+hh <- function(x) {
+  colorize(x, "darkorange")
+}
+
+nv <- function(x) {
+  colorize(x, "chartreuse3")
+}
+
+co <- function(x) {
+  colorize(x, "red")
+}
+```
+
+```{r data, echo=FALSE, cache=TRUE}
+full_data = read.csv(file = "../data/std_and_cropped_data_12_20_2022.csv", header=TRUE)
+
+# some prepping
+full_data = full_data %>% mutate(
+  Quality = factor(Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes")),
+  Problem = factor(Problem),
+  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor(),
+  LAPD_id = sprintf("FAU%3d-B%s-L%d",FAU, Bullet, Land)
+)
+
+followupScans <- data.frame()
+```
+
+## 1. Abstract
+
+XXX TODO
+
+## 2. Introduction
+
+### 2.1 The history of firearm forensics
+
+In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
+
+Currently, the method used to determine if a specific bullet came from a specific firearm requires that a bullet is found or recovered during the investigation, preferably as undamaged as possible, and the firearm. An examiner would fire the weapon into a kevlar tube so that they had a second bullet to use as the control, or a known match to the barrel. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves striation marks on the bullets. Here, we are only interested in striation marks on land-engraved areas (LEAs). Striation marks show strong similarities between bullets from different firings through the same barrel, to the degree that they are considered in the forensic community to be 'unique' to the particular barrel [@pageUniquenessForensicIdentification2011], but a general assessment of the random matching probability has so far proven to be elusive. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.
+
+Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective, and have been proven to have atleast higher than a 1% error rate. [@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016; 
+@nationalresearchcouncilu.s.StrengtheningForensicScience2009]
+
+### 2.2 The role of CSAFE
+
+To further aid in forensic abilities and quantitative methods, CSAFE has been researching ways to use machine learning and other methods to automatically and quantitatively compare bullet striation marks. [@hareAutomaticMatchingBullet2017], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. Automated methods and forensic examiners alike have a similar issue that this paper will hereby address. The problem is differing quality of microscopy scans. 
+
+In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan.
+
+![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
+
+## 3. Our contribution
+
+### 3.1 Data sourcing
+
+Talk about LAPD data, box data with manual assignment, and creating all the csv's
+
+XXX TODO
+
+### 3.2 Creating features
+
+XXX Talk about the DS401 project and our alterations
+
+Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.
+
+Let $A=\{NA\}$ be the set of undefined values. For simplicity of notation we will assume that the space of real values ${\rm I\!R}$ contains $A$:
+${\rm I\!R}:= {\rm I\!R} \cup A$. 
+
+Let $X \in R^{m,n}$ be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers $X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}$.
+
+[Assess Bottomempty](#assess-bottomempty)
+
+The feature `assess_bottomempty` calculates the percentage of missing values in the bottom 20% of the scan. 
+
+Let $R \subseteq {\rm I\!R}$ be a set of size m, where each element is the sum of the NA's for the given row, defined as:
+$$
+\forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+Let $B \subset R$ be a set, which is the set of all values in $R_i$, given that $i \geq m*0.8$. Therefore, the proportion of missing values in $X$'s bottom 20% can be given by:
+$$
+\frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
+$$
+[Assess Col NA](#assess-col-na)
+
+The function `assess_col_na` is the proportion of columns in the image matrix which have more NA's than 20%.
+
+For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA's. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number. 
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the sum of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \sum^m_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We define $P$ as the proportion of all NAs per column for every row, as defined here:
+$$
+\forall i \in R: P_i = \frac{R_i}{n} * 100
+$$
+
+We now find the proportion of threshold adjusted columns in the matrix 
+$$
+\frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
+\text{Where } \beta_B(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x > 20\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+[Assess Median NA proportion](#assess-median-na-proportion)
+
+The function `assess_median_na_proportion` calculates the mean number of NA's in each column, and then finds the median out of all those values.
+
+Let $R \subseteq {\rm I\!R}$ be a set of size n, where each element is the mean of the NA's for the given column, defined as:
+$$
+\forall i \in R: R_i = \frac{\sum^m_{j=1} \theta_A(x_{ij})}{m} \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+We then sort, and select the median of $R$
+
+
+[Assess Middle NA Proportion](#assess-middle-na-proportion)
+XXX TODO
+
+[Extract NA](#extract-na)
+
+The function `extract_na` calculates the percentage of missing values in the scan (part) under observation, e.g. for scan surface matrix $X \in {\rm I\!R}^{m, n}$ the percentage of missing values is defined as:
+
+The proportion of missing values in X is then defined as: 
+$$
+\frac{1}{m*n} \sum^m_{i=1} \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
+
+[Assess Rotation](#assess-rotation)
+XXX TODO
+
+### 3.3 Hypothesis on what a crop will do
+
+Why did we crop? What did we think would happen?
+
+XXX TODO
+
+### 3.4 Process of cropping scans
+
+X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.
+
+XXX clean up, more professional sounding
+
+```{r}
+crop_X3P <- function(x3p) {
+  stopifnot(class(x3p) == "x3p")
+  dims <- dim(x3p$surface.matrix)
+  cropped_x3p <- x3p_crop(x3p, x = 0.1 * dims[1], y = 0.1 * dims[2], width = dims[1], height = dims[2] - (0.1* dims[2]))
+  dims <- dim(cropped_x3p$surface.matrix)
+  cropped_x3p <- x3p_crop(cropped_x3p, x = 0, width = dims[1] - (0.1 * dims[1]), y = 0, height = dims[2])
+  return(cropped_x3p)
+}
+
+```
+
+### 3.5 Modelling random forests
+
+XXX TODO
+
+Why a random forest? Why the particular method we chose?
+
+### 3.6 RShiny and application
+
+XXX TODO
+
+uhhh, a screenshot maybe?
+
+## 4. Results and tuning
+
+### 4.1 Model Metrics
+
+XXX TODO
+
+AUC, ROC score, confusion matrix, accuracy, F1score, all that good stuff
+
+### 4.2 Comparison of cropped scans and standard scans
+
+XXX TODO
+
+Comparison of the models!
+
+## 5. Conclusion
+
+XXX TODO
+
+## 6. Appendix
