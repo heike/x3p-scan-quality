@@ -70,7 +70,7 @@ followupScans <- data.frame()
 
 ## 1. Abstract
 
-XXX TODO
+Firearm forensics has long been plagued with a subjective issue related to obtaining good evidence, microscopy flaws in scanning. In this paper, we propose an application that uses several random forests to predict the quality of an X3P scanned bullet. This application is intended to aid scanners as they handle the large amount of items they are asked to scan, as well as allow researchers to go over current datasets, and determine any scans that may need to be redone. While this application should not replace a scanners individual judgement, it is another tool they could have at their disposal to reduce the number of re-scans they have to do.
 
 ## 2. Introduction
 
@@ -95,9 +95,9 @@ In order to compare the scans, each bullet must be under a microscope and a digi
 
 ### 3.1 Data sourcing
 
-Talk about LAPD data, box data with manual assignment, and creating all the csv's
+Our dataset is the LAPD data, which is a set of 626 unique firearms each of which fired 4 bullets labelled A, B, C, D, and the bullets and matching barrels (called FAUs) were recorded. The bullets each had all 6 lands scanned, with a variety of degrees of quality. Each scan is uniquely identifiable by its LAPDID of the format <FAU, Bullet, Land>.
 
-XXX TODO
+The scans in this dataset will act as our test and train data for our model. Dr. Hofmann manually sorted out 1851 of the scans, 
 
 ### 3.2 Creating features
 
@@ -190,6 +190,8 @@ $$
 
 [Assess Rotation](#assess-rotation)
 XXX TODO
+
+
 
 ### 3.3 Hypothesis on what a crop will do
 
