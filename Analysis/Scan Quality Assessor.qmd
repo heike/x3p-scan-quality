@@ -87,7 +87,7 @@ Forensic Examiners are the current standard for comparing if two bullets have su
 
 To further aid in forensic abilities and quantitative methods, CSAFE has been researching ways to use machine learning and other methods to automatically and quantitatively compare bullet striation marks. [@hareAutomaticMatchingBullet2017], which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. Automated methods and forensic examiners alike have a similar issue that this paper will hereby address. The problem is differing quality of microscopy scans. 
 
-In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny app that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan.
+In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny application that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan that needs to be re-done.
 
 ![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
 
@@ -97,7 +97,20 @@ In order to compare the scans, each bullet must be under a microscope and a digi
 
 Our dataset is the LAPD data, which is a set of 626 unique firearms each of which fired 4 bullets labelled A, B, C, D, and the bullets and matching barrels (called FAUs) were recorded. The bullets each had all 6 lands scanned, with a variety of degrees of quality. Each scan is uniquely identifiable by its LAPDID of the format <FAU, Bullet, Land>.
 
-The scans in this dataset will act as our test and train data for our model. Dr. Hofmann manually sorted out 1851 of the scans, 
+The scans in this dataset will act as our test and train data for our model. Dr. Hofmann manually sorted out 1851 of the scans, assigning each of them a quality, and a most-prevelant-problem. The quality variable is categorical in order from best to worst: "Good, Tiny Problems, Problematic, Bad, Yikes". The problems were broken into several, unordered categories "Good, Holes, Rotation-Staging, Feathering, Damage". It should be noted, the "Damage" problem is not a microscopy issue, but rather an issue that occurs after the bullet is fired and impacts something sufficiently hard that it damages the striation patterns. These bullets would need considerably more attention, re-scanning may not be useful, and will require individual decision making about their use in the forensic process. 
+
+- `r co("Could someone look at this paragraph below specifically, I feel I need to be more careful in my wording")` 
+
+There are several errors that come from this style of classification, namely the subjectivity as to the difference in qualities, such as when to label a scan Tiny Problems versus Problematic. Similar problems occur in the scans specific problem, sufficient Feathering could be considered Holes, and all of these problems are reasonably dependent on each other. We are not trying to solve these issues, we instead use a confidence scale that the scanner at the microscope can use to then make better informed decisions about when to re-scan.
+
+```{r, include = FALSE}
+shiny_labelled_data = read.csv2(file = "../data/shiny_labelled_data_12_19_2022.csv", sep=",", header=TRUE)
+matrix_labels = shiny_labelled_data[,4:5]
+matrix_labels$Quality = factor(matrix_labels$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"))
+matrix_labels$Problem = factor(matrix_labels$Problem, levels = c("Good", "Damage", "Feathering", "Holes", "Rotation-Staging"))
+table(matrix_labels)
+```
+
 
 ### 3.2 Creating features
 
