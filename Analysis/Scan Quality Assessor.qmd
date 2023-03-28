@@ -89,7 +89,7 @@ To further aid in forensic abilities and quantitative methods, CSAFE has been re
 
 In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny application that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan that needs to be re-done.
 
-![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
+![Image of a scan](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
 
 ## 3. Our contribution
 

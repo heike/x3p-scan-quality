@@ -1,0 +1,46 @@
+---
+title: "Scan Quality Assessor: Model Comparison"
+author: "Heike Hofmann, Craig Orman, Naga Vempati"
+output: html_document
+bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
+---
+```{r, warning=FALSE}
+if (!require(tidyverse)) install.packages('tidyverse')
+if (!require(ggplot2)) install.packages('ggplot2')
+library(tidyverse)
+library(ggplot2)
+```
+
+
+This document will give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a production environment.
+
+OUTLINE:
+Look at quantitative data
+Look at feature spread
+compare usefulness of each feature
+Compare a bunch of models
+
+Data handling and type setting
+
+```{r}
+full.data <- read.csv2("../data/std_and_cropped_data_12_20_2022.csv", sep=",")
+full.data.typed <- full.data %>% mutate(
+  Quality = factor(Quality, levels = c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = TRUE),
+  Problem = factor(Problem, levels = c("Good", "Damage", "Holes", "Feathering", "Rotation-Staging"), ordered = FALSE),
+  # This is the features ran against the full image
+  assess_percentile_na_proportion = as.numeric(assess_percentile_na_proportion),
+  assess_col_na = as.numeric(assess_col_na),
+  extract_na = as.numeric(extract_na),
+  assess_middle_na_proportion = as.numeric(assess_middle_na_proportion),
+  assess_rotation = as.numeric(assess_rotation),
+  assess_bottomempty = as.numeric(assess_bottomempty),
+  assess_median_na_proportion = as.numeric(assess_median_na_proportion),
+  # This is the features ran against the cropped image
+  assess_percentile_na_proportion_cropped = as.numeric(assess_percentile_na_proportion_cropped),
+  assess_col_na_cropped = as.numeric(assess_col_na_cropped),
+  extract_na_cropped = as.numeric(extract_na_cropped),
+  assess_bottomempty_cropped = as.numeric(assess_bottomempty_cropped),
+  assess_median_na_proportion_cropped = as.numeric(assess_median_na_proportion_cropped)
+)
+```
+
