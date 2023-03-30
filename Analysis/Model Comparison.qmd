@@ -2,7 +2,6 @@
 title: "Scan Quality Assessor: Model Comparison"
 author: "Heike Hofmann, Craig Orman, Naga Vempati"
 output: html_document
-bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
 ---
 ```{r, warning=FALSE}
 if (!require(tidyverse)) install.packages('tidyverse')
@@ -11,7 +10,7 @@ library(tidyverse)
 library(ggplot2)
 ```
 
-
+## Introduction
 This document will give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a production environment.
 
 OUTLINE:
@@ -44,3 +43,125 @@ full.data.typed <- full.data %>% mutate(
 )
 ```
 
+## Feature Analysis
+
+In this investigation, we are going to look at the features calculated against the full image. This investigation will tell us more about the predictive power of each feature, and tell us how different the quality categories are from each other.
+
+```{r}
+standard.data <- full.data.typed[,1:12]
+table(standard.data[,4:5])
+```
+
+### Assess Percentile NA Proportion 
+
+```{r}
+summary(standard.data$assess_percentile_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_percentile_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("v by Quality")
+
+summary(glm(Quality ~ assess_percentile_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Percentile NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
+
+### Assess Col NA
+
+```{r}
+summary(standard.data$assess_col_na)
+ggplot(standard.data, aes(x=Quality, y=assess_col_na)) +
+  geom_boxplot() +
+  ggtitle("Assess Col NA by Quality")
+summary(glm(Quality ~ assess_col_na,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Col NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart, with the exception of "Good" and "Tiny Problems" which are very similar. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Extract NA
+
+```{r}
+summary(standard.data$extract_na)
+ggplot(standard.data, aes(x=Quality, y=extract_na)) +
+  geom_boxplot() +
+  ggtitle("Extract NA by Quality")
+summary(glm(Quality ~ extract_na,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Extract NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Middle NA Proportion
+
+```{r}
+summary(standard.data$assess_middle_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_middle_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("Assess Middle NA Proportion by Quality")
+summary(glm(Quality ~ assess_middle_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Extract NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Rotation
+
+```{r}
+summary(standard.data$assess_rotation)
+ggplot(standard.data, aes(x=Quality, y=assess_rotation)) +
+  geom_boxplot() +
+  ggtitle("Assess Rotation by Quality")
+summary(glm(Quality ~ assess_rotation,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot, we see that there is no significant visual difference in median or IQR of Assess Rotation when grouped by Quality. The logistic regression shows no evidence that this feature can help explain the quality of an image. 
+
+### Assess Bottomempty
+
+```{r}
+summary(standard.data$assess_bottomempty)
+ggplot(standard.data, aes(x=Quality, y=assess_bottomempty)) +
+  geom_boxplot() +
+  ggtitle("Assess Bottomempty by Quality")
+summary(glm(Quality ~ assess_bottomempty,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Bottomempty increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. There is an observation of note that the Yikes category has a particularly large IQR. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Median NA Proportion
+
+```{r}
+summary(standard.data$assess_median_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_median_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("Assess Median NA Proportion by Quality")
+summary(glm(Quality ~ assess_median_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Median NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The "Bad" and "Yikes" categories have very similar IQR and Medians. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
+
+### Cross COrrelations
+```{r}
+correlations <- cor(standard.data[,6:12])
+correlations <- abs(correlations)
+cor.df <- data.frame(correlations)
+
+```
+
+
+
+## Model Analysis
+
+Models to test
+  - Categorical Logistic regression
+  - Numerical Multi-Linear Regression (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+  - Categorical Random Forest
+  - Numerical Random Forest (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+  
+## Cropped Feature Analysis
+
+## Cropped Model Analysis
