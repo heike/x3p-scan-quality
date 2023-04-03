@@ -6,8 +6,10 @@ output: html_document
 ```{r, warning=FALSE}
 if (!require(tidyverse)) install.packages('tidyverse')
 if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(randomForest)) install.packages('randomForest')
 library(tidyverse)
 library(ggplot2)
+library(randomForest)
 ```
 
 ## Introduction
@@ -147,21 +149,154 @@ In the boxplot we can see that as Assess Median NA Proportion increases, the qua
 ### Cross COrrelations
 ```{r}
 correlations <- cor(standard.data[,6:12])
-correlations <- abs(correlations)
 cor.df <- data.frame(correlations)
+cor.df
+```
+
+```{r}
+library(corrplot)
+
+corrplot(correlations, method = "shade")
+```
+
+There is significant correlation between most of the variables except assess rotation. 
+
+## Model Analysis
+
+```{r}
+sample <- sample(c(TRUE, FALSE), nrow(standard.data), replace=TRUE, prob=c(0.75,0.25))
+train  <- standard.data[sample, ]
+test   <- standard.data[!sample, ]
+
+print("Original")
+table(standard.data[,4:5])
+print("Train")
+table(train[,4:5])
+print("Test")
+table(test[,4:5])
 
 ```
 
 
+### Ordinal Logistic Regression
+```{r}
+ord.reg.train <- train
+ord.reg.test <- test
 
-## Model Analysis
+#summary(glm(Quality ~ assess_percentile_na_proportion + assess_col_na +
+#              extract_na + assess_middle_na_proportion + assess_bottomempty +
+#              assess_median_na_proportion,
+#                     data=standard.data, family="binomial"))
 
-Models to test
-  - Categorical Logistic regression
-  - Numerical Multi-Linear Regression (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
-  - Categorical Random Forest
-  - Numerical Random Forest (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+ord.Model <- glm(Quality ~ assess_percentile_na_proportion + assess_col_na +
+              assess_middle_na_proportion + assess_bottomempty,
+                     data=ord.reg.train, family="binomial")
+
+summary(ord.Model)
+
+ord.predictions <- predict(ord.Model, ord.reg.test)
+```
+
+
+### Numerical regression
+  - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+  - (Good = 1, Yikes = 0, drop others)
   
+  - `r co("Need to check out the problem distribution and if we should relabel Tiny Problems as Good for the problem")` 
+
+Modifying the data to fit into a numerical regression.
+
+
+```{r}
+num.reg.train <- train
+num.reg.test <- test
+
+num.reg.train$num.Quality <- 0
+num.reg.train$num.Quality[num.reg.train$Quality == "Good"] <- 1
+num.reg.train$num.Quality[num.reg.train$Quality == "Tiny Problems"] <- 1
+
+num.reg.train$num.Quality <- factor(num.reg.train$num.Quality, levels = c(1, 0))
+
+num.reg.test$num.Quality <- 0
+num.reg.test$num.Quality[num.reg.test$Quality == "Good"] <- 1
+num.reg.test$num.Quality[num.reg.test$Quality == "Tiny Problems"] <- 1
+
+num.reg.test$num.Quality <- factor(num.reg.test$num.Quality, levels = c(1, 0))
+
+table(num.reg.train$num.Quality)
+
+table(num.reg.train$num.Quality, num.reg.train$Problem)
+```
+
+Running the model
+
+```{r}
+num.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
+              assess_middle_na_proportion + assess_bottomempty,
+                     data=num.reg.train, family="binomial")
+
+summary(num.model)
+
+num.predictions <- predict(num.model, num.reg.test)
+```
+  
+### Ordinal/categorical random forest
+
+Metrics 
+    -Mncemars
+    -kappas
+    -various agreement outputs and stuff.
+    
+
+```{r}
+ord.forest.train <- train
+ord.forest.test <- test
+
+ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
+              assess_middle_na_proportion + assess_bottomempty, data = ord.forest.train,
+                           importance = TRUE)
+
+ord.forest.model$confusion
+
+print("Training Data")
+ord.forest.test$Prediction <- predict(ord.forest.model, ord.forest.test)
+
+print("Test data")
+table(ord.forest.test$Quality, ord.forest.test$Prediction)
+```
+
+
+### Numerical Random Forest
+  - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+  - (Good = 1, Yikes = 0, drop others)
+
+```{r}
+num.forest.train <- train
+num.forest.test <- test
+
+num.forest.train$num.Quality <- 0
+num.forest.train$num.Quality[num.forest.train$Quality == "Good"] <- 1
+num.forest.train$num.Quality[num.forest.train$Quality == "Tiny Problems"] <- 1
+
+num.forest.train$num.Quality <- factor(num.forest.train$num.Quality, levels = c(1, 0))
+
+num.forest.test$num.Quality <- 0
+num.forest.test$num.Quality[num.forest.test$Quality == "Good"] <- 1
+num.forest.test$num.Quality[num.forest.test$Quality == "Tiny Problems"] <- 1
+
+num.forest.test$num.Quality <- factor(num.forest.test$num.Quality, levels = c(1, 0))
+
+table(num.forest.train$num.Quality)
+
+table(num.forest.train$num.Quality, num.forest.train$Problem)
+```
+
+```{r}
+randomForest(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
+              assess_middle_na_proportion + assess_bottomempty, data = num.forest.train,
+                           importance = TRUE)
+```
+
 ## Cropped Feature Analysis
 
 ## Cropped Model Analysis
