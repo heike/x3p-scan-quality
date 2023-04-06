@@ -3,6 +3,10 @@ title: "Scan Quality Assessor"
 author: "Heike Hofmann, Craig Orman, Naga Vempati"
 output: html_document
 bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
+format:
+  html:
+    toc: true
+    toc-location: right
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}
