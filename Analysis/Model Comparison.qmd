@@ -62,7 +62,10 @@ Models will be broken into two classification types, ordinal and binary. In the 
 
 - `r co("Is there a more mathy and rigorous reason we chose these models? They are pretty much just my go-tos, and the only ones I know for categorical")` 
 
-The models we will train are logistic regressions, and random forests. These models have often proved o be sufficiently explainable for forensic purposes, as well as statistically sound in many environments. 
+XXX results first introduction to save people time
+
+
+The models we will train are logistic regressions, and random forests. These models have often proven to be sufficiently explainable for forensic purposes, as well as statistically sound in many environments. 
 
 Data handling and type setting
 
@@ -94,6 +97,14 @@ followupScans <- data.frame()
 ## Feature Analysis
 
 In this investigation, we are going to look at the features calculated against the full image. This investigation will tell us more about the predictive power of each feature, and tell us how different the quality categories are from each other.
+
+XXX Upfront table of the results
+|   |       |       |       |       |
+|---|-------|-------|-------|-------|
+|TPR| 97.37 | 96.38 | 97.37 | 96.38 |
+|TNR| 63.85 | 79.11 | 63.85 | 73.08 |
+
+XXX Our results are mostly in graphical form. Should I use some kinda test?
 
 ```{r}
 standard.data <- full.data[,1:12 & 18:19]
@@ -204,6 +215,14 @@ There is significant correlation between most of the variables except assess rot
 
 ## Model Analysis
 
+XXX Why did I not include all the features in the models?!?!?! GRRRRR
+XXX REDO: all models with correct equations
+
+| | Standard Ordinal Logistic Regression | Standard Numerical Logistic Regression | Standard Ordinal Random Forest| Standard Numerical Random Forest|
+|---|-------|-------|-------|-------|
+|TPR| 97.37 | 96.38 | 97.37 | 96.38 |
+|TNR| 63.85 | 79.11 | 63.85 | 73.08 |
+
 **Categorical Predictions:**
 
 For the purposes of this analysis, consider that the scanner using this model to decide if a scan needs to be re-done will be instructed that Good and Tiny Problems predictions likely don't need to be re-done. However, Problematic, Bad, and Yikes scans have a high likelihood of needing to be redone.
@@ -213,10 +232,6 @@ For the purposes of this analysis, consider that the scanner using this model to
     --cutoff is....
 
 ```{r}
-full.data = full.data %>% mutate(
-  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor()
-)
-
 sample <- sample(c(TRUE, FALSE), nrow(standard.data), replace=TRUE, prob=c(0.75,0.25))
 train  <- standard.data[sample, ]
 test   <- standard.data[!sample, ]
@@ -252,33 +267,56 @@ table(test$num.Quality, test$Problem)
 ```
 
 
-### Ordinal Logistic Regression
+### Standard Ordinal Logistic Regression
 ```{r}
-ord.Model <- polr(Quality ~ assess_percentile_na_proportion + assess_col_na +
+ord.Model <- polr(Quality ~ assess_percentile_na_proportion + assess_col_na + extract_na +
               assess_middle_na_proportion + assess_bottomempty,
                      data=train, method="logistic")
+
+# XXX model doesn't seem to like assess_median_na_proportion
 
 summary(ord.Model)
 
 test$Predictions <- predict(ord.Model, test)
 # True values on the top, Predictions on the left
 table(test$Predictions, test$Quality)
-
 ```
 
- The model did not predict a single Good scan in all 459 scans of the test data. It did however, keep all of the Good scans in the Tiny Problems category. The model got 254/257 tiny problems accurately predicted, with one concern that a Tiny Problems scan got labelled as Yikes. So what should have been an acceptable scan got labelled as completely terrible. The Problematic category has some significant spread, concerningly, 59% of the Problematic scans, which is out cutoff of non-acceptability got labelled as Tiny Problems. The Problematic category is consistently incorrectly labelled as better than it is. The Bad category is correctly labelled 55% of the time, and is consistently labelled in the non-acceptable category, with only 9 out of 51 scans being placed wrong. The Yikes category was consistently labelled as bad or yikes, and therefore is entirely in the non-acceptable category, which is what we are looking for. 
+ The model did not predict a single Good scan in all 459 scans of the test data. It did however, keep all of the Good scans in the Tiny Problems category. The model got 237/264 tiny problems accurately predicted, with one concern that a Tiny Problems scan got labelled as Yikes. So what should have been an acceptable scan got labelled as completely terrible. The Problematic category has some significant spread, concerningly, 44% of the Problematic scans, which is out cutoff of non-acceptability got labelled as Tiny Problems. The Problematic category is consistently incorrectly labelled as better than it is. The Bad category is correctly labelled 43% of the time, and is consistently labelled in the non-acceptable category, with 18 out of 60 scans being placed wrong. The Yikes category was consistently labelled as bad, and therefore is entirely in the non-acceptable category, which is what we are looking for.
+ 
+ XXX McNemars? Cohens kappa or something?
+ 
+To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
+```{r}
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
 
-### Numerical regression
+# Top is true value, left is predicted
+table(test$num.predictions, test$num.Quality)
+```
+
+XXX redo numbers
+TPR: 97.37%
+TNR: 63.85%
+
+### Standard Numerical regression
   - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
 
 ```{r}
 num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
-              assess_middle_na_proportion + assess_bottomempty,
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion,
                      data=train, family="binomial")
 
 summary(num.logit.model)
 
 test$num.predictions <- predict(num.logit.model, test, type="response")
+
+# XXX Figure out followup scans
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
 
 ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   geom_boxplot() +
@@ -286,18 +324,23 @@ ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   ylab("Probability of good scan") +
   ggtitle("Numerical Logistic Prediction Test Data")
 
-XXX Figure out followup scans
-
-test  <- test %>% 
-  mutate(followup=GoodScan=="FALSE" & num.predictions>50)
- test %>% 
-   ggplot(aes(x = assess_bottomempty_cropped, y = GoodScan, color = followup)) + 
-   geom_jitter() +
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
    scale_colour_manual(values=c("grey50", "darkorange"))
+
 ```
 
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+# Top is true value, left is predicted
+table(round(as.numeric(test$num.predictions,0)), test$num.Quality)
+```
 
-### Ordinal/categorical random forest
+XXX redo numbers
+TPR: 96.38%
+TNR: 79.17%
+
+### Standard Ordinal random forest
 
 Metrics 
     -McNemars
@@ -307,7 +350,8 @@ Metrics
 
 ```{r}
 ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
-              assess_middle_na_proportion + assess_bottomempty, data = train,
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion, data = train,
                            importance = TRUE)
 
 test$Prediction <- predict(ord.forest.model, test)
@@ -315,25 +359,62 @@ print("Test data")
 table(test$Quality, test$Prediction)
 ```
 
-### Numerical Random Forest
+To help compare these models, we once again use the previous compression metrics.
+```{r}
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
+
+# Top is true value, left is predicted
+table(test$num.predictions, test$num.Quality)
+```
+
+XXX redo numbers
+TPR: 97.37%
+TNR: 63.85%
+
+### Standard Numerical Random Forest
   - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
   - (Good = 1, Yikes = 0, drop others)
 
 ```{r}
 num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
-              assess_middle_na_proportion + assess_bottomempty, data = train,
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion, data = train,
                            importance = TRUE)
 
-test$num.predictions <- predict(num.RF.model, test, type = 'prob')[,2]
+test$num.predictions <- predict(num.logit.model, test, type="response")
+
+# XXX Figure out followup scans
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
 
 ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   geom_boxplot() +
   xlab("True Quality") +
   ylab("Probability of good scan") +
-  ggtitle("Numerical Random Forest Prediction Test Data")
+  ggtitle("Numerical Logistic Prediction Test Data")
+
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+
 ```
 
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+# Top is true value, left is predicted
+table(round(as.numeric(test$num.predictions,0)), test$num.Quality)
+```
+
+XXX redo numbers
+TPR: 96.38%
+TNR: 73.08%
+
 ## Cropped Feature Analysis
+
+XXX Upfront table of the results
 
 ### Extract NA Cropped
 
@@ -639,8 +720,102 @@ for (i in 1:nrow(followup)) {
 # all should be relabbeled, FAU 204, BC, L4 is particularly Yikes looking
 ```
 
-### Followup Scans
+## Cropped Model Analysis
+
+```{r}
+sample <- sample(c(TRUE, FALSE), nrow(full.data), replace=TRUE, prob=c(0.75,0.25))
+train  <- full.data[sample, ]
+test   <- full.data[!sample, ]
+
+train$followup <- FALSE
+train$num.Quality <- 0
+train$num.Quality[train$Quality == "Good"] <- 1
+train$num.Quality[train$Quality == "Tiny Problems"] <- 1
+train$num.Quality <- factor(train$num.Quality, levels = c(0, 1))
+
+test$followup <- FALSE
+test$num.Quality <- 0
+test$num.Quality[test$Quality == "Good"] <- 1
+test$num.Quality[test$Quality == "Tiny Problems"] <- 1
+test$num.Quality <- factor(test$num.Quality, levels = c(0, 1))
+
+print("Original")
+table(standard.data[,4:5])
+print("Train")
+table(train[,4:5])
+print("Test")
+table(test[,4:5])
+
+print("Train Numeric")
+table(train$num.Quality)
+print("Train Numeric")
+table(train$num.Quality, train$Problem)
+
+print("Test Numeric")
+table(test$num.Quality)
+print("Test Numeric")
+table(test$num.Quality, test$Problem)
+```
+
+XXX Upfront table of the results
+
+### Cropped Ordinal Logistic Regression
+```{r}
+ord.Model <- polr(Quality ~ assess_percentile_na_proportion + assess_col_na +
+              assess_middle_na_proportion + assess_bottomempty,
+                     data=train, method="logistic")
+
+summary(ord.Model)
+
+test$Predictions <- predict(ord.Model, test)
+# True values on the top, Predictions on the left
+table(test$Predictions, test$Quality)
+```
+
+
+### Cropped Numerical Logistic Regression
+
+```{r}
+crop.num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
+                         extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
+                         assess_median_na_proportion,
+                     data=train, family="binomial")
+
+summary(crop.num.logit.model)
+
+test$num.predictions <- predict(crop.num.logit.model, test, type="response")
+
+# XXX Figure out followup scans
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+
+ggplot(test, aes(x=num.Quality, y=num.predictions)) +
+  geom_boxplot() +
+  xlab("True Quality") +
+  ylab("Probability of good scan") +
+  ggtitle("Cropped Numerical Logistic Prediction Test Data")
+
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+
+```
+
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+# Top is true value, left is predicted
+table(round(as.numeric(test$num.predictions,0)), test$num.Quality)
+```
+
+TPR: 
+TNR: 
+
+### Cropped Ordinal Random Forest
+
+### Cropped Numerical Random Forest
+
+
+## Followup Scans
 
 XXX todo: add standard analysis and predicted outliers
-
-## Cropped Model Analysis
+XXX Consider manual g
