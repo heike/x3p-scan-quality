@@ -15,3 +15,5 @@ corrplot
 MASS
 RColorBrewer
 yardstick
+lattice
+caret
