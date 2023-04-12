@@ -227,17 +227,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tbody>
 <tr class="odd">
 <td>TPR</td>
-<td>97.37</td>
-<td>96.38</td>
-<td>97.37</td>
-<td>96.38</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>TNR</td>
-<td>63.85</td>
-<td>79.11</td>
-<td>63.85</td>
-<td>73.08</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -603,17 +603,17 @@ Number of Fisher Scoring iterations: 10</code></pre>
 <tbody>
 <tr class="odd">
 <td>TPR</td>
-<td>97.37</td>
-<td>96.38</td>
-<td>97.37</td>
-<td>96.38</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr class="even">
 <td>TNR</td>
-<td>63.85</td>
-<td>79.11</td>
-<td>63.85</td>
-<td>73.08</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -738,7 +738,6 @@ Quality         Good Damage Holes Feathering Rotation-Staging
 <span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(ord.Model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The model did not predict a single Good scan in all 459 scans of the test data. It did however, keep all of the Good scans in the Tiny Problems category. The model got 237/264 tiny problems accurately predicted, with one concern that a Tiny Problems scan got labelled as Yikes. So what should have been an acceptable scan got labelled as completely terrible. The Problematic category has some significant spread, concerningly, 44% of the Problematic scans, which is out cutoff of non-acceptability got labelled as Tiny Problems. The Problematic category is consistently incorrectly labelled as better than it is. The Bad category is correctly labelled 43% of the time, and is consistently labelled in the non-acceptable category, with 18 out of 60 scans being placed wrong. The Yikes category was consistently labelled as bad, and therefore is entirely in the non-acceptable category, which is what we are looking for.</p>
-<p>XXX McNemars? Cohens kappa or something?</p>
 <p>To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.</p>
 <div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-14_06ff1a7c6a80c5b4c7aca28abf273f58">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
@@ -963,7 +962,6 @@ Prediction   0   1
                                           </code></pre>
 </div>
 </div>
-<p>XXX redo numbers TPR: 97.37% TNR: 63.85%</p>
 </section>
 <section id="standard-numerical-random-forest" class="level3">
 <h3 class="anchored" data-anchor-id="standard-numerical-random-forest">Standard Numerical Random Forest</h3>
@@ -1036,12 +1034,17 @@ Prediction   0   1
                                           </code></pre>
 </div>
 </div>
-<p>XXX redo numbers TPR: 96.38% TNR: 73.08%</p>
 </section>
 </section>
 <section id="cropped-feature-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="cropped-feature-analysis">Cropped Feature Analysis</h2>
-<p>To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis We trained a Generalized Linear Model (glm) to test the p scores, or importance, of each variable in the model, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.</p>
+<section id="hypothesis" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis">Hypothesis</h4>
+<p>The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that’s affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models.</p>
+</section>
+<section id="process" class="level4">
+<h4 class="anchored" data-anchor-id="process">Process</h4>
+<p>To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis. We trained a Generalized Linear Model (glm) to test the p values, or importance, of each variable in explaining the quality, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.</p>
 <div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-21_000177d54cfd2fcaa6e0804aaccda7d8">
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
@@ -1100,6 +1103,7 @@ Prediction   0   1
 </table>
 </div>
 </div>
+</section>
 <section id="extract-na-cropped" class="level3">
 <h3 class="anchored" data-anchor-id="extract-na-cropped">Extract NA Cropped</h3>
 <section id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans" class="level4">
