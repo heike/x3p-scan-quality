@@ -17,6 +17,7 @@ if (!require(MASS)) install.packages('MASS')
 if (!require(RColorBrewer)) install.packages('RColorBrewer')
 if (!require(yardstick)) install.packages('yardstick')
 if (!require(caret)) install.packages('caret')
+if (!require(nnet)) install.packages('nnet')
 library(tidyverse)
 library(ggplot2)
 library(randomForest)
@@ -26,6 +27,7 @@ library(MASS)
 library(RColorBrewer)
 library(yardstick)
 library(caret)
+library(nnet)
 set.seed(10247693)
 ## Load Functions - eventually we would like to just load a library
 theme_set(theme_bw())
@@ -115,7 +117,8 @@ XXX Our results are mostly in graphical form. Should I use some kinda test?
 
 ```{r}
 standard.data <- full.data[,1:12 & 18:19]
-table(standard.data[,4:5])
+knitr::kable(table(standard.data$Quality, standard.data$Problem),
+             caption = "Full Data Problem by Quality")
 ```
 
 ### Assess Percentile NA Proportion 
@@ -225,8 +228,9 @@ There is significant correlation between most of the variables except assess rot
 XXX Why did I not include all the features in the models?!?!?! GRRRRR
 XXX REDO: all models with correct equations
 
-| | Standard Ordinal Logistic Regression | Standard Numerical Logistic Regression | Standard Ordinal Random Forest| Standard Numerical Random Forest|
+| | Standard Multinomial Logistic Regression | Standard Numerical Logistic Regression | Standard Ordinal Random Forest| Standard Numerical Random Forest|
 |---|-------|-------|-------|-------|
+|F1 |  |  |  |  |
 |TPR|  |  |  |  |
 |TNR|  |  |  |  |
 
@@ -255,42 +259,41 @@ test$num.Quality[test$Quality == "Good"] <- 1
 test$num.Quality[test$Quality == "Tiny Problems"] <- 1
 test$num.Quality <- factor(test$num.Quality, levels = c(0, 1))
 
-print("Original")
-table(standard.data[,4:5])
-print("Train")
-table(train[,4:5])
-print("Test")
-table(test[,4:5])
+knitr::kable(table(standard.data$Quality, standard.data$Problem),
+             caption = "Full Data Problem by Quality")
+knitr::kable(table(train$Quality, train$Problem), caption = "Train Problem by Quality")
+knitr::kable(table(test$Quality, test$Problem), caption = "Test Problem by Quality")
 
-print("Train Numeric")
-table(train$num.Quality)
-print("Train Numeric")
-table(train$num.Quality, train$Problem)
+knitr::kable(table(train$num.Quality), caption = "Train Numeric Quality Totals")
+knitr::kable(table(train$num.Quality, train$Problem), caption = "Train Numeric Problem by Quality")
 
-print("Test Numeric")
-table(test$num.Quality)
-print("Test Numeric")
-table(test$num.Quality, test$Problem)
+knitr::kable(table(test$num.Quality), caption = "Test Numeric Quality Totals")
+knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Problem by Quality")
 ```
 
 
-### Standard Ordinal Logistic Regression
+### Standard Multi-Nomial Logistic Regression
+
+XXX MultiNomial Model!
+
+The assumptions of the multinomial logisitic regression are:
+  - Nominal dependent variable: Not met
+  - No multi-colinearity: 
+  - Linear relationship:
+  - No outlier or high influence points: 
+  
 ```{r, eval = FALSE}
-ord.Model <- polr(Quality ~ assess_percentile_na_proportion + assess_col_na +
+train.mutli = train
+train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
+train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
+multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na +
                          extract_na + assess_middle_na_proportion + assess_bottomempty +
-                         assess_median_na_proportion,
-                     data=train, method="logistic")
+                         assess_median_na_proportion, data = train.mutli)
+summary(multi.model)
 
-# XXX model doesn't seem to like assess_median_na_proportion
-
-summary(ord.Model)
-
-test$Predictions <- predict(ord.Model, test)
+test$Predictions <- predict(multi.model, test)
 ```
 
-
- The model did not predict a single Good scan in all 459 scans of the test data. It did however, keep all of the Good scans in the Tiny Problems category. The model got 237/264 tiny problems accurately predicted, with one concern that a Tiny Problems scan got labelled as Yikes. So what should have been an acceptable scan got labelled as completely terrible. The Problematic category has some significant spread, concerningly, 44% of the Problematic scans, which is out cutoff of non-acceptability got labelled as Tiny Problems. The Problematic category is consistently incorrectly labelled as better than it is. The Bad category is correctly labelled 43% of the time, and is consistently labelled in the non-acceptable category, with 18 out of 60 scans being placed wrong. The Yikes category was consistently labelled as bad, and therefore is entirely in the non-acceptable category, which is what we are looking for.
- 
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
 ```{r}
 test$num.predictions = 0
@@ -302,7 +305,6 @@ test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
 metrics <- confusionMatrix(test$num.predictions,
                            test$num.Quality, mode="everything", positive = "1")
 metrics
-
 ```
 
 ### Standard Numerical regression
@@ -348,7 +350,6 @@ Metrics
     -McNemars
     -kappas
     -various agreement outputs and stuff.
-    
 
 ```{r}
 ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
@@ -357,8 +358,6 @@ ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + ass
                            importance = TRUE)
 
 test$Prediction <- predict(ord.forest.model, test)
-print("Test data")
-table(test$Quality, test$Prediction)
 ```
 
 To help compare these models, we once again use the previous compression metrics.
@@ -737,6 +736,13 @@ for (i in 1:nrow(followup)) {
 
 ## Cropped Model Analysis
 
+| | Cropped Multinomial Logistic Regression | Cropped Numerical Logistic Regression | Cropped Ordinal Cropped Forest| Cropped Numerical Random Forest|
+|---|-------|-------|-------|-------|
+|F1 |  |  |  |  |
+|TPR|  |  |  |  |
+|TNR|  |  |  |  |
+
+
 ```{r}
 sample <- sample(c(TRUE, FALSE), nrow(full.data), replace=TRUE, prob=c(0.75,0.25))
 train  <- full.data[sample, ]
@@ -754,40 +760,31 @@ test$num.Quality[test$Quality == "Good"] <- 1
 test$num.Quality[test$Quality == "Tiny Problems"] <- 1
 test$num.Quality <- factor(test$num.Quality, levels = c(0, 1))
 
-print("Original")
-table(standard.data[,4:5])
-print("Train")
-table(train[,4:5])
-print("Test")
-table(test[,4:5])
+knitr::kable(table(standard.data$Quality, standard.data$Problem),
+             caption = "Full Data Problem by Quality")
+knitr::kable(table(train$Quality, train$Problem), caption = "Train Problem by Quality")
+knitr::kable(table(test$Quality, test$Problem), caption = "Test Problem by Quality")
 
-print("Train Numeric")
-table(train$num.Quality)
-print("Train Numeric")
-table(train$num.Quality, train$Problem)
+knitr::kable(table(train$num.Quality), caption = "Train Numeric Quality Totals")
+knitr::kable(table(train$num.Quality, train$Problem), caption = "Train Numeric Problem by Quality")
 
-print("Test Numeric")
-table(test$num.Quality)
-print("Test Numeric")
-table(test$num.Quality, test$Problem)
+knitr::kable(table(test$num.Quality), caption = "Test Numeric Quality Totals")
+knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Problem by Quality")
 ```
 
 XXX Upfront table of the results
 
-### Cropped Ordinal Logistic Regression
+### Cropped Multinomial Logistic Regression
 ```{r, eval = FALSE}
-crop.ord.Model <- polr(Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
+train.mutli = train
+train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
+train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
+crop.multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
                          extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
-                         assess_median_na_proportion,
-                     data=train, method="logistic")
+                         assess_median_na_proportion, data = train.mutli)
+summary(multi.model)
 
-## Doesn't like assess_percentile_na_proportion
-
-summary(crop.ord.Model)
-
-test$Predictions <- predict(crop.ord.Model, test)
-# True values on the top, Predictions on the left
-table(test$Predictions, test$Quality)
+test$Predictions <- predict(multi.model, test)
 ```
 
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
@@ -843,14 +840,13 @@ metrics
 
 ### Cropped Ordinal Random Forest
 ```{r}
-crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
-                         extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
-                         assess_median_na_proportion, data = train,
-                           importance = TRUE)
+crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion +
+                                      assess_col_na_cropped + extract_na_cropped +
+                                      assess_middle_na_proportion + assess_bottomempty_cropped +
+                                      assess_median_na_proportion, data = train,
+                                      importance = TRUE)
 
 test$Prediction <- predict(crop.ord.forest.model, test)
-print("Test data")
-table(test$Quality, test$Prediction)
 ```
 
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
