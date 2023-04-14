@@ -225,6 +225,19 @@ There is significant correlation between most of the variables except assess rot
 
 ## Model Analysis
 
+```{r}
+# Function intended to standardize outputs a bit better
+numerical.Metrics <- function(test, modelName) {
+  metrics <- confusionMatrix(factor(round(test$num.predictions)),
+                             test$num.Quality, mode="everything", positive = "1")
+  print(metrics)
+  #returns c(modelName, TPR, TNR, F1, Kappa)
+  return(c(modelName, round(metrics$byClass[1], 4), round(metrics$byClass[2], 4), 
+           round(metrics$byClass[7], 4), round(metrics$overall[2], 4)))
+}
+```
+
+
 XXX Why did I not include all the features in the models?!?!?! GRRRRR
 XXX REDO: all models with correct equations
 
@@ -269,12 +282,16 @@ knitr::kable(table(train$num.Quality, train$Problem), caption = "Train Numeric P
 
 knitr::kable(table(test$num.Quality), caption = "Test Numeric Quality Totals")
 knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Problem by Quality")
+
+model.metrics.all = data.frame(matrix(ncol=5))
+colnames(model.metrics.all) <- c("Model", "TPR", "TNR", "F1", "Kappa")
 ```
 
 
 ### Standard Multi-Nomial Logistic Regression
 
 XXX MultiNomial Model!
+XXX Why does it label everything as bad only when we render?
 
 The assumptions of the multinomial logisitic regression are:
   - Nominal dependent variable: Not met
@@ -299,15 +316,11 @@ To help compare these models, we will introduce a compression concept. Just as b
 test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
-test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
 
-# Top is true value, left is predicted
-metrics <- confusionMatrix(test$num.predictions,
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Multi Log Reg"))
 ```
 
-### Standard Numerical regression
+### Standard Binary regression
   - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
 
 ```{r}
@@ -338,18 +351,12 @@ ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
 ```{r}
-# Top is true value, left is predicted
-metrics <- confusionMatrix(factor(round(test$num.predictions)),
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Binary Log Reg"))
 ```
 
 ### Standard Ordinal random forest
 
-Metrics 
-    -McNemars
-    -kappas
-    -various agreement outputs and stuff.
+XXX is this an ordinal random forest or just a categorical one?
 
 ```{r}
 ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
@@ -362,17 +369,7 @@ test$Prediction <- predict(ord.forest.model, test)
 
 To help compare these models, we once again use the previous compression metrics.
 ```{r}
-test$num.predictions = 0
-test$num.predictions[test$Predictions == "Good"] = 1
-test$num.predictions[test$Predictions == "Tiny Problems"] = 1
-test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
-
-
-# Top is true value, left is predicted
-metrics <- confusionMatrix(test$num.predictions,
-                           test$num.Quality, mode="everything", positive = "1")
-
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Ord Rand For"))
 ```
 
 ### Standard Numerical Random Forest
@@ -404,10 +401,7 @@ ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
 ```{r}
-# Top is true value, left is predicted
-metrics <- confusionMatrix(factor(round(test$num.predictions)),
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Bin Rand For"))
 ```
 
 ## Cropped Feature Analysis
@@ -774,7 +768,10 @@ knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Prob
 
 XXX Upfront table of the results
 
-### Cropped Multinomial Logistic Regression
+### Cropped Multi-Nomial Logistic Regression
+
+XXX Why does it label everything as bad only when we render?
+
 ```{r, eval = FALSE}
 train.mutli = train
 train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
@@ -792,12 +789,8 @@ To help compare these models, we will introduce a compression concept. Just as b
 test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
-test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
 
-# Top is true value, left is predicted
-metrics <- confusionMatrix(test$num.predictions,
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Multi Logistic Reg"))
 
 ```
 
@@ -832,13 +825,13 @@ ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
 ```{r}
-# Top is true value, left is predicted
-metrics <- confusionMatrix(factor(round(test$num.predictions)),
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Binary Logistic Reg"))
 ```
 
 ### Cropped Ordinal Random Forest
+
+XXX Why does it label everything as bad only when we render?
+
 ```{r}
 crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion +
                                       assess_col_na_cropped + extract_na_cropped +
@@ -854,12 +847,8 @@ To help compare these models, we will introduce a compression concept. Just as b
 test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
-test$num.predictions <- factor(test$num.predictions, levels = c(0, 1))
 
-# Top is true value, left is predicted
-metrics <- confusionMatrix(test$num.predictions,
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Ord Rand For"))
 
 ```
 
@@ -890,11 +879,17 @@ ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
 ```{r}
-# Top is true value, left is predicted
-metrics <- confusionMatrix(factor(round(test$num.predictions)),
-                           test$num.Quality, mode="everything", positive = "1")
-metrics
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Binary Rand For"))
 ```
+
+### Results
+
+```{r}
+model.metrics.all <- model.metrics.all[-1,]
+knitr::kable(model.metrics.all)
+
+```
+
 
 ## Followup Scans
 

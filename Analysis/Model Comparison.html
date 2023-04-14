@@ -124,7 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#model-analysis" id="toc-model-analysis" class="nav-link" data-scroll-target="#model-analysis">Model Analysis</a>
   <ul class="collapse">
   <li><a href="#standard-multi-nomial-logistic-regression" id="toc-standard-multi-nomial-logistic-regression" class="nav-link" data-scroll-target="#standard-multi-nomial-logistic-regression">Standard Multi-Nomial Logistic Regression</a></li>
-  <li><a href="#standard-numerical-regression" id="toc-standard-numerical-regression" class="nav-link" data-scroll-target="#standard-numerical-regression">Standard Numerical regression</a></li>
+  <li><a href="#standard-binary-regression" id="toc-standard-binary-regression" class="nav-link" data-scroll-target="#standard-binary-regression">Standard Binary regression</a></li>
   <li><a href="#standard-ordinal-random-forest" id="toc-standard-ordinal-random-forest" class="nav-link" data-scroll-target="#standard-ordinal-random-forest">Standard Ordinal random forest</a></li>
   <li><a href="#standard-numerical-random-forest" id="toc-standard-numerical-random-forest" class="nav-link" data-scroll-target="#standard-numerical-random-forest">Standard Numerical Random Forest</a></li>
   </ul></li>
@@ -141,6 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#cropped-numerical-logistic-regression" id="toc-cropped-numerical-logistic-regression" class="nav-link" data-scroll-target="#cropped-numerical-logistic-regression">Cropped Numerical Logistic Regression</a></li>
   <li><a href="#cropped-ordinal-random-forest" id="toc-cropped-ordinal-random-forest" class="nav-link" data-scroll-target="#cropped-ordinal-random-forest">Cropped Ordinal Random Forest</a></li>
   <li><a href="#cropped-numerical-random-forest" id="toc-cropped-numerical-random-forest" class="nav-link" data-scroll-target="#cropped-numerical-random-forest">Cropped Numerical Random Forest</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   </ul></li>
   <li><a href="#followup-scans" id="toc-followup-scans" class="nav-link" data-scroll-target="#followup-scans">Followup Scans</a></li>
   </ul>
@@ -631,6 +632,17 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </section>
 <section id="model-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="model-analysis">Model Analysis</h2>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-12_59c7e777ebaadd4a27008bdc4b4d3f79">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function intended to standardize outputs a bit better</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>numerical.Metrics <span class="ot">&lt;-</span> <span class="cf">function</span>(test, modelName) {</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(<span class="fu">round</span>(test<span class="sc">$</span>num.predictions)),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                             test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(metrics)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#returns c(modelName, TPR, TNR, F1, Kappa)</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">c</span>(modelName, <span class="fu">round</span>(metrics<span class="sc">$</span>byClass[<span class="dv">1</span>], <span class="dv">4</span>), <span class="fu">round</span>(metrics<span class="sc">$</span>byClass[<span class="dv">2</span>], <span class="dv">4</span>), </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>           <span class="fu">round</span>(metrics<span class="sc">$</span>byClass[<span class="dv">7</span>], <span class="dv">4</span>), <span class="fu">round</span>(metrics<span class="sc">$</span>overall[<span class="dv">2</span>], <span class="dv">4</span>)))</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>XXX Why did I not include all the features in the models?!?!?! GRRRRR XXX REDO: all models with correct equations</p>
 <table class="table">
 <colgroup>
@@ -677,25 +689,25 @@ Number of Fisher Scoring iterations: 10</code></pre>
 <p>For the purposes of this analysis, consider that the scanner using this model to decide if a scan needs to be re-done will be instructed that Good and Tiny Problems predictions likely don’t need to be re-done. However, Problematic, Bad, and Yikes scans have a high likelihood of needing to be redone.</p>
 <p><strong>Quantitative Predictions:</strong></p>
 <pre><code>--cutoff is....</code></pre>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-12_efa6eedd63f533c3c63ea46c498d3fbf">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="fu">nrow</span>(standard.data), <span class="at">replace=</span><span class="cn">TRUE</span>, <span class="at">prob=</span><span class="fu">c</span>(<span class="fl">0.75</span>,<span class="fl">0.25</span>))</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>train  <span class="ot">&lt;-</span> standard.data[sample, ]</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>test   <span class="ot">&lt;-</span> standard.data[<span class="sc">!</span>sample, ]</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(standard.data<span class="sc">$</span>Quality, standard.data<span class="sc">$</span>Problem),</span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Full Data Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-13_a072246cb0fd2d5b484428f29e8366c1">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="fu">nrow</span>(standard.data), <span class="at">replace=</span><span class="cn">TRUE</span>, <span class="at">prob=</span><span class="fu">c</span>(<span class="fl">0.75</span>,<span class="fl">0.25</span>))</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>train  <span class="ot">&lt;-</span> standard.data[sample, ]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>test   <span class="ot">&lt;-</span> standard.data[<span class="sc">!</span>sample, ]</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(standard.data<span class="sc">$</span>Quality, standard.data<span class="sc">$</span>Problem),</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Full Data Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Full Data Problem by Quality</caption>
@@ -753,7 +765,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Problem by Quality</caption>
@@ -811,7 +823,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Problem by Quality</caption>
@@ -869,7 +881,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Train Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Train Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Numeric Quality Totals</caption>
@@ -891,7 +903,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Numeric Problem by Quality</caption>
@@ -925,7 +937,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Test Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Test Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Numeric Quality Totals</caption>
@@ -947,7 +959,7 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Numeric Problem by Quality</caption>
@@ -981,33 +993,36 @@ Number of Fisher Scoring iterations: 10</code></pre>
 </tbody>
 </table>
 </div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol=</span><span class="dv">5</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(model.metrics.all) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Model"</span>, <span class="st">"TPR"</span>, <span class="st">"TNR"</span>, <span class="st">"F1"</span>, <span class="st">"Kappa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="standard-multi-nomial-logistic-regression" class="level3">
 <h3 class="anchored" data-anchor-id="standard-multi-nomial-logistic-regression">Standard Multi-Nomial Logistic Regression</h3>
 <p>XXX MultiNomial Model!</p>
 <p>The assumptions of the multinomial logisitic regression are: - Nominal dependent variable: Not met - No multi-colinearity: - Linear relationship: - No outlier or high influence points:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-13_6acc111daf06b3c9b4cf95a10f791e64">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>train.mutli <span class="ot">=</span> train</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Tiny Problems"</span>, <span class="st">"Problematic"</span>, <span class="st">"Bad"</span>, <span class="st">"Yikes"</span>), <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">relevel</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">ref =</span> <span class="st">"Good"</span>)</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>multi.model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train.mutli)</span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(multi.model)</span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(multi.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-14_c640ef2fc5bf054a713759317c9ed791">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>train.mutli <span class="ot">=</span> train</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Tiny Problems"</span>, <span class="st">"Problematic"</span>, <span class="st">"Bad"</span>, <span class="st">"Yikes"</span>), <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">relevel</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">ref =</span> <span class="st">"Good"</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>multi.model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train.mutli)</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(multi.model)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(multi.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-14_88353627b39b001092918bd18635d558">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.predictions, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(test<span class="sc">$</span>num.predictions,</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-15_9f6d1d52e4b09d7f4b16670d5dbca27a">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Stnd Multi Log Reg"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in confusionMatrix.default(factor(round(test$num.predictions)), :
+Levels are not in the same order for reference and data. Refactoring data to
+match.</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -1042,18 +1057,18 @@ Prediction   0   1
 </div>
 </div>
 </section>
-<section id="standard-numerical-regression" class="level3">
-<h3 class="anchored" data-anchor-id="standard-numerical-regression">Standard Numerical regression</h3>
+<section id="standard-binary-regression" class="level3">
+<h3 class="anchored" data-anchor-id="standard-binary-regression">Standard Binary regression</h3>
 <ul>
 <li>(Good/Tiny = 1, Problematic/Bad/Yikes = 0)</li>
 </ul>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-15_76ca105821a8b44ae088e53796eb8324">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>num.logit.model <span class="ot">&lt;-</span> <span class="fu">glm</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion,</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>train, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(num.logit.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-16_e3fffea1e2d2ec3bcb177bb8df4213b7">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>num.logit.model <span class="ot">&lt;-</span> <span class="fu">glm</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>train, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(num.logit.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1086,36 +1101,33 @@ AIC: 878.04
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(num.logit.model, test, <span class="at">type=</span><span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(num.logit.model, test, <span class="at">type=</span><span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># XXX Figure out followup scans</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># XXX Figure out followup scans</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-16_d94491b314f3dafcf1c7e083b41f19bd">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(<span class="fu">round</span>(test<span class="sc">$</span>num.predictions)),</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-17_29ffd8af4ee092253f7a6b5ecf1e81dd">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Stnd Binary Log Reg"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -1152,100 +1164,17 @@ Prediction   0   1
 </section>
 <section id="standard-ordinal-random-forest" class="level3">
 <h3 class="anchored" data-anchor-id="standard-ordinal-random-forest">Standard Ordinal random forest</h3>
-<p>Metrics -McNemars -kappas -various agreement outputs and stuff.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-17_2f66f12720200982a7d19a2443630c54">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>ord.forest.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train,</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(ord.forest.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To help compare these models, we once again use the previous compression metrics.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-18_de4291d09114f914651f39ecb700285a">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.predictions, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(test<span class="sc">$</span>num.predictions,</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Confusion Matrix and Statistics
-
-          Reference
-Prediction   0   1
-         0  83   8
-         1  47 296
-                                          
-               Accuracy : 0.8733          
-                 95% CI : (0.8383, 0.9031)
-    No Information Rate : 0.7005          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.6696          
-                                          
- Mcnemar's Test P-Value : 2.992e-07       
-                                          
-            Sensitivity : 0.9737          
-            Specificity : 0.6385          
-         Pos Pred Value : 0.8630          
-         Neg Pred Value : 0.9121          
-              Precision : 0.8630          
-                 Recall : 0.9737          
-                     F1 : 0.9150          
-             Prevalence : 0.7005          
-         Detection Rate : 0.6820          
-   Detection Prevalence : 0.7903          
-      Balanced Accuracy : 0.8061          
-                                          
-       'Positive' Class : 1               
-                                          </code></pre>
-</div>
-</div>
-</section>
-<section id="standard-numerical-random-forest" class="level3">
-<h3 class="anchored" data-anchor-id="standard-numerical-random-forest">Standard Numerical Random Forest</h3>
-<ul>
-<li>(Good/Tiny = 1, Problematic/Bad/Yikes = 0)</li>
-<li>(Good = 1, Yikes = 0, drop others)</li>
-</ul>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-19_8caca7a7fdb26660ff0117dbd6e7e186">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>num.RF.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-18_2962169f9596cd578d2866473003d8ab">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ord.forest.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train,</span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(num.RF.model, test, <span class="at">type=</span><span class="st">"prob"</span>)[,<span class="dv">2</span>]</span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
-<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
-<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
-<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(ord.forest.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-20_fa83daf811e1513c4511154d60e47035">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(<span class="fu">round</span>(test<span class="sc">$</span>num.predictions)),</span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To help compare these models, we once again use the previous compression metrics.</p>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-19_f4875636ac14e28b50de66706c989485">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Stnd Ord Rand For"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -1280,6 +1209,75 @@ Prediction   0   1
 </div>
 </div>
 </section>
+<section id="standard-numerical-random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="standard-numerical-random-forest">Standard Numerical Random Forest</h3>
+<ul>
+<li>(Good/Tiny = 1, Problematic/Bad/Yikes = 0)</li>
+<li>(Good = 1, Yikes = 0, drop others)</li>
+</ul>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-20_95e40939c369d33c723b821d231d35bc">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>num.RF.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>                         extract_na <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty <span class="sc">+</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train,</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(num.RF.model, test, <span class="at">type=</span><span class="st">"prob"</span>)[,<span class="dv">2</span>]</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
+<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
+<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
+<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix:</p>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-21_c89d8efb2395284996335bdc80fedc19">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Stnd Bin Rand For"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 100  21
+         1  30 283
+                                          
+               Accuracy : 0.8825          
+                 95% CI : (0.8484, 0.9112)
+    No Information Rate : 0.7005          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.7143          
+                                          
+ Mcnemar's Test P-Value : 0.2626          
+                                          
+            Sensitivity : 0.9309          
+            Specificity : 0.7692          
+         Pos Pred Value : 0.9042          
+         Neg Pred Value : 0.8264          
+              Precision : 0.9042          
+                 Recall : 0.9309          
+                     F1 : 0.9173          
+             Prevalence : 0.7005          
+         Detection Rate : 0.6521          
+   Detection Prevalence : 0.7212          
+      Balanced Accuracy : 0.8501          
+                                          
+       'Positive' Class : 1               
+                                          </code></pre>
+</div>
+</div>
+</section>
 </section>
 <section id="cropped-feature-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="cropped-feature-analysis">Cropped Feature Analysis</h2>
@@ -1290,7 +1288,7 @@ Prediction   0   1
 <section id="process" class="level4">
 <h4 class="anchored" data-anchor-id="process">Process</h4>
 <p>To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis. We trained a Generalized Linear Model (glm) to test the p values, or importance, of each variable in explaining the quality, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-21_000177d54cfd2fcaa6e0804aaccda7d8">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-22_f5d3914d03630ea24241180f21efc17b">
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <colgroup>
@@ -1353,7 +1351,7 @@ Prediction   0   1
 <h3 class="anchored" data-anchor-id="extract-na-cropped">Extract NA Cropped</h3>
 <section id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans" class="level4">
 <h4 class="anchored" data-anchor-id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans">Which of the features is better for discriminating between good and bad scans?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-22_0ff8873ce23ab2a8eb632b29ab7de5b1">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-23_9d402d0b7d03c839d7bb656df0c3a13c">
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
 dplyr 1.1.0.
@@ -1364,13 +1362,13 @@ dplyr 1.1.0.
   Please report the issue at &lt;https://github.com/tidymodels/yardstick/issues&gt;.</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-23-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Extract NA. Correlation:  0.908 Full AUC: 0.871 Cropped AUC:  0.902"</code></pre>
@@ -1424,7 +1422,7 @@ dplyr 1.1.0.
 </section>
 <section id="should-we-use-features-from-just-one-type-of-scan-or-both" class="level4">
 <h4 class="anchored" data-anchor-id="should-we-use-features-from-just-one-type-of-scan-or-both">Should we use features from just one type of scan or both?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-23_a738990a45b1b53d779df981778d5782">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-24_4abca7c516d333edaecab9c992312bed">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1452,7 +1450,7 @@ AIC: 1305.2
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1461,19 +1459,19 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <p>The values for feature <code>extract_NA</code> are highly correlated between the cropped and the full scan.</p>
 <p>Using good and scans with only tiny problems as overall ‘good’ scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan.</p>
 <p>We might want to follow up on the orange colored scans:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-24_53bc3023ad4144fbd9e7838086f25877">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-25_264ad9ab115633a68b08d3e937cb97a0">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-25_55ef5480b5c156e67c71987afd4e604b">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-26_d287906a1826ec7ff1ea30a5400cc829">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FAU263-BA-L4" "FAU263-BC-L1" "FAU263-BC-L3" "FAU287-BC-L5" "FAU154-BD-L2"
 [6] "FAU277-BA-L4" "FAU286-BA-L5"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># All followups for extract_na are mislabelled scans. They are all labelled as tiny problems but should be problematic or worse.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="co"># All followups for extract_na are mislabelled scans. They are all labelled as tiny problems but should be problematic or worse.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1481,24 +1479,15 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <h3 class="anchored" data-anchor-id="assess-bottomempty-cropped">Assess Bottomempty Cropped</h3>
 <section id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-1" class="level4">
 <h4 class="anchored" data-anchor-id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-1">Which of the features is better for discriminating between good and bad scans?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-27_940c400fbc66e4e6591738a2321ddbd7">
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
-dplyr 1.1.0.
-ℹ Please use `reframe()` instead.
-ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
-  always returns an ungrouped data frame and adjust accordingly.
-ℹ The deprecated feature was likely used in the yardstick package.
-  Please report the issue at &lt;https://github.com/tidymodels/yardstick/issues&gt;.</code></pre>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-28_3fde54cc585a0e7ccc1bc5790922a94b">
+<div class="cell-output-display">
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-27-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-27-3.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-28-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Assess Bottomempty. Correlation:  0.905 Full AUC: 0.783 Cropped AUC:  0.859"</code></pre>
@@ -1543,7 +1532,7 @@ dplyr 1.1.0.
 </section>
 <section id="should-we-use-features-from-just-one-type-of-scan-or-both-1" class="level4">
 <h4 class="anchored" data-anchor-id="should-we-use-features-from-just-one-type-of-scan-or-both-1">Should we use features from just one type of scan or both?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-28_f46cd9db2ed1c30ddb1b8dc1464b6aa7">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-29_344f93045fee4a275dd8b9f0b9f61716">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1571,7 +1560,7 @@ AIC: 1509.7
 Number of Fisher Scoring iterations: 5</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1580,18 +1569,18 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <p>The values for feature <code>assess_bottomempty</code> are highly correlated between the cropped and the full scan.</p>
 <p>Using good and scans with only tiny problems as overall ‘good’ scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan.</p>
 <p>We might want to follow up on the orange colored scans:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-29_0110630bb30aeac26759b66f269fe52c">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-30_b8161bda8e068c3fd26f80e963c199f2">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-30_d43ef27aaf1721077163fe531215a211">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-31_d43b16493913b9569c512ffad51502ff">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FAU263-BA-L4" "FAU287-BC-L5" "FAU254-BD-L4" "FAU275-BC-L5" "FAU275-BD-L3"
 [6] "FAU277-BA-L4" "FAU286-BA-L5"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1599,15 +1588,15 @@ Number of Fisher Scoring iterations: 5</code></pre>
 <h3 class="anchored" data-anchor-id="assess-col-na-cropped">Assess Col NA Cropped</h3>
 <section id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-2" class="level4">
 <h4 class="anchored" data-anchor-id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-2">Which of the features is better for discriminating between good and bad scans?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-32_b8af909b14cd2663df3be031d60e57dc">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-33_1c8c6fcdc6bac6aa6c9aa0a655a9f8ef">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-33-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Assess Col NA Correlation:  0.919 Full AUC: 0.888 Cropped AUC:  0.896"</code></pre>
@@ -1661,7 +1650,7 @@ Number of Fisher Scoring iterations: 5</code></pre>
 </section>
 <section id="should-we-use-features-from-just-one-type-of-scan-or-both-2" class="level4">
 <h4 class="anchored" data-anchor-id="should-we-use-features-from-just-one-type-of-scan-or-both-2">Should we use features from just one type of scan or both?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-33_98398416f5f24a38627ee211e8d2307c">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-34_d0069942d20c5d3a707b1717858018d8">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1689,7 +1678,7 @@ AIC: 1314.8
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1698,18 +1687,18 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <p>The values for feature <code>assess_col_na</code> are highly correlated between the cropped and the full scan.</p>
 <p>Using good and scans with only tiny problems as overall ‘good’ scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan.</p>
 <p>We might want to follow up on the orange colored scans:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-34_c9333e17a5b0b1daf704e2944bb39971">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-35_ccf8336343694e5df03b56ac4fb273d0">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-35_387adc96738abfdc9f07c3081aacbfe1">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-36_5cbcb145bccb54c5a86aef07a59908cb">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FAU263-BA-L4" "FAU263-BB-L3" "FAU263-BC-L1" "FAU263-BC-L3" "FAU154-BD-L2"
 [6] "FAU286-BA-L5"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1717,15 +1706,15 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <h3 class="anchored" data-anchor-id="assess-median-na-proportion-cropped">Assess Median NA Proportion Cropped</h3>
 <section id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-3" class="level4">
 <h4 class="anchored" data-anchor-id="which-of-the-features-is-better-for-discriminating-between-good-and-bad-scans-3">Which of the features is better for discriminating between good and bad scans?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-37_b575e48525eece8f9d5feb9390e8f416">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-38_f867ec20638181efe1d94e345ec14430">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-37-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-38-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-37-3.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-38-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Assess Median NA Proportion. Correlation:  0.908 Full AUC: 0.907 Cropped AUC:  0.863"</code></pre>
@@ -1779,7 +1768,7 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </section>
 <section id="should-we-use-features-from-just-one-type-of-scan-or-both-3" class="level4">
 <h4 class="anchored" data-anchor-id="should-we-use-features-from-just-one-type-of-scan-or-both-3">Should we use features from just one type of scan or both?</h4>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-38_bace8dd8f755f0a0aa4176fcf6cd3250">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-39_9501dcac5769abd14a78cdd0f488f136">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1807,7 +1796,7 @@ AIC: 1225
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -1816,17 +1805,17 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <p>The values for feature <code>extract_NA</code> are highly correlated between the cropped and the full scan.</p>
 <p>Using good and scans with only tiny problems as overall ‘good’ scans, the feature applied to full scans has an increased accuracy compared to the feature values from the cropped scan.</p>
 <p>We might want to follow up on the orange colored scans:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-39_05acfd43637f5887600b54757e74a367">
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-40_782eb7373e7e81c74d332b14eedfb28e">
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-40_f2a24c9e805d3cc238da0f4072a3f086">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-41_432172eb365712f547902c6a53d5b236">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>full.data<span class="sc">$</span>LAPD_id[full.data<span class="sc">$</span>followup]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FAU263-BC-L3" "FAU154-BD-L2" "FAU204-BC-L4"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>followupScans <span class="ot">&lt;-</span> <span class="fu">rbind</span>(followupScans, full.data[full.data<span class="sc">$</span>followup <span class="sc">==</span> <span class="cn">TRUE</span>,])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1874,25 +1863,25 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-42_0307db54cb681bb276c7fde7209906ae">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="fu">nrow</span>(full.data), <span class="at">replace=</span><span class="cn">TRUE</span>, <span class="at">prob=</span><span class="fu">c</span>(<span class="fl">0.75</span>,<span class="fl">0.25</span>))</span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>train  <span class="ot">&lt;-</span> full.data[sample, ]</span>
-<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>test   <span class="ot">&lt;-</span> full.data[<span class="sc">!</span>sample, ]</span>
-<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-11"><a href="#cb89-11" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb89-12"><a href="#cb89-12" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb89-13"><a href="#cb89-13" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb89-14"><a href="#cb89-14" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb89-15"><a href="#cb89-15" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb89-16"><a href="#cb89-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb89-17"><a href="#cb89-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(standard.data<span class="sc">$</span>Quality, standard.data<span class="sc">$</span>Problem),</span>
-<span id="cb89-18"><a href="#cb89-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Full Data Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-43_f0ee89a4f68405463694e5ed59b9592a">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>), <span class="fu">nrow</span>(full.data), <span class="at">replace=</span><span class="cn">TRUE</span>, <span class="at">prob=</span><span class="fu">c</span>(<span class="fl">0.75</span>,<span class="fl">0.25</span>))</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>train  <span class="ot">&lt;-</span> full.data[sample, ]</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>test   <span class="ot">&lt;-</span> full.data[<span class="sc">!</span>sample, ]</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality[train<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>followup <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb91-12"><a href="#cb91-12" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb91-13"><a href="#cb91-13" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb91-14"><a href="#cb91-14" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality[test<span class="sc">$</span>Quality <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb91-15"><a href="#cb91-15" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.Quality, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb91-16"><a href="#cb91-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-17"><a href="#cb91-17" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(standard.data<span class="sc">$</span>Quality, standard.data<span class="sc">$</span>Problem),</span>
+<span id="cb91-18"><a href="#cb91-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"Full Data Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Full Data Problem by Quality</caption>
@@ -1950,7 +1939,7 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Problem by Quality</caption>
@@ -1967,7 +1956,7 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Good</td>
-<td style="text-align: right;">191</td>
+<td style="text-align: right;">194</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -1976,39 +1965,39 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tr class="even">
 <td style="text-align: left;">Tiny Problems</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">738</td>
-<td style="text-align: right;">43</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">759</td>
+<td style="text-align: right;">50</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Problematic</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">8</td>
-<td style="text-align: right;">188</td>
-<td style="text-align: right;">14</td>
+<td style="text-align: right;">172</td>
+<td style="text-align: right;">12</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Bad</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">128</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">132</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Yikes</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
 <td style="text-align: right;">2</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Problem by Quality</caption>
@@ -2025,7 +2014,7 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Good</td>
-<td style="text-align: right;">62</td>
+<td style="text-align: right;">59</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
@@ -2034,39 +2023,39 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tr class="even">
 <td style="text-align: left;">Tiny Problems</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">253</td>
-<td style="text-align: right;">18</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">232</td>
+<td style="text-align: right;">11</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Problematic</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">47</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Bad</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">14</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">51</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Yikes</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Train Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Train Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Numeric Quality Totals</caption>
@@ -2079,16 +2068,16 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">414</td>
+<td style="text-align: right;">398</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">976</td>
+<td style="text-align: right;">1008</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(train<span class="sc">$</span>num.Quality, train<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Train Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Train Numeric Problem by Quality</caption>
@@ -2106,23 +2095,23 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tr class="odd">
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">53</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">329</td>
-<td style="text-align: right;">23</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">319</td>
+<td style="text-align: right;">19</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">191</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">738</td>
-<td style="text-align: right;">43</td>
+<td style="text-align: right;">194</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">759</td>
+<td style="text-align: right;">50</td>
 <td style="text-align: right;">4</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Test Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality), <span class="at">caption =</span> <span class="st">"Test Numeric Quality Totals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Numeric Quality Totals</caption>
@@ -2135,16 +2124,16 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">0</td>
-<td style="text-align: right;">124</td>
+<td style="text-align: right;">140</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">336</td>
+<td style="text-align: right;">304</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">table</span>(test<span class="sc">$</span>num.Quality, test<span class="sc">$</span>Problem), <span class="at">caption =</span> <span class="st">"Test Numeric Problem by Quality"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped">
 <caption>Test Numeric Problem by Quality</caption>
@@ -2162,17 +2151,17 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <tr class="odd">
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">15</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">103</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">113</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">1</td>
-<td style="text-align: right;">62</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">253</td>
-<td style="text-align: right;">18</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">232</td>
+<td style="text-align: right;">11</td>
 <td style="text-align: right;">2</td>
 </tr>
 </tbody>
@@ -2182,39 +2171,40 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <p>XXX Upfront table of the results</p>
 <section id="cropped-multinomial-logistic-regression" class="level3">
 <h3 class="anchored" data-anchor-id="cropped-multinomial-logistic-regression">Cropped Multinomial Logistic Regression</h3>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-43_cb5d6da504811080c9afc78b4ebff4b8">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>train.mutli <span class="ot">=</span> train</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Tiny Problems"</span>, <span class="st">"Problematic"</span>, <span class="st">"Bad"</span>, <span class="st">"Yikes"</span>), <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">relevel</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">ref =</span> <span class="st">"Good"</span>)</span>
-<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>crop.multi.model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
-<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
-<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train.mutli)</span>
-<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(multi.model)</span>
-<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(multi.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-44_c373b5a6fdcaf96ce60ee3286d6ab3fc">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>train.mutli <span class="ot">=</span> train</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">factor</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Tiny Problems"</span>, <span class="st">"Problematic"</span>, <span class="st">"Bad"</span>, <span class="st">"Yikes"</span>), <span class="at">ordered =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>train.mutli<span class="sc">$</span>Quality <span class="ot">&lt;-</span> <span class="fu">relevel</span>(train.mutli<span class="sc">$</span>Quality, <span class="at">ref =</span> <span class="st">"Good"</span>)</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>crop.multi.model <span class="ot">&lt;-</span> <span class="fu">multinom</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train.mutli)</span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(multi.model)</span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(multi.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-44_c32ce02f94276a752de18b949a54b388">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.predictions, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(test<span class="sc">$</span>num.predictions,</span>
-<span id="cb97-8"><a href="#cb97-8" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb97-9"><a href="#cb97-9" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-45_737cb4b937a94ba22083ebfa5de48c30">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Crop Multi Logistic Reg"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in confusionMatrix.default(factor(round(test$num.predictions)), :
+Levels are not in the same order for reference and data. Refactoring data to
+match.</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction   0   1
-         0 124 336
+         0 140 304
          1   0   0
                                           
-               Accuracy : 0.2696          
-                 95% CI : (0.2295, 0.3126)
-    No Information Rate : 0.7304          
+               Accuracy : 0.3153          
+                 95% CI : (0.2723, 0.3608)
+    No Information Rate : 0.6847          
     P-Value [Acc &gt; NIR] : 1               
                                           
                   Kappa : 0               
@@ -2224,11 +2214,11 @@ Prediction   0   1
             Sensitivity : 0.0000          
             Specificity : 1.0000          
          Pos Pred Value :    NaN          
-         Neg Pred Value : 0.2696          
+         Neg Pred Value : 0.3153          
               Precision :     NA          
                  Recall : 0.0000          
                      F1 :     NA          
-             Prevalence : 0.7304          
+             Prevalence : 0.6847          
          Detection Rate : 0.0000          
    Detection Prevalence : 0.0000          
       Balanced Accuracy : 0.5000          
@@ -2240,13 +2230,13 @@ Prediction   0   1
 </section>
 <section id="cropped-numerical-logistic-regression" class="level3">
 <h3 class="anchored" data-anchor-id="cropped-numerical-logistic-regression">Cropped Numerical Logistic Regression</h3>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-45_b01ed2381f5a47f87d080cab497a3215">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>crop.num.logit.model <span class="ot">&lt;-</span> <span class="fu">glm</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion,</span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>train, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(crop.num.logit.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-46_971a20cf83b21f9172711dce4e206eaf">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>crop.num.logit.model <span class="ot">&lt;-</span> <span class="fu">glm</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion,</span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data=</span>train, <span class="at">family=</span><span class="st">"binomial"</span>)</span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(crop.num.logit.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -2257,86 +2247,83 @@ glm(formula = num.Quality ~ assess_percentile_na_proportion +
 
 Deviance Residuals: 
     Min       1Q   Median       3Q      Max  
--2.8032  -0.1417   0.3026   0.4747   4.8743  
+-2.8601  -0.0710   0.2860   0.4581   4.8520  
 
 Coefficients: (1 not defined because of singularities)
-                                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                      4.999e+00  3.832e-01  13.046  &lt; 2e-16 ***
-assess_percentile_na_proportion -5.722e+01  7.979e+00  -7.171 7.45e-13 ***
-assess_col_na_cropped           -1.259e+00  7.351e-01  -1.713   0.0868 .  
-extract_na_cropped              -1.443e-01  6.806e-02  -2.121   0.0339 *  
-assess_middle_na_proportion     -1.214e+01  7.367e+00  -1.649   0.0992 .  
-assess_bottomempty_cropped       4.897e-04  3.586e-02   0.014   0.9891    
-assess_median_na_proportion             NA         NA      NA       NA    
+                                 Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                       5.24584    0.41037  12.783  &lt; 2e-16 ***
+assess_percentile_na_proportion -58.42102    8.16384  -7.156  8.3e-13 ***
+assess_col_na_cropped            -1.50749    0.77373  -1.948   0.0514 .  
+extract_na_cropped               -0.10832    0.07290  -1.486   0.1373    
+assess_middle_na_proportion     -10.61949    7.44519  -1.426   0.1538    
+assess_bottomempty_cropped       -0.01843    0.03710  -0.497   0.6194    
+assess_median_na_proportion            NA         NA      NA       NA    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 1693.1  on 1389  degrees of freedom
-Residual deviance:  913.9  on 1384  degrees of freedom
-AIC: 925.9
+    Null deviance: 1675.48  on 1405  degrees of freedom
+Residual deviance:  874.07  on 1400  degrees of freedom
+AIC: 886.07
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.num.logit.model, test, <span class="at">type=</span><span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.num.logit.model, test, <span class="at">type=</span><span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># XXX Figure out followup scans</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
-<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
-<span id="cb103-8"><a href="#cb103-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
-<span id="cb103-9"><a href="#cb103-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cropped Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># XXX Figure out followup scans</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
+<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
+<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Cropped Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
-<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-45-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-46-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-46_a7ba8b64962cdff334b66a57ae0ca1de">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(<span class="fu">round</span>(test<span class="sc">$</span>num.predictions)),</span>
-<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-47_0ba71d748d98c46cca9f48b39dc0e881">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Crop Binary Logistic Reg"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction   0   1
-         0  98  18
-         1  26 318
+         0  92   9
+         1  48 295
                                           
-               Accuracy : 0.9043          
-                 95% CI : (0.8737, 0.9296)
-    No Information Rate : 0.7304          
-    P-Value [Acc &gt; NIR] : &lt;2e-16          
+               Accuracy : 0.8716          
+                 95% CI : (0.8369, 0.9013)
+    No Information Rate : 0.6847          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
                                           
-                  Kappa : 0.7521          
+                  Kappa : 0.6785          
                                           
- Mcnemar's Test P-Value : 0.2913          
+ Mcnemar's Test P-Value : 4.823e-07       
                                           
-            Sensitivity : 0.9464          
-            Specificity : 0.7903          
-         Pos Pred Value : 0.9244          
-         Neg Pred Value : 0.8448          
-              Precision : 0.9244          
-                 Recall : 0.9464          
-                     F1 : 0.9353          
-             Prevalence : 0.7304          
-         Detection Rate : 0.6913          
-   Detection Prevalence : 0.7478          
-      Balanced Accuracy : 0.8684          
+            Sensitivity : 0.9704          
+            Specificity : 0.6571          
+         Pos Pred Value : 0.8601          
+         Neg Pred Value : 0.9109          
+              Precision : 0.8601          
+                 Recall : 0.9704          
+                     F1 : 0.9119          
+             Prevalence : 0.6847          
+         Detection Rate : 0.6644          
+   Detection Prevalence : 0.7725          
+      Balanced Accuracy : 0.8138          
                                           
        'Positive' Class : 1               
                                           </code></pre>
@@ -2345,37 +2332,38 @@ Prediction   0   1
 </section>
 <section id="cropped-ordinal-random-forest" class="level3">
 <h3 class="anchored" data-anchor-id="cropped-ordinal-random-forest">Cropped Ordinal Random Forest</h3>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-47_6e18ead6e7a66eed28b780216beaa201">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>crop.ord.forest.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span></span>
-<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>                                      assess_col_na_cropped <span class="sc">+</span> extract_na_cropped <span class="sc">+</span></span>
-<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>                                      assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
-<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>                                      assess_median_na_proportion, <span class="at">data =</span> train,</span>
-<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.ord.forest.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-48_6b0e7ec67acd0347cf3ca68c6bcdfbdb">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>crop.ord.forest.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>                                      assess_col_na_cropped <span class="sc">+</span> extract_na_cropped <span class="sc">+</span></span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>                                      assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>                                      assess_median_na_proportion, <span class="at">data =</span> train,</span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>Prediction <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.ord.forest.model, test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-48_c29ee21268c38c60195bd30c3c21dbba">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>num.predictions, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(test<span class="sc">$</span>num.predictions,</span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-49_5564ff84bf3ace34fbe8fcffb5467345">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions[test<span class="sc">$</span>Predictions <span class="sc">==</span> <span class="st">"Tiny Problems"</span>] <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Crop Ord Rand For"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in confusionMatrix.default(factor(round(test$num.predictions)), :
+Levels are not in the same order for reference and data. Refactoring data to
+match.</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction   0   1
-         0 124 336
+         0 140 304
          1   0   0
                                           
-               Accuracy : 0.2696          
-                 95% CI : (0.2295, 0.3126)
-    No Information Rate : 0.7304          
+               Accuracy : 0.3153          
+                 95% CI : (0.2723, 0.3608)
+    No Information Rate : 0.6847          
     P-Value [Acc &gt; NIR] : 1               
                                           
                   Kappa : 0               
@@ -2385,11 +2373,11 @@ Prediction   0   1
             Sensitivity : 0.0000          
             Specificity : 1.0000          
          Pos Pred Value :    NaN          
-         Neg Pred Value : 0.2696          
+         Neg Pred Value : 0.3153          
               Precision :     NA          
                  Recall : 0.0000          
                      F1 :     NA          
-             Prevalence : 0.7304          
+             Prevalence : 0.6847          
          Detection Rate : 0.0000          
    Detection Prevalence : 0.0000          
       Balanced Accuracy : 0.5000          
@@ -2401,70 +2389,154 @@ Prediction   0   1
 </section>
 <section id="cropped-numerical-random-forest" class="level3">
 <h3 class="anchored" data-anchor-id="cropped-numerical-random-forest">Cropped Numerical Random Forest</h3>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-49_f69efd8fb5119803720c09084e39cbca">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>crop.num.RF.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
-<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
-<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train,</span>
-<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.num.RF.model, test, <span class="at">type=</span><span class="st">"prob"</span>)[,<span class="dv">2</span>]</span>
-<span id="cb110-8"><a href="#cb110-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-9"><a href="#cb110-9" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb110-10"><a href="#cb110-10" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb110-11"><a href="#cb110-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb110-12"><a href="#cb110-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
-<span id="cb110-13"><a href="#cb110-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb110-14"><a href="#cb110-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
-<span id="cb110-15"><a href="#cb110-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
-<span id="cb110-16"><a href="#cb110-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-50_21d260572edcf5a869e38097a6c236dd">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>crop.num.RF.model <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(num.Quality <span class="sc">~</span> assess_percentile_na_proportion <span class="sc">+</span> assess_col_na_cropped <span class="sc">+</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>                         extract_na_cropped <span class="sc">+</span> assess_middle_na_proportion <span class="sc">+</span> assess_bottomempty_cropped <span class="sc">+</span></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>                         assess_median_na_proportion, <span class="at">data =</span> train,</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">importance =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>num.predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(crop.num.RF.model, test, <span class="at">type=</span><span class="st">"prob"</span>)[,<span class="dv">2</span>]</span>
+<span id="cb114-8"><a href="#cb114-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-9"><a href="#cb114-9" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&lt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">1</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb114-10"><a href="#cb114-10" aria-hidden="true" tabindex="-1"></a>test[test<span class="sc">$</span>num.predictions <span class="sc">&gt;</span> <span class="fl">0.75</span> <span class="sc">&amp;</span> test<span class="sc">$</span>num.Quality <span class="sc">==</span> <span class="dv">0</span>, ]<span class="sc">$</span>followup <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb114-11"><a href="#cb114-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-12"><a href="#cb114-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions)) <span class="sc">+</span></span>
+<span id="cb114-13"><a href="#cb114-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb114-14"><a href="#cb114-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"True Quality"</span>) <span class="sc">+</span></span>
+<span id="cb114-15"><a href="#cb114-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Probability of good scan"</span>) <span class="sc">+</span></span>
+<span id="cb114-16"><a href="#cb114-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Numerical Logistic Prediction Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(test, <span class="fu">aes</span>(<span class="at">x=</span>num.Quality, <span class="at">y=</span>num.predictions, <span class="at">color=</span>followup)) <span class="sc">+</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span></span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"grey50"</span>, <span class="st">"darkorange"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-49-2.png" class="img-fluid" width="672"></p>
+<p><img src="Model-Comparison_files/figure-html/unnamed-chunk-50-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix:</p>
-<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-50_d2044f34f1e6879d43039f17a370ffd1">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top is true value, left is predicted</span></span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="fu">factor</span>(<span class="fu">round</span>(test<span class="sc">$</span>num.predictions)),</span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>                           test<span class="sc">$</span>num.Quality, <span class="at">mode=</span><span class="st">"everything"</span>, <span class="at">positive =</span> <span class="st">"1"</span>)</span>
-<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-51_012058e6eb0bf04abf2c764d2dfa1700">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(model.metrics.all, <span class="fu">numerical.Metrics</span>(test, <span class="st">"Crop Binary Rand For"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction   0   1
-         0 101  22
-         1  23 314
+         0 101  16
+         1  39 288
                                           
-               Accuracy : 0.9022          
-                 95% CI : (0.8713, 0.9277)
-    No Information Rate : 0.7304          
-    P-Value [Acc &gt; NIR] : &lt;2e-16          
+               Accuracy : 0.8761          
+                 95% CI : (0.8418, 0.9053)
+    No Information Rate : 0.6847          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
                                           
-                  Kappa : 0.751           
+                  Kappa : 0.6998          
                                           
- Mcnemar's Test P-Value : 1               
+ Mcnemar's Test P-Value : 0.003012        
                                           
-            Sensitivity : 0.9345          
-            Specificity : 0.8145          
-         Pos Pred Value : 0.9318          
-         Neg Pred Value : 0.8211          
-              Precision : 0.9318          
-                 Recall : 0.9345          
-                     F1 : 0.9331          
-             Prevalence : 0.7304          
-         Detection Rate : 0.6826          
-   Detection Prevalence : 0.7326          
-      Balanced Accuracy : 0.8745          
+            Sensitivity : 0.9474          
+            Specificity : 0.7214          
+         Pos Pred Value : 0.8807          
+         Neg Pred Value : 0.8632          
+              Precision : 0.8807          
+                 Recall : 0.9474          
+                     F1 : 0.9128          
+             Prevalence : 0.6847          
+         Detection Rate : 0.6486          
+   Detection Prevalence : 0.7365          
+      Balanced Accuracy : 0.8344          
                                           
        'Positive' Class : 1               
                                           </code></pre>
+</div>
+</div>
+</section>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<div class="cell" data-hash="Model-Comparison_cache/html/unnamed-chunk-52_e92959e8c359afcefc44cd5e3e91afe3">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>model.metrics.all <span class="ot">&lt;-</span> model.metrics.all[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(model.metrics.all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Model</th>
+<th style="text-align: left;">TPR</th>
+<th style="text-align: left;">TNR</th>
+<th style="text-align: left;">F1</th>
+<th style="text-align: left;">Kappa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Stnd Multi Log Reg</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Stnd Binary Log Reg</td>
+<td style="text-align: left;">0.9638</td>
+<td style="text-align: left;">0.7462</td>
+<td style="text-align: left;">0.9302</td>
+<td style="text-align: left;">0.7461</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Stnd Ord Rand For</td>
+<td style="text-align: left;">0.9638</td>
+<td style="text-align: left;">0.7462</td>
+<td style="text-align: left;">0.9302</td>
+<td style="text-align: left;">0.7461</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Stnd Bin Rand For</td>
+<td style="text-align: left;">0.9309</td>
+<td style="text-align: left;">0.7692</td>
+<td style="text-align: left;">0.9173</td>
+<td style="text-align: left;">0.7143</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">Crop Multi Logistic Reg</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Crop Binary Logistic Reg</td>
+<td style="text-align: left;">0.9704</td>
+<td style="text-align: left;">0.6571</td>
+<td style="text-align: left;">0.9119</td>
+<td style="text-align: left;">0.6785</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">Crop Ord Rand For</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">Crop Binary Rand For</td>
+<td style="text-align: left;">0.9474</td>
+<td style="text-align: left;">0.7214</td>
+<td style="text-align: left;">0.9128</td>
+<td style="text-align: left;">0.6998</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
