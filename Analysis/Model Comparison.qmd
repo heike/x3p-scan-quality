@@ -58,18 +58,34 @@ co <- function(x) {
 ```
 
 ## Introduction
-This document will give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a production environment.
+This document is intended give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a research or real-world environment.
 
 We will investigate the ability of our features to predict the quality of a scan using a variety of methods. It should be noted that given our current classification system Good > Tiny Problems > Problematic > Bad > Yikes, we will consider that any scan worse than Tiny Problems should be re-scanned by the user. However, this is a tool meant to aid a user in deciding and is not to be taken as a sole source of truth. 
 
 Models will be broken into two classification types, ordinal and binary. In the ordinal models, we will try to accurately predict which of the five categories a scan falls into. As quality is a subjective rating, we will focus more on being within one step of the assigned rating than going for perfect agree, although perfect agreement would be optimal. In the binary setting, we will group the scans as Good (1) and Bad (0) as binary classifications are often easier. Good (1) scans will be scans currently labelled as Good or Tiny Problems, with Bad (0) scans being Problematic, Bad, and Yikes. 
 
-- `r co("Is there a more mathy and rigorous reason we chose these models? They are pretty much just my go-tos, and the only ones I know for categorical")` 
+There will also be a comparison of models between using the features calculated against a full image as taken by the scanner, and a cropped image of the scan. The purpose of this is to increase the speed of the quality assurance stage, and to see if removing the 'noise' at the sides of the image helps to increase the estimate of quality, as our focus is on the center of the image.
 
-XXX results first introduction to save people time
-
+- `r co("XXX Is there a more mathy and rigorous reason we chose these models? They are pretty much just my go-tos, and the only ones I know for categorical. Probably need to add references")` 
 
 The models we will train are logistic regressions, and random forests. These models have often proven to be sufficiently explainable for forensic purposes, as well as statistically sound in many environments. 
+
+### Results 
+
+- `r co("XXX Interpret the results")`
+
+
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     |
+|---------------------------------------|-----------|-----------|---------------|-------    |
+|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |
+|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |
+|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |
+|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |
+|Crop Multinomial Logistic Regression	  |0.9821	    |0.7        |0.9322	        |0.7375     |
+|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |
+|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |
+|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |
+
 
 Data handling and type setting
 
@@ -106,16 +122,10 @@ followupScans <- data.frame()
 
 In this investigation, we are going to look at the features calculated against the full image. This investigation will tell us more about the predictive power of each feature, and tell us how different the quality categories are from each other.
 
-XXX Upfront table of the results
+- `r co("XXX Our results are mostly in graphical form. Should I use some kinda test? Is there a way to front load the results as with models?")`
+ 
 
-|   |Ord Log|Num Log|Ord For|Num For|
-|---|-------|-------|-------|-------|
-|TPR|  |  |  |  |
-|TNR|  |  |  |  |
-
-XXX Our results are mostly in graphical form. Should I use some kinda test?
-
-```{r}
+```{r, include = FALSE}
 standard.data <- full.data[,1:12 & 18:19]
 knitr::kable(table(standard.data$Quality, standard.data$Problem),
              caption = "Full Data Problem by Quality")
@@ -134,6 +144,8 @@ summary(glm(Quality ~ assess_percentile_na_proportion,
 ```
 
 In the boxplot we can see that as Assess Percentile NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
+
+- `r co("XXX What does the warning mean here and how do we address it?")`
 
 ### Assess Col NA
 
@@ -215,7 +227,7 @@ In the boxplot we can see that as Assess Median NA Proportion increases, the qua
 
 ### Cross Correlations
 
-XXX include https://heike.github.io/ggpcp/ and a scatterplot of the data
+- `r co("XXX include https://heike.github.io/ggpcp/ and a scatterplot of the data")`
 ```{r}
 correlations <- cor(standard.data[,6:12])
 corrplot(correlations, method = "shade")
@@ -223,12 +235,22 @@ corrplot(correlations, method = "shade")
 
 There is significant correlation between most of the variables except assess rotation. 
 
-## Model Analysis
+## Standard Model Analysis
 
+
+
+|Model                                  | TPR   | TNR   | F1 Score  | Kappa |
+|---------------------------------------|-------|-------|-----------|-------|
+|Stnd Multinomial Logistic Regression   |0.9821	|0.6786	|0.9283     |0.7191 |
+|Stnd Binary Logistic Regression        |0.9643	|0.7714	|0.9364	    |0.7677 |
+|Stnd Ordinal Random Forest           	|0.9643	|0.7714	|0.9364	    |0.7677 |
+|Stnd Binary Random Forest              |0.9286	|0.8286	|0.9286	    |0.7571 |
+
+Metric Function that provides our results:
 ```{r}
 # Function intended to standardize outputs a bit better
 numerical.Metrics <- function(test, modelName) {
-  metrics <- confusionMatrix(factor(round(test$num.predictions)),
+  metrics <- confusionMatrix(factor(round(test$num.predictions), levels = c(0, 1)),
                              test$num.Quality, mode="everything", positive = "1")
   print(metrics)
   #returns c(modelName, TPR, TNR, F1, Kappa)
@@ -237,24 +259,7 @@ numerical.Metrics <- function(test, modelName) {
 }
 ```
 
-
-XXX Why did I not include all the features in the models?!?!?! GRRRRR
-XXX REDO: all models with correct equations
-
-| | Standard Multinomial Logistic Regression | Standard Numerical Logistic Regression | Standard Ordinal Random Forest| Standard Numerical Random Forest|
-|---|-------|-------|-------|-------|
-|F1 |  |  |  |  |
-|TPR|  |  |  |  |
-|TNR|  |  |  |  |
-
-**Categorical Predictions:**
-
-For the purposes of this analysis, consider that the scanner using this model to decide if a scan needs to be re-done will be instructed that Good and Tiny Problems predictions likely don't need to be re-done. However, Problematic, Bad, and Yikes scans have a high likelihood of needing to be redone.
-
-**Quantitative Predictions:**
-
-    --cutoff is....
-
+Creation of the training and test data.
 ```{r}
 sample <- sample(c(TRUE, FALSE), nrow(standard.data), replace=TRUE, prob=c(0.75,0.25))
 train  <- standard.data[sample, ]
@@ -299,7 +304,7 @@ The assumptions of the multinomial logisitic regression are:
   - Linear relationship:
   - No outlier or high influence points: 
   
-```{r, eval = FALSE}
+```{r}
 train.mutli = train
 train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
 train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
@@ -401,8 +406,16 @@ ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
 ```{r}
-model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Bin Rand For"))
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Binary Rand For"))
 ```
+
+### Standard Model Results
+```{r, include=FALSE}
+model.metrics.all <- model.metrics.all[-1,]
+rownames(model.metrics.all) <- 1:nrow(model.metrics.all)
+knitr::kable(model.metrics.all)
+```
+
 
 ## Cropped Feature Analysis
 
@@ -730,61 +743,27 @@ for (i in 1:nrow(followup)) {
 
 ## Cropped Model Analysis
 
-| | Cropped Multinomial Logistic Regression | Cropped Numerical Logistic Regression | Cropped Ordinal Cropped Forest| Cropped Numerical Random Forest|
-|---|-------|-------|-------|-------|
-|F1 |  |  |  |  |
-|TPR|  |  |  |  |
-|TNR|  |  |  |  |
-
-
-```{r}
-sample <- sample(c(TRUE, FALSE), nrow(full.data), replace=TRUE, prob=c(0.75,0.25))
-train  <- full.data[sample, ]
-test   <- full.data[!sample, ]
-
-train$followup <- FALSE
-train$num.Quality <- 0
-train$num.Quality[train$Quality == "Good"] <- 1
-train$num.Quality[train$Quality == "Tiny Problems"] <- 1
-train$num.Quality <- factor(train$num.Quality, levels = c(0, 1))
-
-test$followup <- FALSE
-test$num.Quality <- 0
-test$num.Quality[test$Quality == "Good"] <- 1
-test$num.Quality[test$Quality == "Tiny Problems"] <- 1
-test$num.Quality <- factor(test$num.Quality, levels = c(0, 1))
-
-knitr::kable(table(standard.data$Quality, standard.data$Problem),
-             caption = "Full Data Problem by Quality")
-knitr::kable(table(train$Quality, train$Problem), caption = "Train Problem by Quality")
-knitr::kable(table(test$Quality, test$Problem), caption = "Test Problem by Quality")
-
-knitr::kable(table(train$num.Quality), caption = "Train Numeric Quality Totals")
-knitr::kable(table(train$num.Quality, train$Problem), caption = "Train Numeric Problem by Quality")
-
-knitr::kable(table(test$num.Quality), caption = "Test Numeric Quality Totals")
-knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Problem by Quality")
-```
-
-XXX Upfront table of the results
+|Model                                | TPR   | TNR   | F1 Score |Kappa |
+|-------------------------------------|-------|-------|----------|------|
+|Crop Multinomial Logistic Regression	|0.9821	|0.7    |0.9322	   |0.7375|
+|Crop Binary Logistic Regression    	|0.9554	|0.7929	|0.9359	   |0.7707|
+|Crop Ordinal Random Forest	          |0.9554	|0.8    |0.9372	   |0.7764|
+|Crop Binary Random Forest          	|0.9375	|0.8286	|0.9333	   |0.7709|
 
 ### Cropped Multi-Nomial Logistic Regression
 
-XXX Why does it label everything as bad only when we render?
-
-```{r, eval = FALSE}
+```{r}
 train.mutli = train
 train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
 train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
 crop.multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
                          extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
                          assess_median_na_proportion, data = train.mutli)
-summary(multi.model)
+summary(crop.multi.model)
 
-test$Predictions <- predict(multi.model, test)
+test$Predictions <- predict(crop.multi.model, test)
 ```
 
-To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
 ```{r}
 test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
@@ -830,8 +809,6 @@ model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Bina
 
 ### Cropped Ordinal Random Forest
 
-XXX Why does it label everything as bad only when we render?
-
 ```{r}
 crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion +
                                       assess_col_na_cropped + extract_na_cropped +
@@ -839,7 +816,7 @@ crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion 
                                       assess_median_na_proportion, data = train,
                                       importance = TRUE)
 
-test$Prediction <- predict(crop.ord.forest.model, test)
+test$Predictions <- predict(crop.ord.forest.model, test)
 ```
 
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
@@ -882,16 +859,13 @@ The boxplot shows a general picture of the results of the model. There is a sign
 model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Binary Rand For"))
 ```
 
-### Results
+### Cropped Model Results
 
-```{r}
-model.metrics.all <- model.metrics.all[-1,]
-knitr::kable(model.metrics.all)
-
+```{r, include= FALSE}
+knitr::kable(model.metrics.all[5:8,])
 ```
 
 
 ## Followup Scans
 
-XXX todo: add standard analysis and predicted outliers
-XXX Consider manual g
+- `r co("XXX Probably need to do something here.")`
