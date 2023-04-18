@@ -118,7 +118,9 @@ table(matrix_labels)
 
 ### 3.2 Creating features
 
-XXX Talk about the DS401 project and our alterations
+- `r co("Is that good?")`
+
+In 2022, Jacob Baalson, Michael Egle, (others), created the following features to begin the project. This paper uses these features in both their original coding and with modification. 
 
 Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.
 
@@ -208,19 +210,15 @@ $$
 [Assess Rotation](#assess-rotation)
 XXX TODO
 
-
-
 ### 3.3 Hypothesis on what a crop will do
 
-Why did we crop? What did we think would happen?
-
-XXX TODO
+The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that's affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models. 
 
 ### 3.4 Process of cropping scans
 
 X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.
 
-XXX clean up, more professional sounding
+XXX Probably move the actual code to the appendix or the model comparison
 
 ```{r}
 crop_X3P <- function(x3p) {
@@ -234,11 +232,22 @@ crop_X3P <- function(x3p) {
 
 ```
 
-### 3.5 Modelling random forests
+### 3.5 Modelling and metrics
 
-XXX TODO
+We modeled our data by breaking it into categorical and binary classifications. For binary classifications, we created two groupings, Good scans, which includes all scans labelled as "Good" or "Tiny Problems", and Bad scans, which includes all scans labelled as "Problematic", "Bad", "Yikes". We used a multi-nomial and a binary logistic regression. For random forests we created a binary model and a categorical model.
 
-Why a random forest? Why the particular method we chose?
+For model comparison, after predictions were made by the categorical models, they were translated into binary categories and compared against the reference data. This approach seeks to utilize the fact that any scan that is "Problematic" or worse in rating will be recommended to be re-scanned. As such, our models were all ran against the same train/test data in a 75/25 split. We trained the models on the features calculated on both the full scan image, as well as the cropped images. This led to 8 total models being produced with the following metrics.
+
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     |
+|---------------------------------------|-----------|-----------|---------------|-------    |
+|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |
+|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |
+|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |
+|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |
+|Crop Multinomial Logistic Regression	  |**0.9821** |0.7        |0.9322	        |0.7375     |
+|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |
+|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |
+|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |
 
 ### 3.6 RShiny and application
 
@@ -248,11 +257,9 @@ uhhh, a screenshot maybe?
 
 ## 4. Results and tuning
 
-### 4.1 Model Metrics
+### 4.1 Model Selection
 
 XXX TODO
-
-AUC, ROC score, confusion matrix, accuracy, F1score, all that good stuff
 
 ### 4.2 Comparison of cropped scans and standard scans
 

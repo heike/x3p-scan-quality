@@ -141,12 +141,12 @@ div.csl-indent {
   <li><a href="#creating-features" id="toc-creating-features" class="nav-link" data-scroll-target="#creating-features">3.2 Creating features</a></li>
   <li><a href="#hypothesis-on-what-a-crop-will-do" id="toc-hypothesis-on-what-a-crop-will-do" class="nav-link" data-scroll-target="#hypothesis-on-what-a-crop-will-do">3.3 Hypothesis on what a crop will do</a></li>
   <li><a href="#process-of-cropping-scans" id="toc-process-of-cropping-scans" class="nav-link" data-scroll-target="#process-of-cropping-scans">3.4 Process of cropping scans</a></li>
-  <li><a href="#modelling-random-forests" id="toc-modelling-random-forests" class="nav-link" data-scroll-target="#modelling-random-forests">3.5 Modelling random forests</a></li>
+  <li><a href="#modelling-and-metrics" id="toc-modelling-and-metrics" class="nav-link" data-scroll-target="#modelling-and-metrics">3.5 Modelling and metrics</a></li>
   <li><a href="#rshiny-and-application" id="toc-rshiny-and-application" class="nav-link" data-scroll-target="#rshiny-and-application">3.6 RShiny and application</a></li>
   </ul></li>
   <li><a href="#results-and-tuning" id="toc-results-and-tuning" class="nav-link" data-scroll-target="#results-and-tuning">4. Results and tuning</a>
   <ul class="collapse">
-  <li><a href="#model-metrics" id="toc-model-metrics" class="nav-link" data-scroll-target="#model-metrics">4.1 Model Metrics</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection">4.1 Model Selection</a></li>
   <li><a href="#comparison-of-cropped-scans-and-standard-scans" id="toc-comparison-of-cropped-scans-and-standard-scans" class="nav-link" data-scroll-target="#comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">5. Conclusion</a></li>
@@ -218,7 +218,10 @@ div.csl-indent {
 </section>
 <section id="creating-features" class="level3">
 <h3 class="anchored" data-anchor-id="creating-features">3.2 Creating features</h3>
-<p>XXX Talk about the DS401 project and our alterations</p>
+<ul>
+<li><span style="color: red;">Is that good?</span></li>
+</ul>
+<p>In 2022, Jacob Baalson, Michael Egle, (others), created the following features to begin the project. This paper uses these features in both their original coding and with modification.</p>
 <p>Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.</p>
 <p>Let <span class="math inline">\(A=\{NA\}\)</span> be the set of undefined values. For simplicity of notation we will assume that the space of real values <span class="math inline">\({\rm I\!R}\)</span> contains <span class="math inline">\(A\)</span>: <span class="math inline">\({\rm I\!R}:= {\rm I\!R} \cup A\)</span>.</p>
 <p>Let <span class="math inline">\(X \in R^{m,n}\)</span> be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers <span class="math inline">\(X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}\)</span>.</p>
@@ -277,13 +280,12 @@ div.csl-indent {
 </section>
 <section id="hypothesis-on-what-a-crop-will-do" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-on-what-a-crop-will-do">3.3 Hypothesis on what a crop will do</h3>
-<p>Why did we crop? What did we think would happen?</p>
-<p>XXX TODO</p>
+<p>The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that’s affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models.</p>
 </section>
 <section id="process-of-cropping-scans" class="level3">
 <h3 class="anchored" data-anchor-id="process-of-cropping-scans">3.4 Process of cropping scans</h3>
 <p>X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.</p>
-<p>XXX clean up, more professional sounding</p>
+<p>XXX Probably move the actual code to the appendix or the model comparison</p>
 <div class="cell" data-hash="Scan-Quality-Assessor_cache/html/unnamed-chunk-2_28ba6f7d6aba327ea0538694f875b183">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crop_X3P <span class="ot">&lt;-</span> <span class="cf">function</span>(x3p) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">class</span>(x3p) <span class="sc">==</span> <span class="st">"x3p"</span>)</span>
@@ -295,10 +297,86 @@ div.csl-indent {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="modelling-random-forests" class="level3">
-<h3 class="anchored" data-anchor-id="modelling-random-forests">3.5 Modelling random forests</h3>
-<p>XXX TODO</p>
-<p>Why a random forest? Why the particular method we chose?</p>
+<section id="modelling-and-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="modelling-and-metrics">3.5 Modelling and metrics</h3>
+<p>We modeled our data by breaking it into categorical and binary classifications. For binary classifications, we created two groupings, Good scans, which includes all scans labelled as “Good” or “Tiny Problems”, and Bad scans, which includes all scans labelled as “Problematic”, “Bad”, “Yikes”. We used a multi-nomial and a binary logistic regression. For random forests we created a binary model and a categorical model.</p>
+<p>For model comparison, after predictions were made by the categorical models, they were translated into binary categories and compared against the reference data. This approach seeks to utilize the fact that any scan that is “Problematic” or worse in rating will be recommended to be re-scanned. As such, our models were all ran against the same train/test data in a 75/25 split. We trained the models on the features calculated on both the full scan image, as well as the cropped images. This led to 8 total models being produced with the following metrics.</p>
+<table class="table">
+<colgroup>
+<col style="width: 46%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 18%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>TPR</th>
+<th>TNR</th>
+<th>F1 Score</th>
+<th>Kappa</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Stnd Multinomial Logistic Regression</td>
+<td><strong>0.9821</strong></td>
+<td>0.6786</td>
+<td>0.9283</td>
+<td>0.7191</td>
+</tr>
+<tr class="even">
+<td>Stnd Binary Logistic Regression</td>
+<td>0.9643</td>
+<td>0.7714</td>
+<td>0.9364</td>
+<td>0.7677</td>
+</tr>
+<tr class="odd">
+<td>Stnd Ordinal Random Forest</td>
+<td>0.9643</td>
+<td>0.7714</td>
+<td>0.9364</td>
+<td>0.7677</td>
+</tr>
+<tr class="even">
+<td>Stnd Binary Random Forest</td>
+<td>0.9286</td>
+<td><strong>0.8286</strong></td>
+<td>0.9286</td>
+<td>0.7571</td>
+</tr>
+<tr class="odd">
+<td>Crop Multinomial Logistic Regression</td>
+<td><strong>0.9821</strong></td>
+<td>0.7</td>
+<td>0.9322</td>
+<td>0.7375</td>
+</tr>
+<tr class="even">
+<td>Crop Binary Logistic Regression</td>
+<td>0.9554</td>
+<td>0.7929</td>
+<td>0.9359</td>
+<td>0.7707</td>
+</tr>
+<tr class="odd">
+<td>Crop Ordinal Random Forest</td>
+<td>0.9554</td>
+<td>0.8</td>
+<td><strong>0.9372</strong></td>
+<td><strong>0.7764</strong></td>
+</tr>
+<tr class="even">
+<td>Crop Binary Random Forest</td>
+<td>0.9375</td>
+<td><strong>0.8286</strong></td>
+<td>0.9333</td>
+<td>0.7709</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="rshiny-and-application" class="level3">
 <h3 class="anchored" data-anchor-id="rshiny-and-application">3.6 RShiny and application</h3>
@@ -308,10 +386,9 @@ div.csl-indent {
 </section>
 <section id="results-and-tuning" class="level2">
 <h2 class="anchored" data-anchor-id="results-and-tuning">4. Results and tuning</h2>
-<section id="model-metrics" class="level3">
-<h3 class="anchored" data-anchor-id="model-metrics">4.1 Model Metrics</h3>
+<section id="model-selection" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection">4.1 Model Selection</h3>
 <p>XXX TODO</p>
-<p>AUC, ROC score, confusion matrix, accuracy, F1score, all that good stuff</p>
 </section>
 <section id="comparison-of-cropped-scans-and-standard-scans" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</h3>
