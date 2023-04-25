@@ -303,11 +303,12 @@ div.csl-indent {
 <p>For model comparison, after predictions were made by the categorical models, they were translated into binary categories and compared against the reference data. This approach seeks to utilize the fact that any scan that is “Problematic” or worse in rating will be recommended to be re-scanned. As such, our models were all ran against the same train/test data in a 75/25 split. We trained the models on the features calculated on both the full scan image, as well as the cropped images. This led to 8 total models being produced with the following metrics.</p>
 <table class="table">
 <colgroup>
-<col style="width: 46%">
-<col style="width: 13%">
-<col style="width: 13%">
-<col style="width: 18%">
-<col style="width: 8%">
+<col style="width: 39%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -316,6 +317,7 @@ div.csl-indent {
 <th>TNR</th>
 <th>F1 Score</th>
 <th>Kappa</th>
+<th>AUC</th>
 </tr>
 </thead>
 <tbody>
@@ -325,6 +327,7 @@ div.csl-indent {
 <td>0.6786</td>
 <td>0.9283</td>
 <td>0.7191</td>
+<td>0.8304</td>
 </tr>
 <tr class="even">
 <td>Stnd Binary Logistic Regression</td>
@@ -332,6 +335,7 @@ div.csl-indent {
 <td>0.7714</td>
 <td>0.9364</td>
 <td>0.7677</td>
+<td><strong>0.9533</strong></td>
 </tr>
 <tr class="odd">
 <td>Stnd Ordinal Random Forest</td>
@@ -339,6 +343,7 @@ div.csl-indent {
 <td>0.7714</td>
 <td>0.9364</td>
 <td>0.7677</td>
+<td>0.8304</td>
 </tr>
 <tr class="even">
 <td>Stnd Binary Random Forest</td>
@@ -346,6 +351,7 @@ div.csl-indent {
 <td><strong>0.8286</strong></td>
 <td>0.9286</td>
 <td>0.7571</td>
+<td>0.9477</td>
 </tr>
 <tr class="odd">
 <td>Crop Multinomial Logistic Regression</td>
@@ -353,6 +359,7 @@ div.csl-indent {
 <td>0.7</td>
 <td>0.9322</td>
 <td>0.7375</td>
+<td>0.8411</td>
 </tr>
 <tr class="even">
 <td>Crop Binary Logistic Regression</td>
@@ -360,6 +367,7 @@ div.csl-indent {
 <td>0.7929</td>
 <td>0.9359</td>
 <td>0.7707</td>
+<td>0.9514</td>
 </tr>
 <tr class="odd">
 <td>Crop Ordinal Random Forest</td>
@@ -367,6 +375,7 @@ div.csl-indent {
 <td>0.8</td>
 <td><strong>0.9372</strong></td>
 <td><strong>0.7764</strong></td>
+<td>0.8777</td>
 </tr>
 <tr class="even">
 <td>Crop Binary Random Forest</td>
@@ -374,9 +383,16 @@ div.csl-indent {
 <td><strong>0.8286</strong></td>
 <td>0.9333</td>
 <td>0.7709</td>
+<td>0.9503</td>
 </tr>
 </tbody>
 </table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Model-Comparison_files/figure-html/all-model-roc-curve-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">All Models ROC curve</figcaption><p></p>
+</figure>
+</div>
 </section>
 <section id="rshiny-and-application" class="level3">
 <h3 class="anchored" data-anchor-id="rshiny-and-application">3.6 RShiny and application</h3>

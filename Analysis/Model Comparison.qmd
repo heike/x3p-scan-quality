@@ -18,6 +18,7 @@ if (!require(RColorBrewer)) install.packages('RColorBrewer')
 if (!require(yardstick)) install.packages('yardstick')
 if (!require(caret)) install.packages('caret')
 if (!require(nnet)) install.packages('nnet')
+if (!require(pROC)) install.packages('pROC')
 library(tidyverse)
 library(ggplot2)
 library(randomForest)
@@ -28,6 +29,7 @@ library(RColorBrewer)
 library(yardstick)
 library(caret)
 library(nnet)
+library(pROC)
 set.seed(10247693)
 ## Load Functions - eventually we would like to just load a library
 theme_set(theme_bw())
@@ -75,16 +77,16 @@ The models we will train are logistic regressions, and random forests. These mod
 - `r co("XXX Interpret the results")`
 
 
-|Model                                  | TPR       | TNR       | F1 Score      | Kappa     |
-|---------------------------------------|-----------|-----------|---------------|-------    |
-|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |
-|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |
-|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |
-|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |
-|Crop Multinomial Logistic Regression	  |**0.9821** |0.7        |0.9322	        |0.7375     |
-|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |
-|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |
-|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     | AUC       |
+|---------------------------------------|-----------|-----------|---------------|-----------|-----------|
+|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |0.8304     |
+|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |**0.9533** |
+|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |0.8304     |
+|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |0.9477     |
+|Crop Multinomial Logistic Regression	  |**0.9821** |0.7        |0.9322	        |0.7375     |0.8411     |
+|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |0.9514     |
+|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |0.8777     |
+|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |0.9503     |
 
 
 Data handling and type setting
@@ -237,7 +239,7 @@ There is significant correlation between most of the variables except assess rot
 
 ## Standard Model Analysis
 
-
+XXX Need ROC curves, add AUC to the presented metrics, distribution of the predictions
 
 |Model                                  | TPR   | TNR   | F1 Score  | Kappa |
 |---------------------------------------|-------|-------|-----------|-------|
@@ -253,50 +255,52 @@ numerical.Metrics <- function(test, modelName) {
   metrics <- confusionMatrix(factor(round(test$num.predictions), levels = c(0, 1)),
                              test$num.Quality, mode="everything", positive = "1")
   print(metrics)
+  
+  #Get the AUC
+  metricROC <- roc(test$num.Quality ~ test$num.predictions)
+  metricAUC <- auc(metricROC)
   #returns c(modelName, TPR, TNR, F1, Kappa)
   return(c(modelName, round(metrics$byClass[1], 4), round(metrics$byClass[2], 4), 
-           round(metrics$byClass[7], 4), round(metrics$overall[2], 4)))
+           round(metrics$byClass[7], 4), round(metrics$overall[2], 4), round(metricAUC, 4)))
 }
 ```
 
 Creation of the training and test data.
 ```{r}
 sample <- sample(c(TRUE, FALSE), nrow(standard.data), replace=TRUE, prob=c(0.75,0.25))
-train  <- standard.data[sample, ]
-test   <- standard.data[!sample, ]
+full.data$sample <- sample
+full.data$set <- "Train"
+full.data$set[full.data$sample == FALSE] <- "Test"
+full.data$set = factor(full.data$set, levels=c("Train", "Test"))
 
-train$followup <- FALSE
-train$num.Quality <- 0
-train$num.Quality[train$Quality == "Good"] <- 1
-train$num.Quality[train$Quality == "Tiny Problems"] <- 1
-train$num.Quality <- factor(train$num.Quality, levels = c(0, 1))
 
-test$followup <- FALSE
-test$num.Quality <- 0
-test$num.Quality[test$Quality == "Good"] <- 1
-test$num.Quality[test$Quality == "Tiny Problems"] <- 1
-test$num.Quality <- factor(test$num.Quality, levels = c(0, 1))
+full.data$followup <- FALSE
+full.data$num.Quality <- 0
+full.data$num.Quality[full.data$Quality == "Good"] <- 1
+full.data$num.Quality[full.data$Quality == "Tiny Problems"] <- 1
+full.data$num.Quality <- factor(full.data$num.Quality, levels = c(0, 1))
 
-knitr::kable(table(standard.data$Quality, standard.data$Problem),
-             caption = "Full Data Problem by Quality")
-knitr::kable(table(train$Quality, train$Problem), caption = "Train Problem by Quality")
-knitr::kable(table(test$Quality, test$Problem), caption = "Test Problem by Quality")
+train  <- full.data[sample, ]
+test   <- full.data[!sample, ]
+```
 
-knitr::kable(table(train$num.Quality), caption = "Train Numeric Quality Totals")
-knitr::kable(table(train$num.Quality, train$Problem), caption = "Train Numeric Problem by Quality")
+```{r, fig.cap="Overview of samples in the dependent variable in the training and test set. The two barcharts show very similar  distributions, and the distribution of problem types within scan quality is also similar. Overall we see the strong imbalance in the frequency of quality categories. By far the most scans have some tiny problems.  "}
+ggplot(full.data) + geom_bar(aes(x=Quality, fill=Problem)) + facet_grid(~set)
+```
 
-knitr::kable(table(test$num.Quality), caption = "Test Numeric Quality Totals")
-knitr::kable(table(test$num.Quality, test$Problem), caption = "Test Numeric Problem by Quality")
+```{r, fig.cap="A barchart of Quality grouped into binary categories, faceted by Train and Test, and colored by Problem. The majority of the binary Good scans appear to have the Holes problem, and the majority of the binary Bad scans appear to have the Feathering problem. The Train and Test datasets appear to be similarly balanced between Good and Bad scans. There are roughly double the number of Good scans as there are Bad scans."}
+ggplot(full.data) + geom_bar(aes(x=num.Quality, fill=Problem)) + facet_grid(~set)
+```
 
-model.metrics.all = data.frame(matrix(ncol=5))
-colnames(model.metrics.all) <- c("Model", "TPR", "TNR", "F1", "Kappa")
+XXX captions: Formula, Description, Inference 
+
+```{r}
+model.metrics.all = data.frame(matrix(ncol=6))
+colnames(model.metrics.all) <- c("Model", "TPR", "TNR", "F1", "Kappa", "AUC")
 ```
 
 
 ### Standard Multi-Nomial Logistic Regression
-
-XXX MultiNomial Model!
-XXX Why does it label everything as bad only when we render?
 
 The assumptions of the multinomial logisitic regression are:
   - Nominal dependent variable: Not met
@@ -308,12 +312,14 @@ The assumptions of the multinomial logisitic regression are:
 train.mutli = train
 train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
 train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
+# Unordered multinomial model
 multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na +
                          extract_na + assess_middle_na_proportion + assess_bottomempty +
                          assess_median_na_proportion, data = train.mutli)
 summary(multi.model)
 
 test$Predictions <- predict(multi.model, test)
+
 ```
 
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
@@ -322,8 +328,24 @@ test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
 
+StndMultiLog <- roc(test$num.Quality ~ test$num.predictions)
+# XXX oh good this is broken again
 model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Multi Log Reg"))
 ```
+
+```{r eval-multinom}
+dt <- table(test$Quality, test$Predictions)
+dframe <- as.data.frame(dt) %>% mutate(
+  Var1 = factor(Var1, levels=levels(test$Quality)),
+  Var2 = factor(Var2, levels=levels(test$Quality)),
+  type= Var1==Var2
+)
+dframe %>% filter(Freq>0) %>% ggplot(aes(x = Var1, y = Var2, size=sqrt(Freq))) + geom_point(aes(colour = type)) + 
+  geom_vline(xintercept=2.5, colour = "grey70") +
+  geom_hline(yintercept=2.5, colour="grey70") + xlab("Which one is that?")
+```
+
+XXX barcharts of predicted scans Quality for all models
 
 ### Standard Binary regression
   - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
@@ -337,7 +359,7 @@ num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_co
 summary(num.logit.model)
 
 test$num.predictions <- predict(num.logit.model, test, type="response")
-
+StndBinLog <- roc(test$num.Quality ~ test$num.predictions)
 # XXX Figure out followup scans
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
@@ -374,6 +396,12 @@ test$Prediction <- predict(ord.forest.model, test)
 
 To help compare these models, we once again use the previous compression metrics.
 ```{r}
+
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+
+StndOrdFor <- roc(test$num.Quality ~ test$num.predictions)
 model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Ord Rand For"))
 ```
 
@@ -389,6 +417,7 @@ num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion + ass
 
 test$num.predictions <- predict(num.RF.model, test, type="prob")[,2]
 
+StndNumFor <- roc(test$num.Quality ~ test$num.predictions)
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
 
@@ -415,6 +444,26 @@ model.metrics.all <- model.metrics.all[-1,]
 rownames(model.metrics.all) <- 1:nrow(model.metrics.all)
 knitr::kable(model.metrics.all)
 ```
+
+```{r}
+#medroc5<- roc(med$Accept ~ med.model.5$fitted.values)
+
+ggroc(list(StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
+           StndNumFor = StndNumFor, StndOrdFor = StndOrdFor))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Standard Quality Prediction Models")
+```
+
+
 
 
 ## Cropped Feature Analysis
@@ -769,6 +818,7 @@ test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
 
+CrpMultiLog <- roc(test$num.Quality ~ test$num.predictions)
 model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Multi Logistic Reg"))
 
 ```
@@ -785,6 +835,7 @@ summary(crop.num.logit.model)
 
 test$num.predictions <- predict(crop.num.logit.model, test, type="response")
 
+CrpBinLog <- roc(test$num.Quality ~ test$num.predictions)
 # XXX Figure out followup scans
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
@@ -825,6 +876,7 @@ test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
 test$num.predictions[test$Predictions == "Tiny Problems"] = 1
 
+CrpOrdFor <- roc(test$num.Quality ~ test$num.predictions)
 model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Ord Rand For"))
 
 ```
@@ -839,6 +891,7 @@ crop.num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion 
 
 test$num.predictions <- predict(crop.num.RF.model, test, type="prob")[,2]
 
+CrpNumFor <- roc(test$num.Quality ~ test$num.predictions)
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
 
@@ -864,6 +917,52 @@ model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Bina
 ```{r, include= FALSE}
 knitr::kable(model.metrics.all[5:8,])
 ```
+
+```{r}
+#medroc5<- roc(med$Accept ~ med.model.5$fitted.values)
+
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
+           CrpNumFor = CrpNumFor, CrpOrdFor = CrpOrdFor))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Cropped Quality Prediction Models")
+```
+
+## Final Results
+```{r all-model-metric-table}
+knitr::kable(model.metrics.all)
+
+##comment
+```
+
+
+```{r all-model-roc-curve}
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
+           CrpNumFor = CrpNumFor, CrpOrdFor = CrpOrdFor,
+           StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
+           StndNumFor = StndNumFor, StndOrdFor = StndOrdFor
+           ))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of All Quality Prediction Models")
+```
+
 
 
 ## Followup Scans
