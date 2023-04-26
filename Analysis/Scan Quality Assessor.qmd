@@ -229,7 +229,6 @@ crop_X3P <- function(x3p) {
   cropped_x3p <- x3p_crop(cropped_x3p, x = 0, width = dims[1] - (0.1 * dims[1]), y = 0, height = dims[2])
   return(cropped_x3p)
 }
-
 ```
 
 ### 3.5 Modelling and metrics
@@ -248,7 +247,6 @@ For model comparison, after predictions were made by the categorical models, the
 |Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |0.9514     |
 |Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |0.8777     |
 |Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |0.9503     |
-
 
 ![All Models ROC curve](./Model-Comparison_files/figure-html/all-model-roc-curve-1.png)
 

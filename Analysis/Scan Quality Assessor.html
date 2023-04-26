@@ -8,7 +8,7 @@
 
 <meta name="author" content="Heike Hofmann, Craig Orman, Naga Vempati">
 
-<title>Scan Quality Assessor</title>
+<title>Bullet Scan Quality Assessor</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -158,7 +158,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Scan Quality Assessor</h1>
+<h1 class="title">Bullet Scan Quality Assessor</h1>
 </div>
 
 
@@ -286,7 +286,7 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="process-of-cropping-scans">3.4 Process of cropping scans</h3>
 <p>X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.</p>
 <p>XXX Probably move the actual code to the appendix or the model comparison</p>
-<div class="cell" data-hash="Scan-Quality-Assessor_cache/html/unnamed-chunk-2_28ba6f7d6aba327ea0538694f875b183">
+<div class="cell" data-hash="Scan-Quality-Assessor_cache/html/unnamed-chunk-2_c68328644a5f84110fbd964a055fc17a">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crop_X3P <span class="ot">&lt;-</span> <span class="cf">function</span>(x3p) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">class</span>(x3p) <span class="sc">==</span> <span class="st">"x3p"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(x3p<span class="sc">$</span>surface.matrix)</span>
