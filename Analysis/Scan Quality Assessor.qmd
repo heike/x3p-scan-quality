@@ -192,7 +192,14 @@ We then sort, and select the median of $R$
 
 
 [Assess Middle NA Proportion](#assess-middle-na-proportion)
-XXX TODO
+The proportion of missing values in the middle $\frac{3}{4}$ths of X is then defined as: 
+$$
+\frac{1}{m*n*0.75} \sum^m_{i=1} \sum^{n*\frac{7}{8}}_{j=n*\frac{1}{8}} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&1 &&: \text{if }x \in A\\
+&0 &&: \text{otherwise}\\
+\end{aligned} \right.
+$$
 
 [Extract NA](#extract-na)
 
@@ -208,7 +215,8 @@ $$
 $$
 
 [Assess Rotation](#assess-rotation)
-XXX TODO
+XXX TODO 
+XXX Might be able to avoid if we don't end up doing the problem detection
 
 ### 3.3 Hypothesis on what a crop will do
 
@@ -252,9 +260,7 @@ For model comparison, after predictions were made by the categorical models, the
 
 ### 3.6 RShiny and application
 
-XXX TODO
-
-uhhh, a screenshot maybe?
+To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan needs to be retaken.
 
 ## 4. Results and tuning
 

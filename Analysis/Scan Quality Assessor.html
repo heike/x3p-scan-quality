@@ -266,7 +266,13 @@ div.csl-indent {
 \end{aligned} \right.
 \]</span></p>
 <p>We then sort, and select the median of <span class="math inline">\(R\)</span></p>
-<p><a href="#assess-middle-na-proportion">Assess Middle NA Proportion</a> XXX TODO</p>
+<p><a href="#assess-middle-na-proportion">Assess Middle NA Proportion</a> The proportion of missing values in the middle <span class="math inline">\(\frac{3}{4}\)</span>ths of X is then defined as: <span class="math display">\[
+\frac{1}{m*n*0.75} \sum^m_{i=1} \sum^{n*\frac{7}{8}}_{j=n*\frac{1}{8}} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
 <p><a href="#extract-na">Extract NA</a></p>
 <p>The function <code>extract_na</code> calculates the percentage of missing values in the scan (part) under observation, e.g.&nbsp;for scan surface matrix <span class="math inline">\(X \in {\rm I\!R}^{m, n}\)</span> the percentage of missing values is defined as:</p>
 <p>The proportion of missing values in X is then defined as: <span class="math display">\[
@@ -276,7 +282,7 @@ div.csl-indent {
 &amp;0 &amp;&amp;: \text{otherwise}\\
 \end{aligned} \right.
 \]</span></p>
-<p><a href="#assess-rotation">Assess Rotation</a> XXX TODO</p>
+<p><a href="#assess-rotation">Assess Rotation</a> XXX TODO XXX Might be able to avoid if we don’t end up doing the problem detection</p>
 </section>
 <section id="hypothesis-on-what-a-crop-will-do" class="level3">
 <h3 class="anchored" data-anchor-id="hypothesis-on-what-a-crop-will-do">3.3 Hypothesis on what a crop will do</h3>
