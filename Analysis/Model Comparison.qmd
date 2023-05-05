@@ -323,6 +323,47 @@ summary(multi.model)
 test$Predictions <- predict(multi.model, test)
 ```
 
+```{r}
+testMetrics <- data.frame(predict(multi.model, test, type="probs"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+```
+Comparing the ROC curve of the different Qualities.
+
+```{r}
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Stnd MultiNom Log Good ROC")
+```
+
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
 ```{r}
 test$num.predictions = 0
@@ -392,8 +433,48 @@ ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + ass
                          assess_median_na_proportion, data = train,
                            importance = TRUE)
 
-test$Prediction <- predict(ord.forest.model, test)
+test$Predictions <- predict(ord.forest.model, test)
 ```
+
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(ord.forest.model, test, type="prob"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Stnd Ordinal Forest ROC")
+```
+
 
 To help compare these models, we once again use the previous compression metrics.
 ```{r}
@@ -447,8 +528,6 @@ knitr::kable(model.metrics.all)
 ```
 
 ```{r}
-#medroc5<- roc(med$Accept ~ med.model.5$fitted.values)
-
 ggroc(list(StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
            StndNumFor = StndNumFor, StndOrdFor = StndOrdFor))+
   theme_bw()+
@@ -814,6 +893,46 @@ summary(crop.multi.model)
 test$Predictions <- predict(crop.multi.model, test)
 ```
 
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(crop.multi.model, test, type="probs"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Crpped Multi Log ROC")
+```
+
+
 ```{r}
 test$num.predictions = 0
 test$num.predictions[test$Predictions == "Good"] = 1
@@ -866,10 +985,47 @@ crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion 
                                       assess_middle_na_proportion + assess_bottomempty_cropped +
                                       assess_median_na_proportion, data = train,
                                       importance = TRUE)
-
 test$Predictions <- predict(crop.ord.forest.model, test)
 ```
 
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(crop.ord.forest.model, test, type="prob"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Crpped Ordinal Forest ROC")
+```
 To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
 ```{r}
 test$num.predictions = 0
@@ -919,8 +1075,6 @@ knitr::kable(model.metrics.all[5:8,])
 ```
 
 ```{r}
-#medroc5<- roc(med$Accept ~ med.model.5$fitted.values)
-
 ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
            CrpNumFor = CrpNumFor, CrpOrdFor = CrpOrdFor))+
   theme_bw()+
@@ -961,6 +1115,24 @@ ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
        y = "Specificity",
        title="Comparison of All Quality Prediction Models")
 ```
+
+```{r}
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpOrdFor = CrpOrdFor,
+           StndMultiLog = StndMultiLog, StndOrdFor = StndOrdFor
+           ))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Triangular Quality Prediction Models")
+```
+
 
 ## Followup Scans
 
