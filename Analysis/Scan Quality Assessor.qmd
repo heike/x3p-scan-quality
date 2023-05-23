@@ -214,10 +214,6 @@ $$
 \end{aligned} \right.
 $$
 
-[Assess Rotation](#assess-rotation)
-XXX TODO 
-XXX Might be able to avoid if we don't end up doing the problem detection
-
 ### 3.3 Hypothesis on what a crop will do
 
 The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that's affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models. 
@@ -260,19 +256,17 @@ For model comparison, after predictions were made by the categorical models, the
 
 ### 3.6 RShiny and application
 
-To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan needs to be retaken.
+To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan in question needs to be re-scanned.
 
 ## 4. Results and tuning
 
 ### 4.1 Model Selection
 
-XXX TODO
+The model selected was the Cropped Binary Random Forest, the reasoning being that it provided the best balance of true positive, true negative, and had a large AUC score. This model also has the simplicity of being a binary model which will keep the model simpler. The logistic regressions were deemed non-viable on the grounds that there is significant multicolinearity which violates the assumptions of the logistic regression model. 
 
-### 4.2 Comparison of cropped scans and standard scans
+### 4.2 Model Maintenance
 
-XXX TODO
-
-Comparison of the models!
+XXX what kind of feature would help ensure the model stays accurate?
 
 ## 5. Conclusion
 

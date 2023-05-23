@@ -322,6 +322,17 @@ summary(multi.model)
 
 test$Predictions <- predict(multi.model, test)
 ```
+$$
+log(\frac{P_{Tiny}}{P_{Good}}) = 3.086 + 137.06X_{APNP} + 2.765X_{ACN} + 0.069X_{EN} + 159.629X_{AMidNP} - 0.411X_{AB} + 137.063X_{AMedNP} \\
+
+log(\frac{P_{Problematic}}{P_{Good}}) = -0.713 + 145.350X_{APNP} +5.011X_{ACN} + 0.066X_{EN} + 203.859X_{AMidNP} - 0.503X_{AB} + 145.35X_{AMedNP} \\
+
+log(\frac{P_{Bad}}{P_{Good}}) = -2.907 + 159.55X_{APNP} + 5.393X_{ACN} + 0.073X_{EN} + 206.140X_{AMidNP} - 0.504X_{AB} + 159.55X_{AMedNP} \\
+
+log(\frac{P_{Yikes}}{P_{Good}}) = -8.627 + 161.593X_{APNP} + 7.846X_{ACN} - 0.021X_{EN} + 192.803X_{AMidNP} - 0.452X_{AB} + 161.593X_{AMedNP} \\
+
+
+$$
 
 ```{r}
 testMetrics <- data.frame(predict(multi.model, test, type="probs"))
@@ -943,7 +954,7 @@ model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Mult
 
 ```
 
-### Cropped Numerical Logistic Regression
+### Cropped Binary Logistic Regression
 
 ```{r}
 crop.num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
@@ -964,7 +975,7 @@ ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   geom_boxplot() +
   xlab("True Quality") +
   ylab("Probability of good scan") +
-  ggtitle("Cropped Numerical Logistic Prediction Test Data")
+  ggtitle("Cropped Binary Logistic Prediction Test Data")
 
 ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
   geom_jitter() +
@@ -1037,7 +1048,7 @@ model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Ord 
 
 ```
 
-### Cropped Numerical Random Forest
+### Cropped Binary Random Forest
 ```{r}
 crop.num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
                          extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
@@ -1093,8 +1104,6 @@ ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
 ## Final Results
 ```{r}
 knitr::kable(model.metrics.all)
-
-##comment
 ```
 
 ```{r all-model-roc-curve}
@@ -1130,7 +1139,7 @@ ggroc(list(CrpMultiLog = CrpMultiLog, CrpOrdFor = CrpOrdFor,
                linetype="dashed")+
   labs(x = "Sensitivity",
        y = "Specificity",
-       title="Comparison of Triangular Quality Prediction Models")
+       title="Comparison of Triangular Quality Models")
 ```
 
 
