@@ -273,3 +273,9 @@ In order to improve the model, it is recommended that ongoing maintenance is don
 The Cropped Binary Random Forest model will help enable our scanners to ensure that all scans they take can be of high quality. The model will be easily accessible in an RShiny application, and will be need to be revised and tested for continued accuracy on an on-going basis.
 
 ## 6. Appendix
+
+All technical specifications can be found on the "Scan Quality Assessor: Model Comparison" document, joined to this paper.
+
+The RShiny application can be found, cloned, and used from https://github.com/ArgentCode/X3P_Quality_Assessor. 
+
+### 6.1 Bibliography
