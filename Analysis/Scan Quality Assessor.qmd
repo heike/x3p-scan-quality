@@ -266,10 +266,10 @@ The model selected was the Cropped Binary Random Forest, the reasoning being tha
 
 ### 4.2 Model Maintenance
 
-XXX what kind of feature would help ensure the model stays accurate?
+In order to improve the model, it is recommended that ongoing maintenance is done. This will consist of a continued effort to expand the ground truth database by manual labeling, which can then be used to re-train the model. As the data set gets larger with time, the error rates should be decreased. 
 
 ## 5. Conclusion
 
-XXX TODO
+The Cropped Binary Random Forest model will help enable our scanners to ensure that all scans they take can be of high quality. The model will be easily accessible in an RShiny application, and will be need to be revised and tested for continued accuracy on an on-going basis.
 
 ## 6. Appendix
