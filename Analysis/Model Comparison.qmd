@@ -136,7 +136,7 @@ knitr::kable(table(standard.data$Quality, standard.data$Problem),
 
 ### Assess Percentile NA Proportion 
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the Assess percentile na proportion on the Y axis. The good scans show a tight clustering around 0.0 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase in assess percentile na proportion by level is similar to a linear increase. This boxplot shows that higher quality is associated with a lower assess percentile na proportion."}
 summary(standard.data$assess_percentile_na_proportion)
 ggplot(standard.data, aes(x=Quality, y=assess_percentile_na_proportion)) +
   geom_boxplot() +
@@ -152,7 +152,7 @@ In the boxplot we can see that as Assess Percentile NA Proportion increases, the
 
 ### Assess Col NA
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess col na on the Y axis. The good scans show a tight clustering around 0.9 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to the start of an exponential chart where the rate of change increases over time. This boxplot shows that higher quality is associated with a lower assess col na."}
 summary(standard.data$assess_col_na)
 ggplot(standard.data, aes(x=Quality, y=assess_col_na)) +
   geom_boxplot() +
