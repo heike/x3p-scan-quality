@@ -165,7 +165,7 @@ In the boxplot we can see that as Assess Col NA increases, the quality of the im
 
 ### Extract NA
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the extract na feature on the Y axis. The good scans show a tight clustering around 12 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases slightly as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower extract na."}
 summary(standard.data$extract_na)
 ggplot(standard.data, aes(x=Quality, y=extract_na)) +
   geom_boxplot() +
@@ -178,7 +178,7 @@ In the boxplot we can see that as Extract NA increases, the quality of the image
 
 ### Assess Middle NA Proportion
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess middle NA proportion feature on the Y axis. The good scans show a tight clustering around 0.025 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower assess middle NA proportion."}
 summary(standard.data$assess_middle_na_proportion)
 ggplot(standard.data, aes(x=Quality, y=assess_middle_na_proportion)) +
   geom_boxplot() +
@@ -191,7 +191,7 @@ In the boxplot we can see that as Extract NA increases, the quality of the image
 
 ### Assess Rotation
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess rotation feature on the Y axis. All of the categories have a median located around the 0.75 mark on the Y axis. All of the categories have minor variations on their quantiles, but they are all between 1.75 and 0.25. Each of the categories have large numbers of outliers even beyond the 4 mark. Due to the categories all being very similar, there is no reason to assume that there is an association between quality and the assess rotation feature."}
 summary(standard.data$assess_rotation)
 ggplot(standard.data, aes(x=Quality, y=assess_rotation)) +
   geom_boxplot() +
@@ -204,7 +204,7 @@ In the boxplot, we see that there is no significant visual difference in median 
 
 ### Assess Bottomempty
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess bottom empty feature on the Y axis. The good scans show a median of 24 with quantiles at 20 and 2. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to the start of an exponential chart where the rate of change increases over time, the median of the Yike category is 49m and the variance is from 36 to 69. This boxplot shows that higher quality is associated with a lower assess bottomempty."}
 summary(standard.data$assess_bottomempty)
 ggplot(standard.data, aes(x=Quality, y=assess_bottomempty)) +
   geom_boxplot() +
@@ -217,7 +217,7 @@ In the boxplot we can see that as Assess Bottomempty increases, the quality of t
 
 ### Assess Median NA Proportion
 
-```{r}
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess median NA proportion feature on the Y axis. The good scans show a tight clustering around 0.0 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower assess median NA proportion."}
 summary(standard.data$assess_median_na_proportion)
 ggplot(standard.data, aes(x=Quality, y=assess_median_na_proportion)) +
   geom_boxplot() +
@@ -231,12 +231,15 @@ In the boxplot we can see that as Assess Median NA Proportion increases, the qua
 ### Cross Correlations
 
 - `r co("XXX include https://heike.github.io/ggpcp/")`
-```{r}
+```{r, fig.cap="This plot shows a color for each combination of features' correlation. All of the feature pairs have a correlation above 0.5 with the following exceptions. Assess rotation has no meaningful correlation with any other feature. Assess bottomempty and assess percentile na proportion have a correlation of 0.2. Assess bottomempty and assess median na proportion have a correlation of 0.3."}
 correlations <- cor(full.data[,6:12])
 corrplot(correlations, method = "shade")
+```
 
+```{r, fig.cap="This plot shows a scatter plot of all feature pairs to check for correlation. All of the features, barring assess rotation, show a linear line between the pairs. Many of the feature pairs have trailing outliers either above or below the linear lines."}
 pairs(full.data[,6:12], pch=19, lower.panel=NULL)
 ```
+
 
 There is significant correlation between most of the variables except assess rotation. 
 
@@ -287,7 +290,7 @@ train  <- full.data[sample, ]
 test   <- full.data[!sample, ]
 ```
 
-```{r, fig.cap="Overview of samples in the dependent variable in the training and test set. The two barcharts show very similar  distributions, and the distribution of problem types within scan quality is also similar. Overall we see the strong imbalance in the frequency of quality categories. By far the most scans have some tiny problems.  "}
+```{r, fig.cap="Overview of samples in the dependent variable in the training and test set. The two barcharts show very similar  distributions, and the distribution of problem types within scan quality is also similar. Overall we see the strong imbalance in the frequency of quality categories. By far the most scans have some tiny problems."}
 ggplot(full.data) + geom_bar(aes(x=Quality, fill=Problem)) + facet_grid(~set)
 ```
 
