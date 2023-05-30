@@ -298,8 +298,6 @@ ggplot(full.data) + geom_bar(aes(x=Quality, fill=Problem)) + facet_grid(~set)
 ggplot(full.data) + geom_bar(aes(x=num.Quality, fill=Problem)) + facet_grid(~set)
 ```
 
-XXX captions: Formula, Description, Inference 
-
 ```{r}
 model.metrics.all = data.frame(matrix(ncol=6))
 colnames(model.metrics.all) <- c("Model", "TPR", "TNR", "F1", "Kappa", "AUC")
@@ -360,8 +358,8 @@ YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
 ```
 Comparing the ROC curve of the different Qualities.
 
-```{r}
-ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+```{r, fig.cap="A plot of an ROC curve for each of the individual qualities in the standard Multi-nomial model. The Good curve is the closest to the (1,1) mark, followed by Bad, Tiny, followed by Problematic, The yikes curve represents stairs due to its small sample size."}
+ggroc(list(GoodROC = GoodROC, TinyROC = TinyROC, 
            ProbROC = ProbROC, BadROC = BadROC,
            YikesROC = YikesROC))+
   theme_bw()+
@@ -420,17 +418,20 @@ StndBinLog <- roc(test$num.Quality ~ test$num.predictions)
 # XXX Figure out followup scans
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+```
 
+```{r, fig.cap="Box plot that shows probability of good scan faceted by binary true quality. The bad quality has a median at 14% with quantiles 3% and 45%, and tailing up to over 80%. The good category has median 89% with quantiles at 80% and 95%, trailing down to 10%. The graph shows a clear distinction between the two problem types"}
 ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   geom_boxplot() +
   xlab("True Quality") +
   ylab("Probability of good scan") +
   ggtitle("Numerical Logistic Prediction Test Data")
+```
 
+```{r, fig.cap="This is a scatterplot with predicted quality on the y axis, faceted by true quality. On the bad quality. Majority of good scans are above 85%, and bad scans below 25%. Bad points above 75% prediction are labelled for followup, and good points below 50%."}
 ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
   geom_jitter() +
    scale_colour_manual(values=c("grey50", "darkorange"))
-
 ```
 
 The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
@@ -471,8 +472,10 @@ TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
 ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
 BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
 YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+```
 
-ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+```{r, fig.cap="A plot of an ROC curve for each of the individual qualities in the standard Multi-nomial model. The Good curve is the closest to the (1,1) mark, followed by Bad, Tiny, followed by Problematic, The yikes curve represents stairs due to its small sample size."}
+ggroc(list(GoodROC = GoodROC, TinyROC = TinyROC, 
            ProbROC = ProbROC, BadROC = BadROC,
            YikesROC = YikesROC))+
   theme_bw()+
@@ -517,13 +520,17 @@ test$num.predictions <- predict(num.RF.model, test, type="prob")[,2]
 StndNumFor <- roc(test$num.Quality ~ test$num.predictions)
 test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
 test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+```
 
+```{r, fig.cap="Box plot that shows probability of good scan faceted by binary true quality. The bad quality has a median at 14% with quantiles 3% and 30%, and tailing up to over 65% with outliers to 100%. The good category has median 95% with quantiles at 87% and 99%, trailing down to 1%. The graph shows a clear distinction between the two problem types"}
 ggplot(test, aes(x=num.Quality, y=num.predictions)) +
   geom_boxplot() +
   xlab("True Quality") +
   ylab("Probability of good scan") +
   ggtitle("Numerical Logistic Prediction Test Data")
+```
 
+```{r, fig.cap="This is a scatterplot with predicted quality on the y axis, faceted by true quality. On the bad quality. Majority of good scans are above 85%, and bad scans below 25%. Bad points above 75% prediction are labelled for followup, and good points below 50%."}
 ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
   geom_jitter() +
    scale_colour_manual(values=c("grey50", "darkorange"))
