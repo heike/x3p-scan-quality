@@ -549,13 +549,13 @@ rownames(model.metrics.all) <- 1:nrow(model.metrics.all)
 knitr::kable(model.metrics.all)
 ```
 
-```{r}
+```{r, fig.cap="Plot shows the four standard models ROC curves on the same plot. the numerical forest and binary logistic regression models show the best curve, curving through the 87.5 point on specificity and sensitivity. The multinomial logistic regression and the ordinal forest both represent a triangle as they had binary conversions to be plotted. Their plots fit inside the other two's curves."}
 ggroc(list(StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
            StndNumFor = StndNumFor, StndOrdFor = StndOrdFor))+
   theme_bw()+
   theme(axis.title.y = element_text(size = rel(1.4)))+
   theme(axis.title.x = element_text(size = rel(1.4)))+
-  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.x = element_text(size = rel(1.6), fig.cap))+
   theme(axis.text.y = element_text(size = rel(1.6)))+
   theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
   geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
@@ -596,13 +596,22 @@ knitr::kable(feature_table)
 correlation <- cor(full.data$extract_na, full.data$extract_na_cropped)
 
 res <- comparison(data.frame(full.data$extract_na, full.data$extract_na_cropped, full.data$Quality), feature = "Extract NA")
+```
 
+```{r, fig.cap="Plot shows a scatterplot of the extract na feature ran on the full scan on the x axis and ran on the cropped scan on the y axis, faceted by quality. The good scans show a clear distinction from the others by being on the bottom left cortner of the graph. The tiny problems, problematic, and bad scans all are disperesed in a linear line. The yikes category is only at the higher end of the points. This graph shows that the feature ran across the cropped scans on average are lower than on the full scan."}
 res$scatterplot + coord_equal()
+```
 
+```{r, fig.cap="Plot shows a boxplot of the extract na feature ran on the full scan on the x axis and ran on the cropped scan on the y axis, faceted by quality. The medians of both the cropped and full scans show a linear increase as the quality of the scan degrades. The cropped medians are also all 10 higher or more than the full scans."}
 res$boxplot
+```
 
+```{r}
 res$roc_curve
 
+```
+
+```{r}
 print(paste("Extract NA. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
 
 knitr::kable(res$summ, caption=attr(res$summ, "title"))
