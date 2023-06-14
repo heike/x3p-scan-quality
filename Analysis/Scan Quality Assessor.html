@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Heike Hofmann, Craig Orman, Naga Vempati">
+
+<title>Bullet Scan Quality Assessor</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="Scan Quality Assessor_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Scan Quality Assessor_files/libs/quarto-html/quarto.js"></script>
+<script src="Scan Quality Assessor_files/libs/quarto-html/popper.min.js"></script>
+<script src="Scan Quality Assessor_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Scan Quality Assessor_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Scan Quality Assessor_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Scan Quality Assessor_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Scan Quality Assessor_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Scan Quality Assessor_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Scan Quality Assessor_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">1. Abstract</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">2. Introduction</a>
+  <ul class="collapse">
+  <li><a href="#the-history-of-firearm-forensics" id="toc-the-history-of-firearm-forensics" class="nav-link" data-scroll-target="#the-history-of-firearm-forensics">2.1 The history of firearm forensics</a></li>
+  <li><a href="#the-role-of-csafe" id="toc-the-role-of-csafe" class="nav-link" data-scroll-target="#the-role-of-csafe">2.2 The role of CSAFE</a></li>
+  </ul></li>
+  <li><a href="#our-contribution" id="toc-our-contribution" class="nav-link" data-scroll-target="#our-contribution">3. Our contribution</a>
+  <ul class="collapse">
+  <li><a href="#data-sourcing" id="toc-data-sourcing" class="nav-link" data-scroll-target="#data-sourcing">3.1 Data sourcing</a></li>
+  <li><a href="#creating-features" id="toc-creating-features" class="nav-link" data-scroll-target="#creating-features">3.2 Creating features</a></li>
+  <li><a href="#hypothesis-on-what-a-crop-will-do" id="toc-hypothesis-on-what-a-crop-will-do" class="nav-link" data-scroll-target="#hypothesis-on-what-a-crop-will-do">3.3 Hypothesis on what a crop will do</a></li>
+  <li><a href="#process-of-cropping-scans" id="toc-process-of-cropping-scans" class="nav-link" data-scroll-target="#process-of-cropping-scans">3.4 Process of cropping scans</a></li>
+  <li><a href="#modelling-and-metrics" id="toc-modelling-and-metrics" class="nav-link" data-scroll-target="#modelling-and-metrics">3.5 Modelling and metrics</a></li>
+  <li><a href="#rshiny-and-application" id="toc-rshiny-and-application" class="nav-link" data-scroll-target="#rshiny-and-application">3.6 RShiny and application</a></li>
+  </ul></li>
+  <li><a href="#results-and-tuning" id="toc-results-and-tuning" class="nav-link" data-scroll-target="#results-and-tuning">4. Results and tuning</a>
+  <ul class="collapse">
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection">4.1 Model Selection</a></li>
+  <li><a href="#comparison-of-cropped-scans-and-standard-scans" id="toc-comparison-of-cropped-scans-and-standard-scans" class="nav-link" data-scroll-target="#comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">5. Conclusion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">6. Appendix</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Bullet Scan Quality Assessor</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Heike Hofmann, Craig Orman, Naga Vempati </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-hash="Scan-Quality-Assessor_cache/html/data_c4fc3b075dfcd596d73ba7dd59b00c80">
+
+</div>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">1. Abstract</h2>
+<p>Firearm forensics has long been plagued with a subjective issue related to obtaining good evidence, microscopy flaws in scanning. In this paper, we propose an application that uses several random forests to predict the quality of an X3P scanned bullet. This application is intended to aid scanners as they handle the large amount of items they are asked to scan, as well as allow researchers to go over current datasets, and determine any scans that may need to be redone. While this application should not replace a scanners individual judgement, it is another tool they could have at their disposal to reduce the number of re-scans they have to do.</p>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">2. Introduction</h2>
+<section id="the-history-of-firearm-forensics" class="level3">
+<h3 class="anchored" data-anchor-id="the-history-of-firearm-forensics">2.1 The history of firearm forensics</h3>
+<p>In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm.</p>
+<p>Currently, the method used to determine if a specific bullet came from a specific firearm requires that a bullet is found or recovered during the investigation, preferably as undamaged as possible, and the firearm. An examiner would fire the weapon into a kevlar tube so that they had a second bullet to use as the control, or a known match to the barrel. Most modern firearms have rifling, which is a series of spiral grooves in a barrel that cause the bullet to spin, leading to greater speed, accuracy, and range. Rifling is done via mass production, but due to very small inconsistencies, and the use and treatment of the barrel after production, the rifling leaves striation marks on the bullets. Here, we are only interested in striation marks on land-engraved areas (LEAs). Striation marks show strong similarities between bullets from different firings through the same barrel, to the degree that they are considered in the forensic community to be ‘unique’ to the particular barrel <span class="citation" data-cites="pageUniquenessForensicIdentification2011">(<a href="#ref-pageUniquenessForensicIdentification2011" role="doc-biblioref">Page, Taylor, and Blenkin 2011</a>)</span>, but a general assessment of the random matching probability has so far proven to be elusive. The grooves on the bullets are called striations and the general pattern is similar across all bullets fired from a particular barrel. Two main flaws in this method are that barrels are usually interchangeable on firearms, and that continued firing from the barrel will alter the chance of a match.</p>
+<p>Forensic Examiners are the current standard for comparing if two bullets have sufficient striation matching to be considered a positive match. A forensic examiner is a person who uses a comparison microscope to view two of the bullets and their striations and matches them. The problem with using forensic examiners is that they are still subjective, and have been proven to have atleast higher than a 1% error rate. <span class="citation" data-cites="presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016 nationalresearchcouncilu.s.StrengtheningForensicScience2009">(<a href="#ref-presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016" role="doc-biblioref">President’s Council of Advisors on Science and Technology 2016</a>; <a href="#ref-nationalresearchcouncilu.s.StrengtheningForensicScience2009" role="doc-biblioref">National Research Council (U.S.) 2009</a>)</span></p>
+</section>
+<section id="the-role-of-csafe" class="level3">
+<h3 class="anchored" data-anchor-id="the-role-of-csafe">2.2 The role of CSAFE</h3>
+<p>To further aid in forensic abilities and quantitative methods, CSAFE has been researching ways to use machine learning and other methods to automatically and quantitatively compare bullet striation marks. <span class="citation" data-cites="hareAutomaticMatchingBullet2017">(<a href="#ref-hareAutomaticMatchingBullet2017" role="doc-biblioref">Hare et al. 2017</a>)</span>, which compares bullets using a variety of statistical and mathematical models to generate confidence scores of the similarities of striation markings. Automated methods and forensic examiners alike have a similar issue that this paper will hereby address. The problem is differing quality of microscopy scans.</p>
+<p>In order to compare the scans, each bullet must be under a microscope and a digital scan be made. Scanning of the bullets can go wrong in a variety of ways, from lighting conditions, bullet placement in the holders, to actual damage to the bullets surface. In order to detect when there are flaws in the scanning process, we have created an RShiny application that reads in the scanned X3P files, and gives a confidence score, with 100 being a perfect, un-flawed scan, to 0 being a terrible scan that needs to be re-done.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Image of a scan</figcaption><p></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="our-contribution" class="level2">
+<h2 class="anchored" data-anchor-id="our-contribution">3. Our contribution</h2>
+<section id="data-sourcing" class="level3">
+<h3 class="anchored" data-anchor-id="data-sourcing">3.1 Data sourcing</h3>
+<p>Our dataset is the LAPD data, which is a set of 626 unique firearms each of which fired 4 bullets labelled A, B, C, D, and the bullets and matching barrels (called FAUs) were recorded. The bullets each had all 6 lands scanned, with a variety of degrees of quality. Each scan is uniquely identifiable by its LAPDID of the format &lt;FAU, Bullet, Land&gt;.</p>
+<p>The scans in this dataset will act as our test and train data for our model. Dr.&nbsp;Hofmann manually sorted out 1851 of the scans, assigning each of them a quality, and a most-prevelant-problem. The quality variable is categorical in order from best to worst: “Good, Tiny Problems, Problematic, Bad, Yikes”. The problems were broken into several, unordered categories “Good, Holes, Rotation-Staging, Feathering, Damage”. It should be noted, the “Damage” problem is not a microscopy issue, but rather an issue that occurs after the bullet is fired and impacts something sufficiently hard that it damages the striation patterns. These bullets would need considerably more attention, re-scanning may not be useful, and will require individual decision making about their use in the forensic process.</p>
+<ul>
+<li><span style="color: red;">Could someone look at this paragraph below specifically, I feel I need to be more careful in my wording</span></li>
+</ul>
+<p>There are several errors that come from this style of classification, namely the subjectivity as to the difference in qualities, such as when to label a scan Tiny Problems versus Problematic. Similar problems occur in the scans specific problem, sufficient Feathering could be considered Holes, and all of these problems are reasonably dependent on each other. We are not trying to solve these issues, we instead use a confidence scale that the scanner at the microscope can use to then make better informed decisions about when to re-scan.</p>
+</section>
+<section id="creating-features" class="level3">
+<h3 class="anchored" data-anchor-id="creating-features">3.2 Creating features</h3>
+<ul>
+<li><span style="color: red;">Is that good?</span></li>
+</ul>
+<p>In 2022, Jacob Baalson, Michael Egle, (others), created the following features to begin the project. This paper uses these features in both their original coding and with modification.</p>
+<p>Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.</p>
+<p>Let <span class="math inline">\(A=\{NA\}\)</span> be the set of undefined values. For simplicity of notation we will assume that the space of real values <span class="math inline">\({\rm I\!R}\)</span> contains <span class="math inline">\(A\)</span>: <span class="math inline">\({\rm I\!R}:= {\rm I\!R} \cup A\)</span>.</p>
+<p>Let <span class="math inline">\(X \in R^{m,n}\)</span> be a real-valued surface matrix of dimensions m x n where m and n are strictly positive integers <span class="math inline">\(X = (x_{ij})_{1 \leq i \leq m, 1 \leq j \leq n}\)</span>.</p>
+<p><a href="#assess-bottomempty">Assess Bottomempty</a></p>
+<p>The feature <code>assess_bottomempty</code> calculates the percentage of missing values in the bottom 20% of the scan.</p>
+<p>Let <span class="math inline">\(R \subseteq {\rm I\!R}\)</span> be a set of size m, where each element is the sum of the NA’s for the given row, defined as: <span class="math display">\[
+\forall i \in R: R_i = \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+<p>Let <span class="math inline">\(B \subset R\)</span> be a set, which is the set of all values in <span class="math inline">\(R_i\)</span>, given that <span class="math inline">\(i \geq m*0.8\)</span>. Therefore, the proportion of missing values in <span class="math inline">\(X\)</span>’s bottom 20% can be given by: <span class="math display">\[
+\frac{1}{m*n*0.2}\sum_{i=1}^{m*0.2}(R_i)*100
+\]</span> <a href="#assess-col-na">Assess Col NA</a></p>
+<p>The function <code>assess_col_na</code> is the proportion of columns in the image matrix which have more NA’s than 20%.</p>
+<p>For every column in the matrix of a scan, we find the proportion of scans in that column which are NA. Then we count how many of the columns whose proportion is greater than 20%, the pre-determined threshold of acceptable NA’s. Then we divide by the number of columns * 0.2 to get our final threshold adjusted number.</p>
+<p>Let <span class="math inline">\(R \subseteq {\rm I\!R}\)</span> be a set of size n, where each element is the sum of the NA’s for the given column, defined as: <span class="math display">\[
+\forall i \in R: R_i = \sum^m_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+<p>We define <span class="math inline">\(P\)</span> as the proportion of all NAs per column for every row, as defined here: <span class="math display">\[
+\forall i \in R: P_i = \frac{R_i}{n} * 100
+\]</span></p>
+<p>We now find the proportion of threshold adjusted columns in the matrix <span class="math display">\[
+\frac{\sum_{i=1}^n(P_i*\beta_B(P_i))}{n*0.2} \\
+\text{Where } \beta_B(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x &gt; 20\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+<p><a href="#assess-median-na-proportion">Assess Median NA proportion</a></p>
+<p>The function <code>assess_median_na_proportion</code> calculates the mean number of NA’s in each column, and then finds the median out of all those values.</p>
+<p>Let <span class="math inline">\(R \subseteq {\rm I\!R}\)</span> be a set of size n, where each element is the mean of the NA’s for the given column, defined as: <span class="math display">\[
+\forall i \in R: R_i = \frac{\sum^m_{j=1} \theta_A(x_{ij})}{m} \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+<p>We then sort, and select the median of <span class="math inline">\(R\)</span></p>
+<p><a href="#assess-middle-na-proportion">Assess Middle NA Proportion</a> The proportion of missing values in the middle <span class="math inline">\(\frac{3}{4}\)</span>ths of X is then defined as: <span class="math display">\[
+\frac{1}{m*n*0.75} \sum^m_{i=1} \sum^{n*\frac{7}{8}}_{j=n*\frac{1}{8}} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+<p><a href="#extract-na">Extract NA</a></p>
+<p>The function <code>extract_na</code> calculates the percentage of missing values in the scan (part) under observation, e.g.&nbsp;for scan surface matrix <span class="math inline">\(X \in {\rm I\!R}^{m, n}\)</span> the percentage of missing values is defined as:</p>
+<p>The proportion of missing values in X is then defined as: <span class="math display">\[
+\frac{1}{m*n} \sum^m_{i=1} \sum^n_{j=1} \theta_A(x_{ij}) \\
+\text{Where } \theta_A(x) = \left\{\begin{aligned}
+&amp;1 &amp;&amp;: \text{if }x \in A\\
+&amp;0 &amp;&amp;: \text{otherwise}\\
+\end{aligned} \right.
+\]</span></p>
+</section>
+<section id="hypothesis-on-what-a-crop-will-do" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis-on-what-a-crop-will-do">3.3 Hypothesis on what a crop will do</h3>
+<p>The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that’s affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models.</p>
+</section>
+<section id="process-of-cropping-scans" class="level3">
+<h3 class="anchored" data-anchor-id="process-of-cropping-scans">3.4 Process of cropping scans</h3>
+<p>X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.</p>
+<p>XXX Probably move the actual code to the appendix or the model comparison</p>
+<div class="cell" data-hash="Scan-Quality-Assessor_cache/html/unnamed-chunk-2_c68328644a5f84110fbd964a055fc17a">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crop_X3P <span class="ot">&lt;-</span> <span class="cf">function</span>(x3p) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">class</span>(x3p) <span class="sc">==</span> <span class="st">"x3p"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(x3p<span class="sc">$</span>surface.matrix)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  cropped_x3p <span class="ot">&lt;-</span> <span class="fu">x3p_crop</span>(x3p, <span class="at">x =</span> <span class="fl">0.1</span> <span class="sc">*</span> dims[<span class="dv">1</span>], <span class="at">y =</span> <span class="fl">0.1</span> <span class="sc">*</span> dims[<span class="dv">2</span>], <span class="at">width =</span> dims[<span class="dv">1</span>], <span class="at">height =</span> dims[<span class="dv">2</span>] <span class="sc">-</span> (<span class="fl">0.1</span><span class="sc">*</span> dims[<span class="dv">2</span>]))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(cropped_x3p<span class="sc">$</span>surface.matrix)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  cropped_x3p <span class="ot">&lt;-</span> <span class="fu">x3p_crop</span>(cropped_x3p, <span class="at">x =</span> <span class="dv">0</span>, <span class="at">width =</span> dims[<span class="dv">1</span>] <span class="sc">-</span> (<span class="fl">0.1</span> <span class="sc">*</span> dims[<span class="dv">1</span>]), <span class="at">y =</span> <span class="dv">0</span>, <span class="at">height =</span> dims[<span class="dv">2</span>])</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cropped_x3p)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="modelling-and-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="modelling-and-metrics">3.5 Modelling and metrics</h3>
+<p>We modeled our data by breaking it into categorical and binary classifications. For binary classifications, we created two groupings, Good scans, which includes all scans labelled as “Good” or “Tiny Problems”, and Bad scans, which includes all scans labelled as “Problematic”, “Bad”, “Yikes”. We used a multi-nomial and a binary logistic regression. For random forests we created a binary model and a categorical model.</p>
+<p>For model comparison, after predictions were made by the categorical models, they were translated into binary categories and compared against the reference data. This approach seeks to utilize the fact that any scan that is “Problematic” or worse in rating will be recommended to be re-scanned. As such, our models were all ran against the same train/test data in a 75/25 split. We trained the models on the features calculated on both the full scan image, as well as the cropped images. This led to 8 total models being produced with the following metrics.</p>
+<table class="table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 15%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>TPR</th>
+<th>TNR</th>
+<th>F1 Score</th>
+<th>Kappa</th>
+<th>AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Stnd Multinomial Logistic Regression</td>
+<td><strong>0.9821</strong></td>
+<td>0.6786</td>
+<td>0.9283</td>
+<td>0.7191</td>
+<td>0.8304</td>
+</tr>
+<tr class="even">
+<td>Stnd Binary Logistic Regression</td>
+<td>0.9643</td>
+<td>0.7714</td>
+<td>0.9364</td>
+<td>0.7677</td>
+<td><strong>0.9533</strong></td>
+</tr>
+<tr class="odd">
+<td>Stnd Ordinal Random Forest</td>
+<td>0.9643</td>
+<td>0.7714</td>
+<td>0.9364</td>
+<td>0.7677</td>
+<td>0.8304</td>
+</tr>
+<tr class="even">
+<td>Stnd Binary Random Forest</td>
+<td>0.9286</td>
+<td><strong>0.8286</strong></td>
+<td>0.9286</td>
+<td>0.7571</td>
+<td>0.9477</td>
+</tr>
+<tr class="odd">
+<td>Crop Multinomial Logistic Regression</td>
+<td><strong>0.9821</strong></td>
+<td>0.7</td>
+<td>0.9322</td>
+<td>0.7375</td>
+<td>0.8411</td>
+</tr>
+<tr class="even">
+<td>Crop Binary Logistic Regression</td>
+<td>0.9554</td>
+<td>0.7929</td>
+<td>0.9359</td>
+<td>0.7707</td>
+<td>0.9514</td>
+</tr>
+<tr class="odd">
+<td>Crop Ordinal Random Forest</td>
+<td>0.9554</td>
+<td>0.8</td>
+<td><strong>0.9372</strong></td>
+<td><strong>0.7764</strong></td>
+<td>0.8777</td>
+</tr>
+<tr class="even">
+<td>Crop Binary Random Forest</td>
+<td>0.9375</td>
+<td><strong>0.8286</strong></td>
+<td>0.9333</td>
+<td>0.7709</td>
+<td>0.9503</td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Model-Comparison_files/figure-html/all-model-roc-curve-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">All Models ROC curve</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="rshiny-and-application" class="level3">
+<h3 class="anchored" data-anchor-id="rshiny-and-application">3.6 RShiny and application</h3>
+<p>To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan needs to be retaken.</p>
+</section>
+</section>
+<section id="results-and-tuning" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-tuning">4. Results and tuning</h2>
+<section id="model-selection" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection">4.1 Model Selection</h3>
+<p>The model was decided to be</p>
+</section>
+<section id="comparison-of-cropped-scans-and-standard-scans" class="level3">
+<h3 class="anchored" data-anchor-id="comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</h3>
+<p>XXX TODO</p>
+<p>Comparison of the models!</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">5. Conclusion</h2>
+<p>XXX TODO</p>
+</section>
+<section id="appendix" class="level2 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">6. Appendix</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-hareAutomaticMatchingBullet2017" class="csl-entry" role="doc-biblioentry">
+Hare, Eric, Heike Hofmann, Alicia Carriquiry, et al. 2017. <span>“Automatic Matching of Bullet Land Impressions.”</span> <em>The Annals of Applied Statistics</em> 11 (4): 2332–56. <a href="https://doi.org/10.1214/17-AOAS1080">https://doi.org/10.1214/17-AOAS1080</a>.
+</div>
+<div id="ref-nationalresearchcouncilu.s.StrengtheningForensicScience2009" class="csl-entry" role="doc-biblioentry">
+National Research Council (U.S.), ed. 2009. <em>Strengthening Forensic Science in the <span>United States</span>: A Path Forward</em>. <span>Washington, D.C</span>: <span>National Academies Press</span>.
+</div>
+<div id="ref-pageUniquenessForensicIdentification2011" class="csl-entry" role="doc-biblioentry">
+Page, Mark, Jane Taylor, and Matt Blenkin. 2011. <span>“Uniqueness in the Forensic Identification Sciences–Fact or Fiction?”</span> <em>Forensic Science International</em> 206 (1-3): 12–18. <a href="https://doi.org/10.1016/j.forsciint.2010.08.004">https://doi.org/10.1016/j.forsciint.2010.08.004</a>.
+</div>
+<div id="ref-presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016" class="csl-entry" role="doc-biblioentry">
+President’s Council of Advisors on Science and Technology. 2016. <span>“Forensic <span>Science</span> in <span>Criminal Courts</span>: <span>Ensuring Scientific Validity</span> of <span>Feature Comparison Methods</span>.”</span> <a href="https://obamawhitehouse.archives.gov/sites/default/files/microsites/ostp/PCAST/pcast_forensic_science_report_final.pdf">https://obamawhitehouse.archives.gov/sites/default/files/microsites/ostp/PCAST/pcast_forensic_science_report_final.pdf</a>.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

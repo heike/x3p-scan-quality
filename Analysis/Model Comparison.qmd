@@ -1,0 +1,1168 @@
+---
+title: "Scan Quality Assessor: Model Comparison"
+author: "Heike Hofmann, Craig Orman, Naga Vempati"
+output: html_document
+format:
+  html:
+    toc: true
+    toc-location: right
+---
+```{r, include = FALSE, warning=FALSE}
+if (!require(tidyverse)) install.packages('tidyverse')
+if (!require(ggplot2)) install.packages('ggplot2')
+if (!require(randomForest)) install.packages('randomForest')
+if (!require(irr)) install.packages('irr')
+if (!require(corrplot)) install.packages('corrplot')
+if (!require(MASS)) install.packages('MASS')
+if (!require(RColorBrewer)) install.packages('RColorBrewer')
+if (!require(yardstick)) install.packages('yardstick')
+if (!require(caret)) install.packages('caret')
+if (!require(nnet)) install.packages('nnet')
+if (!require(pROC)) install.packages('pROC')
+library(tidyverse)
+library(ggplot2)
+library(randomForest)
+library(irr)
+library(corrplot)
+library(MASS)
+library(RColorBrewer)
+library(yardstick)
+library(caret)
+library(nnet)
+library(pROC)
+
+set.seed(10247693)
+## Load Functions - eventually we would like to just load a library
+theme_set(theme_bw())
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+
+source("../R/comparison.R")
+
+colorize <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{%s}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'>%s</span>", color,
+      x)
+  } else x
+}
+
+hh <- function(x) {
+  colorize(x, "darkorange")
+}
+
+nv <- function(x) {
+  colorize(x, "chartreuse3")
+}
+
+co <- function(x) {
+  colorize(x, "red")
+}
+```
+
+## Introduction
+This document is intended give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a research or real-world environment.
+
+We will investigate the ability of our features to predict the quality of a scan using a variety of methods. It should be noted that given our current classification system Good > Tiny Problems > Problematic > Bad > Yikes, we will consider that any scan worse than Tiny Problems should be re-scanned by the user. However, this is a tool meant to aid a user in deciding and is not to be taken as a sole source of truth. 
+
+Models will be broken into two classification types, ordinal and binary. In the ordinal models, we will try to accurately predict which of the five categories a scan falls into. As quality is a subjective rating, we will focus more on being within one step of the assigned rating than going for perfect agree, although perfect agreement would be optimal. In the binary setting, we will group the scans as Good (1) and Bad (0) as binary classifications are often easier. Good (1) scans will be scans currently labelled as Good or Tiny Problems, with Bad (0) scans being Problematic, Bad, and Yikes. 
+
+There will also be a comparison of models between using the features calculated against a full image as taken by the scanner, and a cropped image of the scan. The purpose of this is to increase the speed of the quality assurance stage, and to see if removing the 'noise' at the sides of the image helps to increase the estimate of quality, as our focus is on the center of the image.
+
+- `r co("XXX Is there a more mathy and rigorous reason we chose these models? They are pretty much just my go-tos, and the only ones I know for categorical. Probably need to add references")` 
+
+The models we will train are logistic regressions, and random forests. These models have often proven to be sufficiently explainable for forensic purposes, as well as statistically sound in many environments. 
+
+### Results 
+
+- `r co("XXX Interpret the results")`
+
+
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     | AUC       |
+|---------------------------------------|-----------|-----------|---------------|-----------|-----------|
+|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |0.8304     |
+|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |**0.9533** |
+|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |0.8304     |
+|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |0.9477     |
+|Crop Multinomial Logistic Regression	  |**0.9821** |0.7        |0.9322	        |0.7375     |0.8411     |
+|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |0.9514     |
+|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |0.8777     |
+|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |0.9503     |
+
+
+Data handling and type setting
+
+```{r}
+full.data <- read.csv2("../data/std_and_cropped_data_12_20_2022.csv", sep=",")
+full.data <- full.data %>% mutate(
+  Quality = factor(Quality, levels = c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = TRUE),
+  Problem = factor(Problem, levels = c("Good", "Damage", "Holes", "Feathering", "Rotation-Staging"), ordered = FALSE),
+  GoodScan = Quality %in% c("Good", "Tiny Problems") %>% factor(),
+  LAPD_id = sprintf("FAU%3d-B%s-L%d",FAU, Bullet, Land),
+  
+  # This is the features ran against the full image
+  assess_percentile_na_proportion = as.numeric(assess_percentile_na_proportion),
+  assess_col_na = as.numeric(assess_col_na),
+  extract_na = as.numeric(extract_na),
+  assess_middle_na_proportion = as.numeric(assess_middle_na_proportion),
+  assess_rotation = as.numeric(assess_rotation),
+  assess_bottomempty = as.numeric(assess_bottomempty),
+  assess_median_na_proportion = as.numeric(assess_median_na_proportion),
+  
+  # This is the features ran against the cropped image
+  assess_percentile_na_proportion_cropped = as.numeric(assess_percentile_na_proportion_cropped),
+  assess_col_na_cropped = as.numeric(assess_col_na_cropped),
+  extract_na_cropped = as.numeric(extract_na_cropped),
+  assess_bottomempty_cropped = as.numeric(assess_bottomempty_cropped),
+  assess_median_na_proportion_cropped = as.numeric(assess_median_na_proportion_cropped)
+)
+
+
+followupScans <- data.frame()
+```
+
+## Feature Analysis
+
+In this investigation, we are going to look at the features calculated against the full image. This investigation will tell us more about the predictive power of each feature, and tell us how different the quality categories are from each other.
+
+- `r co("XXX Our results are mostly in graphical form. Should I use some kinda test? Is there a way to front load the results as with models?")`
+ 
+
+```{r, include = FALSE}
+standard.data <- full.data[,1:12 & 18:19]
+knitr::kable(table(standard.data$Quality, standard.data$Problem),
+             caption = "Full Data Problem by Quality")
+```
+
+### Assess Percentile NA Proportion 
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the Assess percentile na proportion on the Y axis. The good scans show a tight clustering around 0.0 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase in assess percentile na proportion by level is similar to a linear increase. This boxplot shows that higher quality is associated with a lower assess percentile na proportion."}
+summary(standard.data$assess_percentile_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_percentile_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("Assess Percentile NA Proportion by Quality")
+
+summary(glm(Quality ~ assess_percentile_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Percentile NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
+
+- `r co("XXX What does the warning mean here and how do we address it?")`
+
+### Assess Col NA
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess col na on the Y axis. The good scans show a tight clustering around 0.9 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to the start of an exponential chart where the rate of change increases over time. This boxplot shows that higher quality is associated with a lower assess col na."}
+summary(standard.data$assess_col_na)
+ggplot(standard.data, aes(x=Quality, y=assess_col_na)) +
+  geom_boxplot() +
+  ggtitle("Assess Col NA by Quality")
+summary(glm(Quality ~ assess_col_na,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Col NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart, with the exception of "Good" and "Tiny Problems" which are very similar. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Extract NA
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the extract na feature on the Y axis. The good scans show a tight clustering around 12 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases slightly as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower extract na."}
+summary(standard.data$extract_na)
+ggplot(standard.data, aes(x=Quality, y=extract_na)) +
+  geom_boxplot() +
+  ggtitle("Extract NA by Quality")
+summary(glm(Quality ~ extract_na,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Extract NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Middle NA Proportion
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess middle NA proportion feature on the Y axis. The good scans show a tight clustering around 0.025 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower assess middle NA proportion."}
+summary(standard.data$assess_middle_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_middle_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("Assess Middle NA Proportion by Quality")
+summary(glm(Quality ~ assess_middle_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Extract NA increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Rotation
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess rotation feature on the Y axis. All of the categories have a median located around the 0.75 mark on the Y axis. All of the categories have minor variations on their quantiles, but they are all between 1.75 and 0.25. Each of the categories have large numbers of outliers even beyond the 4 mark. Due to the categories all being very similar, there is no reason to assume that there is an association between quality and the assess rotation feature."}
+summary(standard.data$assess_rotation)
+ggplot(standard.data, aes(x=Quality, y=assess_rotation)) +
+  geom_boxplot() +
+  ggtitle("Assess Rotation by Quality")
+summary(glm(Quality ~ assess_rotation,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot, we see that there is no significant visual difference in median or IQR of Assess Rotation when grouped by Quality. The logistic regression shows no evidence that this feature can help explain the quality of an image. This feature was primarily intended for use in predicting a particular problem that occurs in scans. 
+
+### Assess Bottomempty
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess bottom empty feature on the Y axis. The good scans show a median of 24 with quantiles at 20 and 2. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to the start of an exponential chart where the rate of change increases over time, the median of the Yike category is 49m and the variance is from 36 to 69. This boxplot shows that higher quality is associated with a lower assess bottomempty."}
+summary(standard.data$assess_bottomempty)
+ggplot(standard.data, aes(x=Quality, y=assess_bottomempty)) +
+  geom_boxplot() +
+  ggtitle("Assess Bottomempty by Quality")
+summary(glm(Quality ~ assess_bottomempty,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Bottomempty increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. There is an observation of note that the Yikes category has a particularly large IQR. The logistic regression also shows that there is overwhelming evidence for this being a useful feature in explaining the quality.
+
+### Assess Median NA Proportion
+
+```{r, fig.cap="Figure shows a box plot with the 5 categorical quality levels on the X axis and the assess median NA proportion feature on the Y axis. The good scans show a tight clustering around 0.0 on the Y axis. As the quality of the scan decreases the median increases, and the variance increases as well. The rate of increase is similar to a linear progression. This boxplot shows that higher quality is associated with a lower assess median NA proportion."}
+summary(standard.data$assess_median_na_proportion)
+ggplot(standard.data, aes(x=Quality, y=assess_median_na_proportion)) +
+  geom_boxplot() +
+  ggtitle("Assess Median NA Proportion by Quality")
+summary(glm(Quality ~ assess_median_na_proportion,
+                     data=standard.data, family="binomial"))
+```
+
+In the boxplot we can see that as Assess Median NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The "Bad" and "Yikes" categories have very similar IQR and Medians. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
+
+### Cross Correlations
+
+- `r co("XXX include https://heike.github.io/ggpcp/")`
+```{r, fig.cap="This plot shows a color for each combination of features' correlation. All of the feature pairs have a correlation above 0.5 with the following exceptions. Assess rotation has no meaningful correlation with any other feature. Assess bottomempty and assess percentile na proportion have a correlation of 0.2. Assess bottomempty and assess median na proportion have a correlation of 0.3."}
+correlations <- cor(full.data[,6:12])
+corrplot(correlations, method = "shade")
+```
+
+```{r, fig.cap="This plot shows a scatter plot of all feature pairs to check for correlation. All of the features, barring assess rotation, show a linear line between the pairs. Many of the feature pairs have trailing outliers either above or below the linear lines."}
+pairs(full.data[,6:12], pch=19, lower.panel=NULL)
+```
+
+
+There is significant correlation between most of the variables except assess rotation. 
+
+## Standard Model Analysis
+
+XXX Need ROC curves, add AUC to the presented metrics, distribution of the predictions
+
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     | AUC       |
+|---------------------------------------|-----------|-----------|---------------|-----------|-----------|
+|Stnd Multinomial Logistic Regression   |**0.9821**	|0.6786	    |0.9283         |0.7191     |0.8304     |
+|Stnd Binary Logistic Regression        |0.9643	    |0.7714	    |0.9364	        |0.7677     |**0.9533** |
+|Stnd Ordinal Random Forest           	|0.9643	    |0.7714	    |0.9364	        |0.7677     |0.8304     |
+|Stnd Binary Random Forest              |0.9286	    |**0.8286** |0.9286	        |0.7571     |0.9477     |
+
+Metric Function that provides our results:
+```{r}
+# Function intended to standardize outputs a bit better
+numerical.Metrics <- function(test, modelName) {
+  metrics <- confusionMatrix(factor(round(test$num.predictions), levels = c(0, 1)),
+                             test$num.Quality, mode="everything", positive = "1")
+  print(metrics)
+  
+  #Get the AUC
+  metricROC <- roc(test$num.Quality ~ test$num.predictions)
+  metricAUC <- auc(metricROC)
+  #returns c(modelName, TPR, TNR, F1, Kappa)
+  return(c(modelName, round(metrics$byClass[1], 4), round(metrics$byClass[2], 4), 
+           round(metrics$byClass[7], 4), round(metrics$overall[2], 4), round(metricAUC, 4)))
+}
+```
+
+Creation of the training and test data.
+```{r}
+sample <- sample(c(TRUE, FALSE), nrow(standard.data), replace=TRUE, prob=c(0.75,0.25))
+full.data$sample <- sample
+full.data$set <- "Train"
+full.data$set[full.data$sample == FALSE] <- "Test"
+full.data$set = factor(full.data$set, levels=c("Train", "Test"))
+
+
+full.data$followup <- FALSE
+full.data$num.Quality <- 0
+full.data$num.Quality[full.data$Quality == "Good"] <- 1
+full.data$num.Quality[full.data$Quality == "Tiny Problems"] <- 1
+full.data$num.Quality <- factor(full.data$num.Quality, levels = c(0, 1))
+
+train  <- full.data[sample, ]
+test   <- full.data[!sample, ]
+```
+
+```{r, fig.cap="Overview of samples in the dependent variable in the training and test set. The two barcharts show very similar  distributions, and the distribution of problem types within scan quality is also similar. Overall we see the strong imbalance in the frequency of quality categories. By far the most scans have some tiny problems."}
+ggplot(full.data) + geom_bar(aes(x=Quality, fill=Problem)) + facet_grid(~set)
+```
+
+```{r, fig.cap="A barchart of Quality grouped into binary categories, faceted by Train and Test, and colored by Problem. The majority of the binary Good scans appear to have the Holes problem, and the majority of the binary Bad scans appear to have the Feathering problem. The Train and Test datasets appear to be similarly balanced between Good and Bad scans. There are roughly double the number of Good scans as there are Bad scans."}
+ggplot(full.data) + geom_bar(aes(x=num.Quality, fill=Problem)) + facet_grid(~set)
+```
+
+```{r}
+model.metrics.all = data.frame(matrix(ncol=6))
+colnames(model.metrics.all) <- c("Model", "TPR", "TNR", "F1", "Kappa", "AUC")
+```
+
+
+### Standard Multi-Nomial Logistic Regression
+
+The assumptions of the multinomial logisitic regression are:
+  - Nominal dependent variable: Not met
+  - No multi-colinearity: 
+  - Linear relationship:
+  - No outlier or high influence points: 
+  
+```{r}
+train.mutli = train
+train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
+train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
+# Unordered multinomial model
+multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na +
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion, data = train.mutli)
+summary(multi.model)
+
+test$Predictions <- predict(multi.model, test)
+```
+$$
+log(\frac{P_{Tiny}}{P_{Good}}) = 3.086 + 137.06X_{APNP} + 2.765X_{ACN} + 0.069X_{EN} + 159.629X_{AMidNP} - 0.411X_{AB} + 137.063X_{AMedNP} \\
+
+log(\frac{P_{Problematic}}{P_{Good}}) = -0.713 + 145.350X_{APNP} +5.011X_{ACN} + 0.066X_{EN} + 203.859X_{AMidNP} - 0.503X_{AB} + 145.35X_{AMedNP} \\
+
+log(\frac{P_{Bad}}{P_{Good}}) = -2.907 + 159.55X_{APNP} + 5.393X_{ACN} + 0.073X_{EN} + 206.140X_{AMidNP} - 0.504X_{AB} + 159.55X_{AMedNP} \\
+
+log(\frac{P_{Yikes}}{P_{Good}}) = -8.627 + 161.593X_{APNP} + 7.846X_{ACN} - 0.021X_{EN} + 192.803X_{AMidNP} - 0.452X_{AB} + 161.593X_{AMedNP} \\
+
+
+$$
+
+```{r}
+testMetrics <- data.frame(predict(multi.model, test, type="probs"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+```
+Comparing the ROC curve of the different Qualities.
+
+```{r, fig.cap="A plot of an ROC curve for each of the individual qualities in the standard Multi-nomial model. The Good curve is the closest to the (1,1) mark, followed by Bad, Tiny, followed by Problematic, The yikes curve represents stairs due to its small sample size."}
+ggroc(list(GoodROC = GoodROC, TinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Stnd MultiNom Log Good ROC")
+```
+
+To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
+```{r}
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+
+StndMultiLog <- roc(test$num.Quality ~ test$num.predictions)
+
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Multi Log Reg"))
+```
+
+```{r eval-multinom}
+dt <- table(test$Quality, test$Predictions)
+dframe <- as.data.frame(dt) %>% mutate(
+  Var1 = factor(Var1, levels=levels(test$Quality)),
+  Var2 = factor(Var2, levels=levels(test$Quality)),
+  type= Var1==Var2
+)
+dframe %>% filter(Freq>0) %>% ggplot(aes(x = Var1, y = Var2, size=sqrt(Freq))) + geom_point(aes(colour = type)) + 
+  geom_vline(xintercept=2.5, colour = "grey70") +
+  geom_hline(yintercept=2.5, colour="grey70") + xlab("Which one is that?")
+```
+
+XXX barcharts of predicted scans Quality for all models
+
+### Standard Binary regression
+  - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+
+```{r}
+num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion,
+                     data=train, family="binomial")
+
+summary(num.logit.model)
+
+test$num.predictions <- predict(num.logit.model, test, type="response")
+StndBinLog <- roc(test$num.Quality ~ test$num.predictions)
+# XXX Figure out followup scans
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+```
+
+```{r, fig.cap="Box plot that shows probability of good scan faceted by binary true quality. The bad quality has a median at 14% with quantiles 3% and 45%, and tailing up to over 80%. The good category has median 89% with quantiles at 80% and 95%, trailing down to 10%. The graph shows a clear distinction between the two problem types"}
+ggplot(test, aes(x=num.Quality, y=num.predictions)) +
+  geom_boxplot() +
+  xlab("True Quality") +
+  ylab("Probability of good scan") +
+  ggtitle("Numerical Logistic Prediction Test Data")
+```
+
+```{r, fig.cap="This is a scatterplot with predicted quality on the y axis, faceted by true quality. On the bad quality. Majority of good scans are above 85%, and bad scans below 25%. Bad points above 75% prediction are labelled for followup, and good points below 50%."}
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+```
+
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Binary Log Reg"))
+```
+
+### Standard Ordinal random forest
+
+XXX is this an ordinal random forest or just a categorical one?
+
+```{r}
+ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion, data = train,
+                           importance = TRUE)
+
+test$Predictions <- predict(ord.forest.model, test)
+```
+
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(ord.forest.model, test, type="prob"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+```
+
+```{r, fig.cap="A plot of an ROC curve for each of the individual qualities in the standard Multi-nomial model. The Good curve is the closest to the (1,1) mark, followed by Bad, Tiny, followed by Problematic, The yikes curve represents stairs due to its small sample size."}
+ggroc(list(GoodROC = GoodROC, TinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Stnd Ordinal Forest ROC")
+```
+
+
+To help compare these models, we once again use the previous compression metrics.
+```{r}
+
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+
+StndOrdFor <- roc(test$num.Quality ~ test$num.predictions)
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Ord Rand For"))
+```
+
+### Standard Numerical Random Forest
+  - (Good/Tiny = 1, Problematic/Bad/Yikes = 0)
+  - (Good = 1, Yikes = 0, drop others)
+
+```{r}
+num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion + assess_col_na +
+                         extract_na + assess_middle_na_proportion + assess_bottomempty +
+                         assess_median_na_proportion, data = train,
+                           importance = TRUE)
+
+test$num.predictions <- predict(num.RF.model, test, type="prob")[,2]
+
+StndNumFor <- roc(test$num.Quality ~ test$num.predictions)
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+```
+
+```{r, fig.cap="Box plot that shows probability of good scan faceted by binary true quality. The bad quality has a median at 14% with quantiles 3% and 30%, and tailing up to over 65% with outliers to 100%. The good category has median 95% with quantiles at 87% and 99%, trailing down to 1%. The graph shows a clear distinction between the two problem types"}
+ggplot(test, aes(x=num.Quality, y=num.predictions)) +
+  geom_boxplot() +
+  xlab("True Quality") +
+  ylab("Probability of good scan") +
+  ggtitle("Numerical Logistic Prediction Test Data")
+```
+
+```{r, fig.cap="This is a scatterplot with predicted quality on the y axis, faceted by true quality. On the bad quality. Majority of good scans are above 85%, and bad scans below 25%. Bad points above 75% prediction are labelled for followup, and good points below 50%."}
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+
+```
+
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Binary Rand For"))
+```
+
+### Standard Model Results
+```{r, include=FALSE}
+model.metrics.all <- model.metrics.all[-1,]
+rownames(model.metrics.all) <- 1:nrow(model.metrics.all)
+knitr::kable(model.metrics.all)
+```
+
+```{r, fig.cap="Plot shows the four standard models ROC curves on the same plot. the numerical forest and binary logistic regression models show the best curve, curving through the 87.5 point on specificity and sensitivity. The multinomial logistic regression and the ordinal forest both represent a triangle as they had binary conversions to be plotted. Their plots fit inside the other two's curves."}
+ggroc(list(StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
+           StndNumFor = StndNumFor, StndOrdFor = StndOrdFor))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6), fig.cap))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Standard Quality Prediction Models")
+```
+
+
+
+
+## Cropped Feature Analysis
+
+#### Hypothesis
+The quality of our images predicted by the models and assessed by our algorithms is dependent on the how much of the data from the scan is legible and useful. The bottom middle of the bullet gives us the most information, due to the striations in this area being most prominent. Some scans get distorted due to numerous external factors ranging from a bad scan to the bullet undergoing damages that's affected those striations. Cropping our scans to cut off parts of the scan that are non-essential could help to eliminate the ‘noise’ around the images that skew the accuracy of the results. The goal is to see whether making a crop will improve the accuracy of our models. 
+
+
+#### Process
+To conduct our analysis, we did a series of tests to compare the cropped version of a scan against the full version. We constructed scatter and box plots as well as ROC curves for visual analysis. We trained a Generalized Linear Model (glm) to test the p values, or importance, of each variable in explaining the quality, and constructed kernel density graphs to compare the scans. Every cropped scan and its full scan counterpart were found to have more than 90% correlation with each other, requiring us to use only one of them for each feature to avoid co-linearity issues.
+
+```{r, echo = FALSE}
+feature_table <- data.frame(matrix(nrow = 4, ncol=5, dimnames=list(c("Extract NA", "Assess Bottomempty", "Assess Col NA", "Assess Median NA Proportion"), c("Correlation", "pvalue_Full", "pvalue_cropped", "auc_Full", "auc_Cropped"))))
+
+feature_table[1,] <- c(0.908, "0.229", "<2e-16", 0.871, 0.902)
+feature_table[2,] <- c(0.905, "5.86e-10", "<2e-16", 0.783, 0.859)
+feature_table[3,] <- c(0.919, "1.62e-06", "1.17e-14", 0.888, 0.896)
+feature_table[4,] <- c(0.908, "<2e-16", "6.77e-10", 0.907, 0.863)
+
+knitr::kable(feature_table)
+```
+
+### Extract NA Cropped
+
+#### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+correlation <- cor(full.data$extract_na, full.data$extract_na_cropped)
+
+res <- comparison(data.frame(full.data$extract_na, full.data$extract_na_cropped, full.data$Quality), feature = "Extract NA")
+```
+
+```{r, fig.cap="Plot shows a scatterplot of the extract na feature ran on the full scan on the x axis and ran on the cropped scan on the y axis, faceted by quality. The good scans show a clear distinction from the others by being on the bottom left cortner of the graph. The tiny problems, problematic, and bad scans all are disperesed in a linear line. The yikes category is only at the higher end of the points. This graph shows that the feature ran across the cropped scans on average are lower than on the full scan."}
+res$scatterplot + coord_equal()
+```
+
+```{r, fig.cap="Plot shows a boxplot of the extract na feature ran on the full scan on the x axis and ran on the cropped scan on the y axis, faceted by quality. The medians of both the cropped and full scans show a linear increase as the quality of the scan degrades. The cropped medians are also all 10 higher or more than the full scans."}
+res$boxplot
+```
+
+```{r}
+res$roc_curve
+
+```
+
+```{r}
+print(paste("Extract NA. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+#### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~extract_na+extract_na_cropped, data = full.data, family = binomial())
+summary(logistic_base)
+
+# extract_na_cropped is the better single predictor. 
+full.data %>% pivot_longer(starts_with("extract_na"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) +
+  geom_density(alpha=0.8) +
+  scale_fill_manual(values=col_scans_light) +
+  scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+
+```
+
+
+#### Conclusion for Extract NA
+
+The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full.data  <- full.data %>% 
+  mutate(followup=GoodScan=="TRUE" & extract_na_cropped>15)
+full.data %>% 
+  ggplot(aes(x = extract_na_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+
+
+```
+```{r}
+
+full.data$LAPD_id[full.data$followup]
+
+followupScans <- rbind(followupScans, full.data[full.data$followup == TRUE,])
+# All followups for extract_na are mislabelled scans. They are all labelled as tiny problems but should be problematic or worse.
+```
+
+```{r, include = FALSE, eval = FALSE}
+library(x3ptools)
+# /media/Raven/LAPD
+f1 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BA-L4 is labelled tiny-problems but should be labelled Problematic or worse
+
+f2 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 1 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BC-L1 is labelled tiny-problems but should be labelled Problematic or worse
+
+f3 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU263-BC-L3 is labelled tiny-problems but should be labelled Problematic or worse
+
+f4 <- x3p_read("/media/Raven/LAPD/FAU 287/Bullet C/LAPD - 287 - Bullet C - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU287-BC-L5 is labelled tiny-problems but should be labelled Problematic or worse
+
+f5 <- x3p_read("/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p")
+# FAU154-BD-L2 is labelled tiny-problems but should be labelled Problematic or worse
+
+f6 <- x3p_read("/media/Raven/LAPD/FAU 277/Bullet A/LAPD - 277 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU277-BA-L4 is labelled tiny-problems but should be labelled Problematic or worse
+
+f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+# FAU286-BA-L5 is labelled tiny-problems but should be labelled Problematic or worse
+```
+
+
+### Assess Bottomempty Cropped
+
+#### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+correlation <- cor(full.data$assess_bottomempty, full.data$assess_bottomempty_cropped)
+
+res <- comparison(data.frame(full.data$assess_bottomempty, full.data$assess_bottomempty_cropped, full.data$Quality), feature = "Assess Bottomempty")
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+print(paste("Assess Bottomempty. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+#### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_bottomempty+assess_bottomempty_cropped, data = full.data, family = binomial())
+summary(logistic_base)
+
+# assess_bottomempty_cropped is the better single predictor. 
+full.data %>% pivot_longer(starts_with("assess_bottomempty"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+#### Conclusion for Assess Bottomempty
+
+The values for feature `assess_bottomempty` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full.data  <- full.data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_bottomempty_cropped>30)
+full.data %>% 
+  ggplot(aes(x = assess_bottomempty_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full.data$LAPD_id[full.data$followup]
+
+followupScans <- rbind(followupScans, full.data[full.data$followup == TRUE,])
+```
+
+```{r, include = FALSE, eval = FALSE}
+# All problems are registered as tiny problems
+followup <- c("FAU263-BA-L4", "FAU287-BC-L5", "FAU254-BD-L4", "FAU275-BC-L5", "FAU275-BD-L3", "FAU277-BA-L4", "FAU286-BA-L5")
+f1 <- x3p_read("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f1, main=followup[1])
+
+f2 <- x3p_read("/media/Raven/LAPD/FAU 287/Bullet C/LAPD - 287 - Bullet C - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f2, main=followup[2])
+
+f3 <- x3p_read("/media/Raven/LAPD/FAU 254/Bullet D/LAPD - 254 - Bullet D - Land 4 - Sneox2 - 20x - auto light left image +20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f3, main=followup[3])
+
+f4 <- x3p_read("/media/Raven/LAPD/FAU 275/Bullet C/LAPD - 275 - Bullet C - Land 5 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f4, main=followup[4])
+
+f5 <- x3p_read("/media/Raven/LAPD/FAU 275/Bullet D/LAPD - 275 - Bullet D - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f5, main=followup[5])
+
+f6 <- x3p_read("/media/Raven/LAPD/FAU 277/Bullet A/LAPD - 277 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f6, main=followup[6])
+
+f7 <- x3p_read("/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p")
+image(f7, main=followup[7])
+
+```
+
+
+### Assess Col NA Cropped
+
+#### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+correlation <- cor(full.data$assess_col_na, full.data$assess_col_na_cropped)
+
+res <- comparison(data.frame(full.data$assess_col_na, full.data$assess_col_na_cropped, full.data$Quality), feature = "Assess Col NA")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+print(paste("Assess Col NA Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+#### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_col_na+assess_col_na_cropped, data = full.data, family = binomial())
+summary(logistic_base)
+
+# Both predictors are about the same.
+full.data %>% pivot_longer(starts_with("assess_col_na"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+#### Conclusion for Assess Col NA
+
+The values for feature `assess_col_na` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to cropped scans has an increased accuracy compared to the feature values from the full scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full.data  <- full.data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_col_na_cropped>1.35)
+full.data %>% 
+  ggplot(aes(x = assess_col_na_cropped, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full.data$LAPD_id[full.data$followup]
+
+followupScans <- rbind(followupScans, full.data[full.data$followup == TRUE,])
+```
+
+```{r, include = FALSE, eval = FALSE}
+followup <- data.frame(LAPD_ID = c("FAU263-BA-L4", "FAU263-BB-L3", "FAU263-BC-L1", "FAU263-BC-L3", "FAU154-BD-L2", "FAU286-BA-L5"), filePAth = c("/media/Raven/LAPD/FAU 263/Bullet A/LAPD - 263 - Bullet A - Land 4 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet B/LAPD - 263 - Bullet B - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 1 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p"  , "/media/Raven/LAPD/FAU 286/Bullet A/LAPD - 286 - Bullet A - Land 5 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p"))
+
+for (i in 1:nrow(followup)) {
+  f <- x3p_read(followup[i,2])
+  image(f, main=followup[i,1])
+}
+```
+
+### Assess Median NA Proportion Cropped
+
+#### Which of the features is better for discriminating between good and bad scans?
+
+```{r echo=FALSE}
+correlation <- cor(full.data$extract_na, full.data$extract_na_cropped)
+
+
+res <- comparison(data.frame(full.data$assess_median_na_proportion, full.data$assess_median_na_proportion_cropped, full.data$Quality), feature = "Assess median NA proportion")
+
+res$scatterplot + coord_equal()
+
+res$boxplot
+
+res$roc_curve
+
+print(paste("Assess Median NA Proportion. Correlation: ", round(correlation, 3), "Full AUC:", round(res$roc_auc$Full_AUC, 3), "Cropped AUC: ", round(res$roc_auc$Cropped_AUC, 3)))
+
+knitr::kable(res$summ, caption=attr(res$summ, "title"))
+
+```
+#### Should we use features from just one type of scan or both?
+
+```{r, echo=FALSE}
+# logistic regression in the two features
+logistic_base <- glm(GoodScan~assess_median_na_proportion+assess_median_na_proportion_cropped,
+                     data = full.data, family = binomial())
+summary(logistic_base)
+
+# assess_median_na_proportion is the better single predictor. 
+full.data %>% pivot_longer(starts_with("assess_median_na_proportion"), names_to="Scan") %>% 
+  ggplot(aes(x = value, fill=GoodScan, color=GoodScan)) + geom_density(alpha=0.8) + scale_fill_manual(values=col_scans_light) + scale_colour_manual(values=col_scans_dark) +
+  facet_grid(.~Scan)
+```
+
+
+#### Conclusion for Assess Median NA Proportion
+
+The values for feature `extract_NA` are highly correlated between the cropped and the full scan. 
+
+Using good and scans with only tiny problems as overall 'good' scans, the feature applied to full scans has an increased accuracy compared to the feature values from the cropped scan. 
+
+We might want to follow up on the orange colored scans:
+
+```{r echo=FALSE, fig.height=3}
+full.data  <- full.data %>% 
+  mutate(followup=GoodScan=="TRUE" & assess_median_na_proportion>0.095)
+full.data %>% 
+  ggplot(aes(x = assess_median_na_proportion, y = GoodScan, color = followup)) + 
+  geom_jitter() +
+  scale_colour_manual(values=c("grey50", "darkorange"))
+```
+```{r}
+full.data$LAPD_id[full.data$followup]
+
+followupScans <- rbind(followupScans, full.data[full.data$followup == TRUE,])
+```
+```{r, include = FALSE, eval = FALSE}
+followup <- data.frame(LAPD_ID = c("FAU263-BC-L3", "FAU154-BD-L2", "FAU204-BC-L4"), filePAth = c("/media/Raven/LAPD/FAU 263/Bullet C/LAPD - 263 - Bullet C - Land 3 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p", "/media/Raven/LAPD/FAU 154/Bullet D/LAPD - 154 - Bullet D - Land 2 - Sneox2 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Carley McConnell.x3p", "/media/Raven/LAPD/FAU 204/Bullet C/LAPD - 204 - Bullet C - Land 4 - Sneox1 - 20x - auto light left image + 20% - threshold 2 - resolution 4 - Connor Hergenreter.x3p"))
+
+for (i in 1:nrow(followup)) {
+  f <- x3p_read(followup[i,2])
+  image(f, main=followup[i,1])
+}
+# all should be relabbeled, FAU 204, BC, L4 is particularly Yikes looking
+```
+
+## Cropped Model Analysis
+
+|Model                                  | TPR       | TNR       | F1 Score      | Kappa     | AUC       |
+|---------------------------------------|-----------|-----------|---------------|-----------|-----------|
+|Crop Multinomial Logistic Regression	  |**0.9821** |0.7        |0.9322	        |0.7375     |0.8411     |
+|Crop Binary Logistic Regression    	  |0.9554	    |0.7929	    |0.9359	        |0.7707     |0.9514     |
+|Crop Ordinal Random Forest	            |0.9554	    |0.8        |**0.9372**     |**0.7764** |0.8777     |
+|Crop Binary Random Forest          	  |0.9375	    |**0.8286** |0.9333	        |0.7709     |0.9503     |
+
+### Cropped Multi-Nomial Logistic Regression
+
+```{r}
+train.mutli = train
+train.mutli$Quality <- factor(train.mutli$Quality, levels=c("Good", "Tiny Problems", "Problematic", "Bad", "Yikes"), ordered = FALSE)
+train.mutli$Quality <- relevel(train.mutli$Quality, ref = "Good")
+crop.multi.model <- multinom(Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
+                         extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
+                         assess_median_na_proportion, data = train.mutli)
+summary(crop.multi.model)
+
+test$Predictions <- predict(crop.multi.model, test)
+```
+
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(crop.multi.model, test, type="probs"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Crpped Multi Log ROC")
+```
+
+
+```{r}
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+
+CrpMultiLog <- roc(test$num.Quality ~ test$num.predictions)
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Multi Logistic Reg"))
+
+```
+
+### Cropped Binary Logistic Regression
+
+```{r}
+crop.num.logit.model <- glm(num.Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
+                         extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
+                         assess_median_na_proportion,
+                     data=train, family="binomial")
+
+summary(crop.num.logit.model)
+
+test$num.predictions <- predict(crop.num.logit.model, test, type="response")
+
+CrpBinLog <- roc(test$num.Quality ~ test$num.predictions)
+# XXX Figure out followup scans
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+
+ggplot(test, aes(x=num.Quality, y=num.predictions)) +
+  geom_boxplot() +
+  xlab("True Quality") +
+  ylab("Probability of good scan") +
+  ggtitle("Cropped Binary Logistic Prediction Test Data")
+
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+
+```
+
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Binary Logistic Reg"))
+```
+
+### Cropped Ordinal Random Forest
+
+```{r}
+crop.ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion +
+                                      assess_col_na_cropped + extract_na_cropped +
+                                      assess_middle_na_proportion + assess_bottomempty_cropped +
+                                      assess_median_na_proportion, data = train,
+                                      importance = TRUE)
+test$Predictions <- predict(crop.ord.forest.model, test)
+```
+
+Comparing the ROC of the individual categories
+```{r}
+testMetrics <- data.frame(predict(crop.ord.forest.model, test, type="prob"))
+testMetrics$Quality <- test$Quality
+testMetrics$LAPD_id <- test$LAPD_id
+
+
+testMetrics <- testMetrics %>% mutate (
+  isGood = (testMetrics$Quality == "Good"),
+  isTiny = (testMetrics$Quality == "Tiny Problems"),
+  isProb = (testMetrics$Quality == "Problematic"),
+  isBad = (testMetrics$Quality == "Bad"),
+  isYikes = (testMetrics$Quality == "Yikes")
+)
+
+GoodROC<- roc(testMetrics$isGood ~ testMetrics$Good)
+TinyROC<- roc(testMetrics$isTiny ~ testMetrics$Tiny.Problems)
+ProbROC<- roc(testMetrics$isProb ~ testMetrics$Problematic)
+BadROC<- roc(testMetrics$isBad ~ testMetrics$Bad)
+YikesROC<- roc(testMetrics$isYikes ~ testMetrics$Yikes)
+
+ggroc(list(GoodROC = GoodROC, YinyROC = TinyROC, 
+           ProbROC = ProbROC, BadROC = BadROC,
+           YikesROC = YikesROC))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  geom_segment(aes(x = 1, xend = 0, y = 1, yend = 0),
+               linetype="dotdash")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Crpped Ordinal Forest ROC")
+```
+To help compare these models, we will introduce a compression concept. Just as before, all scans will be divided into Good, which includes Good and Tiny Problems. Bad will include all other categories.
+```{r}
+test$num.predictions = 0
+test$num.predictions[test$Predictions == "Good"] = 1
+test$num.predictions[test$Predictions == "Tiny Problems"] = 1
+
+CrpOrdFor <- roc(test$num.Quality ~ test$num.predictions)
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Ord Rand For"))
+
+```
+
+### Cropped Binary Random Forest
+```{r}
+crop.num.RF.model <- randomForest(num.Quality ~ assess_percentile_na_proportion + assess_col_na_cropped +
+                         extract_na_cropped + assess_middle_na_proportion + assess_bottomempty_cropped +
+                         assess_median_na_proportion, data = train,
+                           importance = TRUE)
+
+
+test$num.predictions <- predict(crop.num.RF.model, test, type="prob")[,2]
+
+CrpNumFor <- roc(test$num.Quality ~ test$num.predictions)
+test[test$num.predictions < 0.5 & test$num.Quality == 1, ]$followup = TRUE
+test[test$num.predictions > 0.75 & test$num.Quality == 0, ]$followup = TRUE
+
+ggplot(test, aes(x=num.Quality, y=num.predictions)) +
+  geom_boxplot() +
+  xlab("True Quality") +
+  ylab("Probability of good scan") +
+  ggtitle("Numerical Logistic Prediction Test Data")
+
+ggplot(test, aes(x=num.Quality, y=num.predictions, color=followup)) +
+  geom_jitter() +
+   scale_colour_manual(values=c("grey50", "darkorange"))
+
+```
+
+The boxplot shows a general picture of the results of the model. There is a significant number of misclassified scans. Using a typical 0.5 rounding we get the confusion matrix: 
+```{r}
+model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Crop Binary Rand For"))
+```
+
+### Cropped Model Results
+
+```{r, include= FALSE}
+knitr::kable(model.metrics.all[5:8,])
+```
+
+```{r}
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
+           CrpNumFor = CrpNumFor, CrpOrdFor = CrpOrdFor))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Cropped Quality Prediction Models")
+```
+
+## Final Results
+```{r}
+knitr::kable(model.metrics.all)
+```
+
+```{r all-model-roc-curve}
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpBinLog = CrpBinLog,
+           CrpNumFor = CrpNumFor, CrpOrdFor = CrpOrdFor,
+           StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
+           StndNumFor = StndNumFor, StndOrdFor = StndOrdFor
+           ))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of All Quality Prediction Models")
+```
+
+```{r}
+ggroc(list(CrpMultiLog = CrpMultiLog, CrpOrdFor = CrpOrdFor,
+           StndMultiLog = StndMultiLog, StndOrdFor = StndOrdFor
+           ))+
+  theme_bw()+
+  theme(axis.title.y = element_text(size = rel(1.4)))+
+  theme(axis.title.x = element_text(size = rel(1.4)))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
+  theme(axis.text.y = element_text(size = rel(1.6)))+
+  theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
+  geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
+               linetype="dashed")+
+  labs(x = "Sensitivity",
+       y = "Specificity",
+       title="Comparison of Triangular Quality Models")
+```
+
+
+## Followup Scans
+
+- `r co("XXX Probably need to do something here.")`
