@@ -140,14 +140,15 @@ To further aid in forensic abilities and quantitative methods, CSAFE has been re
 
 To increase the speed and performance of our quality scanner, we decided to crop the X3P files, this helps eliminate the 'noise' around the images that can skew the accuracy of the results. By using smaller images, we also increase the speed of evaluation, as there is less to process. 
 
-This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the bottom of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. Below are examples of a full, full with marked edges, and a cropped image.
+This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the bottom of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. `r hh("It's a bit confusing when you emphasize that you want to preserve the bottom, but then cut the bottom off :). I think you need to spend a bit more time on explaining what we think of as 'noise' and what is valuable information")`
 
-![Image of a scan without cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png)
 
 - `r co("Is this the kind of image you were imagining? I think we need to make the red lines beefier and more obvious")`  
+`r hh("Yes, that's a good image! Lines look good - but we only need the image in the middle ")` 
+`r hh("I think it would be better, if you actually use a mask of the area that is being cut off.")`
+
 
 ![Image of a scan with the edges colored](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-masked.png)
-![Image of a scan with cropping](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-Cropped.png)
 
 
 ## Features
