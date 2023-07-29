@@ -61,7 +61,7 @@ co <- function(x) {
 ```
 
 ## Introduction
-This document is intended give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a research or real-world environment.
+This document is intended to give well commented exact technical details to show the comparison of various models we tested and compared to determine the best candidate for use in a research or real-world environment.
 
 We will investigate the ability of our features to predict the quality of a scan using a variety of methods. It should be noted that given our current classification system Good > Tiny Problems > Problematic > Bad > Yikes, we will consider that any scan worse than Tiny Problems should be re-scanned by the user. However, this is a tool meant to aid a user in deciding and is not to be taken as a sole source of truth. 
 
@@ -69,14 +69,9 @@ Models will be broken into two classification types, ordinal and binary. In the 
 
 There will also be a comparison of models between using the features calculated against a full image as taken by the scanner, and a cropped image of the scan. The purpose of this is to increase the speed of the quality assurance stage, and to see if removing the 'noise' at the sides of the image helps to increase the estimate of quality, as our focus is on the center of the image.
 
-- `r co("XXX Is there a more mathy and rigorous reason we chose these models? They are pretty much just my go-tos, and the only ones I know for categorical. Probably need to add references")` 
-
 The models we will train are logistic regressions, and random forests. These models have often proven to be sufficiently explainable for forensic purposes, as well as statistically sound in many environments. 
 
 ### Results 
-
-- `r co("XXX Interpret the results")`
-
 
 |Model                                  | TPR       | TNR       | F1 Score      | Kappa     | AUC       |
 |---------------------------------------|-----------|-----------|---------------|-----------|-----------|
@@ -124,8 +119,6 @@ followupScans <- data.frame()
 ## Feature Analysis
 
 In this investigation, we are going to look at the features calculated against the full image. This investigation will tell us more about the predictive power of each feature, and tell us how different the quality categories are from each other.
-
-- `r co("XXX Our results are mostly in graphical form. Should I use some kinda test? Is there a way to front load the results as with models?")`
  
 
 ```{r, include = FALSE}
@@ -147,8 +140,6 @@ summary(glm(Quality ~ assess_percentile_na_proportion,
 ```
 
 In the boxplot we can see that as Assess Percentile NA Proportion increases, the quality of the image decreases. The IQR of the quality categories has overlap, but the medians are consistently different in the chart. The logistic regression also shows that there is overwhelming evidence, with reservation, for this being a useful feature in explaining the quality.
-
-- `r co("XXX What does the warning mean here and how do we address it?")`
 
 ### Assess Col NA
 
@@ -324,6 +315,7 @@ summary(multi.model)
 
 test$Predictions <- predict(multi.model, test)
 ```
+
 $$
 log(\frac{P_{Tiny}}{P_{Good}}) = 3.086 + 137.06X_{APNP} + 2.765X_{ACN} + 0.069X_{EN} + 159.629X_{AMidNP} - 0.411X_{AB} + 137.063X_{AMedNP} \\
 
@@ -441,7 +433,6 @@ model.metrics.all <- rbind(model.metrics.all, numerical.Metrics(test, "Stnd Bina
 
 ### Standard Ordinal random forest
 
-XXX is this an ordinal random forest or just a categorical one?
 
 ```{r}
 ord.forest.model <- randomForest(Quality ~ assess_percentile_na_proportion + assess_col_na +
@@ -555,7 +546,7 @@ ggroc(list(StndMultiLog = StndMultiLog, StndBinLog = StndBinLog,
   theme_bw()+
   theme(axis.title.y = element_text(size = rel(1.4)))+
   theme(axis.title.x = element_text(size = rel(1.4)))+
-  theme(axis.text.x = element_text(size = rel(1.6), fig.cap))+
+  theme(axis.text.x = element_text(size = rel(1.6)))+
   theme(axis.text.y = element_text(size = rel(1.6)))+
   theme(plot.title = element_text(hjust=0.5, size = rel(2)))+
   geom_segment(aes(x = 1, xend = 0, y = 0, yend = 1),
@@ -1161,8 +1152,3 @@ ggroc(list(CrpMultiLog = CrpMultiLog, CrpOrdFor = CrpOrdFor,
        y = "Specificity",
        title="Comparison of Triangular Quality Models")
 ```
-
-
-## Followup Scans
-
-- `r co("XXX Probably need to do something here.")`

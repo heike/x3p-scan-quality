@@ -6,13 +6,6 @@ output: html_document
 bibliography: "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`"
 ---
 
-Naga, if you have any problems running this file, exchange line 6 with
-
-bibliography: "zotero.bib"
-
-If that doesn't work either, holler on slack
-
-
 ```{r, include = FALSE, eval=FALSE}
 ### <!-- "`r rbbt::bbt_write_bib('zotero.bib', overwrite = TRUE, library_id=rbbt::bbt_library_id('CSAFE'))`" -->
 ```
@@ -110,29 +103,7 @@ knitr::kable(feature_table)
 
 All of the features had significant outliers, which we have called "[Followup Scans](#followup-scans)", for their individual predictive power. We investigated the type I errors, false positives of a bad scan being predicted as good, and found them all to be "Tiny Problems" scans which could reasonably be re-classified as "problematic" or worse.
 
-XXX Related Works
-- `r co("Do we need forensics specific papers here, or can we use general imagery comparative analysis?")` 
-
-`r hh("Good question, and I don't know - I'm not sure that there is any kind of forensic specific work out (yet). I'm waiting for a NIST paper to finally come out :) ")`
-
 ## Background and Introduction
-
-XXX General stylistic comments
-
-- `r hh("there are no 'you's in a scientific paper. Make sure to be specific of each actor.")`  
-
-Relevant citations for criticism of the subjective nature of current firearms comparisons:
-[@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016; 
-@nationalresearchcouncilu.s.StrengtheningForensicScience2009]
-
-@presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016,  
-@nationalresearchcouncilu.s.StrengtheningForensicScience2009
-
-XXX Writing in progress
-- `r co("Some questions on this section, am I being too generic? Do I need to add more sources in this section?")`  
-
-`r hh("Generally, it looks good, but we can probably get away with fewer words and more images :)")`
-
 
 In many court cases, determining the source of evidence is crucial, whether it is finding the correct murder weapon, or proving which cartridge casing came from which firearm. The particular evidence of interest to this study is determining if a bullet is fired from a particular firearm. 
 
@@ -145,13 +116,7 @@ To further aid in forensic abilities and quantitative methods, CSAFE has been re
 
 To increase the speed and performance of our quality scanner, we decided to crop the X3P files, this helps eliminate the 'noise' around the images that can skew the accuracy of the results. By using smaller images, we also increase the speed of evaluation, as there is less to process. 
 
-This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the bottom of the image. In particular, we want to preserve the bottom of the image and the center as that is where most of the signal is. `r hh("It's a bit confusing when you emphasize that you want to preserve the bottom, but then cut the bottom off :). I think you need to spend a bit more time on explaining what we think of as 'noise' and what is valuable information")`
-
-
-- `r co("Is this the kind of image you were imagining? I think we need to make the red lines beefier and more obvious")`  
-`r hh("Yes, that's a good image! Lines look good - but we only need the image in the middle ")` 
-`r hh("I think it would be better, if you actually use a mask of the area that is being cut off.")`
-
+This analysis is to compare the difference between the cropped versus non-cropped (full) version of a scan for quality identification. Cropped images have the potential for decreasing noise around the signal. The level of cropping we are considering is 5% from the left and right sides, and 10% off of the bottom of the image where there is typically a large amount of white noise to to positioning.
 
 ![Image of a scan with the edges colored](./Comparative-Analysis_files/figure-html/FAU-254-BB-L1-masked.png)
 

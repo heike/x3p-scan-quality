@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -18,9 +18,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -47,48 +48,19 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -102,8 +74,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="Scan Quality Assessor_files/libs/clipboard/clipboard.min.js"></script>
@@ -117,6 +88,7 @@ div.csl-indent {
 <link href="Scan Quality Assessor_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="Scan Quality Assessor_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -147,10 +119,13 @@ div.csl-indent {
   <li><a href="#results-and-tuning" id="toc-results-and-tuning" class="nav-link" data-scroll-target="#results-and-tuning">4. Results and tuning</a>
   <ul class="collapse">
   <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection">4.1 Model Selection</a></li>
-  <li><a href="#comparison-of-cropped-scans-and-standard-scans" id="toc-comparison-of-cropped-scans-and-standard-scans" class="nav-link" data-scroll-target="#comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</a></li>
+  <li><a href="#model-maintenance" id="toc-model-maintenance" class="nav-link" data-scroll-target="#model-maintenance">4.2 Model Maintenance</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">5. Conclusion</a></li>
-  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">6. Appendix</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">6. Appendix</a>
+  <ul class="collapse">
+  <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">6.1 Bibliography</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -179,9 +154,6 @@ div.csl-indent {
 
 </header>
 
-<div class="cell" data-hash="Scan-Quality-Assessor_cache/html/data_c4fc3b075dfcd596d73ba7dd59b00c80">
-
-</div>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">1. Abstract</h2>
 <p>Firearm forensics has long been plagued with a subjective issue related to obtaining good evidence, microscopy flaws in scanning. In this paper, we propose an application that uses several random forests to predict the quality of an X3P scanned bullet. This application is intended to aid scanners as they handle the large amount of items they are asked to scan, as well as allow researchers to go over current datasets, and determine any scans that may need to be redone. While this application should not replace a scanners individual judgement, it is another tool they could have at their disposal to reduce the number of re-scans they have to do.</p>
@@ -201,7 +173,7 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./Comparative-Analysis_files/figure-html/FAU-254-BB-L1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Image of a scan</figcaption><p></p>
+<figcaption class="figure-caption">Image of a scan</figcaption>
 </figure>
 </div>
 </section>
@@ -212,16 +184,10 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="data-sourcing">3.1 Data sourcing</h3>
 <p>Our dataset is the LAPD data, which is a set of 626 unique firearms each of which fired 4 bullets labelled A, B, C, D, and the bullets and matching barrels (called FAUs) were recorded. The bullets each had all 6 lands scanned, with a variety of degrees of quality. Each scan is uniquely identifiable by its LAPDID of the format &lt;FAU, Bullet, Land&gt;.</p>
 <p>The scans in this dataset will act as our test and train data for our model. Dr.&nbsp;Hofmann manually sorted out 1851 of the scans, assigning each of them a quality, and a most-prevelant-problem. The quality variable is categorical in order from best to worst: “Good, Tiny Problems, Problematic, Bad, Yikes”. The problems were broken into several, unordered categories “Good, Holes, Rotation-Staging, Feathering, Damage”. It should be noted, the “Damage” problem is not a microscopy issue, but rather an issue that occurs after the bullet is fired and impacts something sufficiently hard that it damages the striation patterns. These bullets would need considerably more attention, re-scanning may not be useful, and will require individual decision making about their use in the forensic process.</p>
-<ul>
-<li><span style="color: red;">Could someone look at this paragraph below specifically, I feel I need to be more careful in my wording</span></li>
-</ul>
 <p>There are several errors that come from this style of classification, namely the subjectivity as to the difference in qualities, such as when to label a scan Tiny Problems versus Problematic. Similar problems occur in the scans specific problem, sufficient Feathering could be considered Holes, and all of these problems are reasonably dependent on each other. We are not trying to solve these issues, we instead use a confidence scale that the scanner at the microscope can use to then make better informed decisions about when to re-scan.</p>
 </section>
 <section id="creating-features" class="level3">
 <h3 class="anchored" data-anchor-id="creating-features">3.2 Creating features</h3>
-<ul>
-<li><span style="color: red;">Is that good?</span></li>
-</ul>
 <p>In 2022, Jacob Baalson, Michael Egle, (others), created the following features to begin the project. This paper uses these features in both their original coding and with modification.</p>
 <p>Each of the features shares a similar set up, so the following assumptions and definitions will remain independently true for each of the features defined below.</p>
 <p>Let <span class="math inline">\(A=\{NA\}\)</span> be the set of undefined values. For simplicity of notation we will assume that the space of real values <span class="math inline">\({\rm I\!R}\)</span> contains <span class="math inline">\(A\)</span>: <span class="math inline">\({\rm I\!R}:= {\rm I\!R} \cup A\)</span>.</p>
@@ -291,7 +257,6 @@ div.csl-indent {
 <section id="process-of-cropping-scans" class="level3">
 <h3 class="anchored" data-anchor-id="process-of-cropping-scans">3.4 Process of cropping scans</h3>
 <p>X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.</p>
-<p>XXX Probably move the actual code to the appendix or the model comparison</p>
 <div class="cell" data-hash="Scan-Quality-Assessor_cache/html/unnamed-chunk-2_c68328644a5f84110fbd964a055fc17a">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crop_X3P <span class="ot">&lt;-</span> <span class="cf">function</span>(x3p) {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">class</span>(x3p) <span class="sc">==</span> <span class="st">"x3p"</span>)</span>
@@ -396,47 +361,51 @@ div.csl-indent {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./Model-Comparison_files/figure-html/all-model-roc-curve-1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">All Models ROC curve</figcaption><p></p>
+<figcaption class="figure-caption">All Models ROC curve</figcaption>
 </figure>
 </div>
 </section>
 <section id="rshiny-and-application" class="level3">
 <h3 class="anchored" data-anchor-id="rshiny-and-application">3.6 RShiny and application</h3>
-<p>To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan needs to be retaken.</p>
+<p>To make this application accessible for both public use, and for use in an application environment, we created an RShiny application that shows a 2D version of the image, as well as producing a score that the scanner can use to help determine if the scan in question needs to be re-scanned.</p>
 </section>
 </section>
 <section id="results-and-tuning" class="level2">
 <h2 class="anchored" data-anchor-id="results-and-tuning">4. Results and tuning</h2>
 <section id="model-selection" class="level3">
 <h3 class="anchored" data-anchor-id="model-selection">4.1 Model Selection</h3>
-<p>The model was decided to be</p>
+<p>The model selected was the Cropped Binary Random Forest, the reasoning being that it provided the best balance of true positive, true negative, and had a large AUC score. This model also has the simplicity of being a binary model which will keep the model simpler. The logistic regressions were deemed non-viable on the grounds that there is significant multicolinearity which violates the assumptions of the logistic regression model.</p>
 </section>
-<section id="comparison-of-cropped-scans-and-standard-scans" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-of-cropped-scans-and-standard-scans">4.2 Comparison of cropped scans and standard scans</h3>
-<p>XXX TODO</p>
-<p>Comparison of the models!</p>
+<section id="model-maintenance" class="level3">
+<h3 class="anchored" data-anchor-id="model-maintenance">4.2 Model Maintenance</h3>
+<p>In order to improve the model, it is recommended that ongoing maintenance is done. This will consist of a continued effort to expand the ground truth database by manual labeling, which can then be used to re-train the model. As the data set gets larger with time, the error rates should be decreased.</p>
 </section>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">5. Conclusion</h2>
-<p>XXX TODO</p>
+<p>The Cropped Binary Random Forest model will help enable our scanners to ensure that all scans they take can be of high quality. The model will be easily accessible in an RShiny application, and will be need to be revised and tested for continued accuracy on an on-going basis.</p>
 </section>
-<section id="appendix" class="level2 unnumbered">
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">6. Appendix</h2>
+<p>All technical specifications can be found on the “Scan Quality Assessor: Model Comparison” document, joined to this paper.</p>
+<p>The RShiny application can be found, cloned, and used from https://github.com/ArgentCode/X3P_Quality_Assessor.</p>
+<section id="bibliography" class="level3 unnumbered">
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">6. Appendix</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
-<div id="ref-hareAutomaticMatchingBullet2017" class="csl-entry" role="doc-biblioentry">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">6.1 Bibliography</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-hareAutomaticMatchingBullet2017" class="csl-entry" role="listitem">
 Hare, Eric, Heike Hofmann, Alicia Carriquiry, et al. 2017. <span>“Automatic Matching of Bullet Land Impressions.”</span> <em>The Annals of Applied Statistics</em> 11 (4): 2332–56. <a href="https://doi.org/10.1214/17-AOAS1080">https://doi.org/10.1214/17-AOAS1080</a>.
 </div>
-<div id="ref-nationalresearchcouncilu.s.StrengtheningForensicScience2009" class="csl-entry" role="doc-biblioentry">
+<div id="ref-nationalresearchcouncilu.s.StrengtheningForensicScience2009" class="csl-entry" role="listitem">
 National Research Council (U.S.), ed. 2009. <em>Strengthening Forensic Science in the <span>United States</span>: A Path Forward</em>. <span>Washington, D.C</span>: <span>National Academies Press</span>.
 </div>
-<div id="ref-pageUniquenessForensicIdentification2011" class="csl-entry" role="doc-biblioentry">
+<div id="ref-pageUniquenessForensicIdentification2011" class="csl-entry" role="listitem">
 Page, Mark, Jane Taylor, and Matt Blenkin. 2011. <span>“Uniqueness in the Forensic Identification Sciences–Fact or Fiction?”</span> <em>Forensic Science International</em> 206 (1-3): 12–18. <a href="https://doi.org/10.1016/j.forsciint.2010.08.004">https://doi.org/10.1016/j.forsciint.2010.08.004</a>.
 </div>
-<div id="ref-presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016" class="csl-entry" role="doc-biblioentry">
+<div id="ref-presidentscouncilofadvisorsonscienceandtechnologyForensicScienceCriminal2016" class="csl-entry" role="listitem">
 President’s Council of Advisors on Science and Technology. 2016. <span>“Forensic <span>Science</span> in <span>Criminal Courts</span>: <span>Ensuring Scientific Validity</span> of <span>Feature Comparison Methods</span>.”</span> <a href="https://obamawhitehouse.archives.gov/sites/default/files/microsites/ostp/PCAST/pcast_forensic_science_report_final.pdf">https://obamawhitehouse.archives.gov/sites/default/files/microsites/ostp/PCAST/pcast_forensic_science_report_final.pdf</a>.
 </div>
 </div></section></div></main>
@@ -468,9 +437,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -535,6 +518,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

@@ -103,8 +103,6 @@ Our dataset is the LAPD data, which is a set of 626 unique firearms each of whic
 
 The scans in this dataset will act as our test and train data for our model. Dr. Hofmann manually sorted out 1851 of the scans, assigning each of them a quality, and a most-prevelant-problem. The quality variable is categorical in order from best to worst: "Good, Tiny Problems, Problematic, Bad, Yikes". The problems were broken into several, unordered categories "Good, Holes, Rotation-Staging, Feathering, Damage". It should be noted, the "Damage" problem is not a microscopy issue, but rather an issue that occurs after the bullet is fired and impacts something sufficiently hard that it damages the striation patterns. These bullets would need considerably more attention, re-scanning may not be useful, and will require individual decision making about their use in the forensic process. 
 
-- `r co("Could someone look at this paragraph below specifically, I feel I need to be more careful in my wording")` 
-
 There are several errors that come from this style of classification, namely the subjectivity as to the difference in qualities, such as when to label a scan Tiny Problems versus Problematic. Similar problems occur in the scans specific problem, sufficient Feathering could be considered Holes, and all of these problems are reasonably dependent on each other. We are not trying to solve these issues, we instead use a confidence scale that the scanner at the microscope can use to then make better informed decisions about when to re-scan.
 
 ```{r, include = FALSE}
@@ -117,8 +115,6 @@ table(matrix_labels)
 
 
 ### 3.2 Creating features
-
-- `r co("Is that good?")`
 
 In 2022, Jacob Baalson, Michael Egle, (others), created the following features to begin the project. This paper uses these features in both their original coding and with modification. 
 
@@ -221,8 +217,6 @@ The quality of our images predicted by the models and assessed by our algorithms
 ### 3.4 Process of cropping scans
 
 X3PTools comes with a cropping function, so we standardized the function for our project. This way, all scans will have a 10% crop on the left and right sides, and a 10% crop off of the bottom of the scan.
-
-XXX Probably move the actual code to the appendix or the model comparison
 
 ```{r}
 crop_X3P <- function(x3p) {
